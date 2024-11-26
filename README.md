@@ -15,5 +15,5 @@ I began writing it for myself to make traveling easier. It is customized for the
 
 **-or-**
 
-1. Download the [meta file]( https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/DemonicControl.met ) and then move that file to your vtank folder, which should be *C:\Games\VirindiPlugins\VirindiTank*
+1. Download the [meta file]( https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/DemonicControl.met )(right click, save as) and then move that file to your vtank folder, which should be *C:\Games\VirindiPlugins\VirindiTank*
 2. Download the two Chaos Helper Profiles, [DemonicControl.Layout](https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/source/DemonicControl.Layout) and [DemonicControl.txt](https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/source/DemonicControl.txt) and put both of those into the chaos folder, which should be at *C:\Games\Decal Plugins\chaoshelper*
