@@ -15,7 +15,7 @@ Basic_Button_13,Nav On,#optset enablenav true
 Basic_Button_14,Nav Off,#optset enablenav false
 Basic_Button_15,Loot All,#action loot all
 Basic_Button_16,Loot Rares Only,#action rares only
-Basic_Button_17,Summon On,#optset summonpets true
+Basic_ToggleButton_17,Summon,#optset summonpets true,#optset summonpets false
 Basic_Button_18,Summon Off,#optset summonpets false
 Basic_Button_19,Peace Mode On,#optset idlepeacemode true
 Basic_Button_20,Peace Mode Off,#optset idlepeacemode false
@@ -314,26 +314,26 @@ Subway_Button_48,NOTSET,#command
 Subway_Button_49,NOTSET,#command
 Subway_Button_50,NOTSET,#command
 Portals_Button_01,Ron,#command
-Portals_Button_02,Teth,#action sum1a
-Portals_Button_03,-,#action sum1b
+Portals_Button_02,Teth,#action sum7a
+Portals_Button_03,-,#action sum7b
 Portals_Button_04,RonUSMC,#command
-Portals_Button_05,Teth,#action sum2a
-Portals_Button_06,Buttersworth,#action sum2b
+Portals_Button_05,Teth,#action sum4a
+Portals_Button_06,Buttersworth,#action sum4b
 Portals_Button_07,Ron II,#command
-Portals_Button_08,Teth,#action sum3a
-Portals_Button_09,BDC,#action sum3b
+Portals_Button_08,Teth,#action sum6a
+Portals_Button_09,BDC,#action sum6b
 Portals_Button_10,Demonic,#command
-Portals_Button_11,Teth,#action sum4a
-Portals_Button_12,Dogs,#action sum4b
+Portals_Button_11,Teth,#action sum5a
+Portals_Button_12,Dogs,#action sum5b
 Portals_Button_13,Ron IV,#NONE
-Portals_Button_14,Teth,#action sum5a
-Portals_Button_15,BDC,#action sum5b
+Portals_Button_14,Teth,#action sum3a
+Portals_Button_15,BDC,#action sum3b
 Portals_Button_16,Ron V,#command
-Portals_Button_17,Teth,#action sum6a
-Portals_Button_18,Butter,#action sum6b
+Portals_Button_17,Teth,#action sum2a
+Portals_Button_18,Butter,#action sum2b
 Portals_Button_19,Ron VI,#command
-Portals_Button_20,Teth,#action sum7a
-Portals_Button_21,Teth Incursion,#action sum7b
+Portals_Button_20,Teth,#action sum1a
+Portals_Button_21,Teth Incursion,#action sum1b
 Portals_Button_22,-,#command
 Portals_Button_23,-,#command
 Portals_Button_24,closest portal,#action ucp

@@ -1,12 +1,17 @@
 UTL
 1
-121
+122
 Pyreal Bar
 
-0;10;1
-0
+0;1;1
 15
 Pyreal Bar
+1
+Crystal Shard
+
+0;1;1
+18
+Crystal Shard
 1
 Curator Mask
 
@@ -607,7 +612,7 @@ Bane|Tink
 Cov|Olthoi
 1
 9
-25
+29
 371
 10
 9999
@@ -628,7 +633,7 @@ Minor|Major|Epic
 9999
 36
 9
-25
+29
 371
     (A) Defender's Set + dr22
 
@@ -653,7 +658,7 @@ Smock|Shirt
 104
 218103821
 9
-25
+29
 370
     (C) (Shirt) + dr25
 
@@ -667,7 +672,7 @@ Smock|Shirt
 104
 218103821
 9
-25
+29
 371
     (C) (Pants) + dr25
 
@@ -681,7 +686,7 @@ Pants|Pantaloons|Trousers
 22
 218103821
 9
-25
+29
 371
     (C) (Pants) + d25
 
@@ -695,7 +700,7 @@ Pants|Pantaloons|Trousers
 22
 218103821
 9
-25
+29
 370
     (J) M-Legendary +d25
 
@@ -707,7 +712,7 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 Tink
 2
 9
-25
+29
 370
     (J) Colo Ring
 
