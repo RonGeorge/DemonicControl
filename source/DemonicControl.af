@@ -440,7 +440,7 @@ STATE: {Default} ~~ {
 		DO:	DoAll
 				DoExpr {setvar[view, true]} ~~ mini remote
 				Chat {/ch setprofile DemonicControl.txt}
-				Chat {/ch setchatcommand /s}
+				Chat {/ch setchatcommand /lfg}
 				Chat {/ch settab 4}
 	IF: Always
 		DO: DoAll
@@ -593,6 +593,15 @@ STATE: {Default2} ~~ {
 				Chat {/ub clearbugged}
 				SetState {Default2}
 	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#patrol (?<pathtext>.*)\"$} {}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+		DO: DoAll
+				SetState {Patrol}
+
+	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset (?<settingtext>.*) (?<settingvartext>.*)\"$} {}
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
@@ -621,7 +630,7 @@ STATE: {Default2} ~~ {
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO: DoAll
 				DoExpr {$raretracker=1}
-				Chat {Now tracking rares.}
+				Chat {/lfg Now tracking rares.}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#gamble\"$} {}
@@ -637,7 +646,7 @@ STATE: {Default2} ~~ {
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
-				ChatExpr {`#drop `+wobjectgetstringprop[wobjectgetselection[],1]}
+				ChatExpr {`/lfg #drop `+wobjectgetstringprop[wobjectgetselection[],1]}
 				SetState {Default2}
 	IF: All
 			ChatMatch {You have killed 250 Monouga Barbarians!}
@@ -1552,7 +1561,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 			Expr {(BlueLady)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5541]==0} ~~ SpellId 5541 is "Lost City of Neftet Recall".
 		DO:	DoAll
-				Chat {You need Neftet recall for this Quest navigation. You can do navto Neftet to run.}
+				Chat {/lfg You need Neftet recall for this Quest navigation. You can do navto Neftet to run.}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
@@ -2309,7 +2318,7 @@ STATE: {Nav To Sub} ~~ {
 		DO:	DoAll
 				EmbedNav nav239___sub_ {[vraccess]}
 				DoExpr {clearvar[capturegroup_navtext]}
-				Chat {Go west, young man.}
+				Chat {/lfg Go west, young man.}
 				SetState {Default2}
 	IF:	All
 			Expr {(Frozen Valley)#getvar[capturegroup_navtext]}
@@ -2939,7 +2948,7 @@ STATE: {Quest} ~~ {
 		DO:	DoAll
 				EmbedNav nav299_buttertoeggs {[starttoeggs]}
 				SetOpt {enablecombat} {true}
-				Chat {#optset enablecombat true}
+				Chat {/lfg #optset enablecombat true}
 				SetOpt {OpenDoors} {true}
 				DoExpr {clearvar[capturegroup_quest]}
 				SetState {Default2}
@@ -3027,7 +3036,7 @@ STATE: {Quest} ~~ {
 			ItemCountLE 0 {Magic Lamp}
 			Expr {(Bluelady)#getvar[capturegroup_questtext]}
 		DO: DoAll
-				Chat {You don't have a Magic Lamp!}
+				Chat {/lfg You don't have a Magic Lamp!}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	IF:	All
@@ -3150,7 +3159,7 @@ STATE: {Unlock} ~~ {
 				DoExpr {actiontryuseitem[wobjectfindnearestdoor[]]}
 	IF: Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==1}
 		DO:	DoAll
-				Chat {Nothing to do here!}
+				Chat {/lfg Nothing to do here!}
 				SetState {Default2}
 	IF:	All 
 			SecsInStateGE 4
@@ -3566,7 +3575,7 @@ STATE: {EquipState} ~~ {
 			Expr {getvar[counter]>=7}
 		DO: DoAll 
 				DoExpr {listmap[listcreate[`capturegroup_equiptext`, `monster`, `counter`, `equipexit`], `clearvar[$1]`]}
-				CallState {CombatState} {ActiveLeader}
+				CallState {CombatState} {Default2}
 ~~ }
 STATE: {CombatState} ~~ {
 	IF: Always
@@ -4108,7 +4117,7 @@ STATE: {Gamble} ~~ {
 				ItemCountLE 0 {Mid-Stakes Olthoi Token}
 				ItemCountLE 0 {High-Stakes Olthoi Token}
 		DO: DoAll
-				Chat {I'm broke!}
+				Chat {/lfg I'm broke!}
 				SetState {Default2}
 	IF: All
 			CellE E4D6010F
@@ -4128,7 +4137,7 @@ STATE: {RareTracker} ~~ {
 			ItemCountLE 0 {Pearl of Lightning Baning}
 			ItemCountLE 0 {Pearl of Blade Baning}
 		DO: DoAll
-				Chat {No more gems.}
+				Chat {/lfg No more gems.}
 				DoExpr {clearvar[raretracker]}
 				SetState {Default2}
 	IF: All
@@ -4180,13 +4189,13 @@ STATE: {ActiveCheck} ~~ { ~~ this is to check equipment, inventory
 			ItemCountGE 10 {Sanguinary Rat Tail}
 		DO: DoAll
 				SetOpt {lootonlyrarecorpses} {true}
-				Chat {Got my rat tails!}
+				Chat {/lfg Got my rat tails!}
 	IF: Always
 		DO: SetState {Default2}
 	IF: All
 			SecsInStateGE 4
 			ItemCountGE 1 {Bottled Water}
-		DO: Chat {Got Water!}
+		DO: Chat {/lfg Got Water!}
 	IF: All
 			ItemCountGE 1 {Bottled Water}
 			ExitPortal
@@ -4385,7 +4394,7 @@ STATE: {DemonSet} ~~ {
 				DoExpr {testgvar[watchlist]||setgvar[watchlist,listcreate[]]}
 				DoExpr {listcontains[&watchlist,$capturegroup_settingvartext]&&listremove[&watchlist,$capturegroup_settingvartext]||listadd[&watchlist,$capturegroup_settingvartext]}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
-				Chat {Done.}
+				Chat {/lfg Done.}
 				SetState {Default2}
 	IF:	All
 			Expr {(watchlist)#getvar[capturegroup_settingtext]}
@@ -4393,7 +4402,7 @@ STATE: {DemonSet} ~~ {
 		DO:	DoAll
 				DoExpr {listclear[&watchlist]||setgvar[watchlist,listcreate[]]}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
-				Chat {Done.}
+				Chat {/lfg Done.}
 				SetState {Default2}
 	IF:	All
 			Expr {(watchlist)#getvar[capturegroup_settingtext]}
@@ -4402,7 +4411,7 @@ STATE: {DemonSet} ~~ {
 				DoExpr {testgvar[watchlist]||setgvar[watchlist,listcreate[]]}
 				DoExpr {listcontains[&watchlist,$capturegroup_settingvartext]&&listremove[&watchlist,$capturegroup_settingvartext]||listadd[&watchlist,$capturegroup_settingvartext]}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
-				Chat {Done.}
+				Chat {/lfg Done.}
 				SetState {Default2}
 	IF:	All
 			Expr {(watchlist)#getvar[capturegroup_settingtext]}
@@ -4430,6 +4439,28 @@ STATE: {Food} ~~ {
 				DoExpr {clearvar[foodMissing]}
 				DoExpr {echo[Food Check complete,13]}
 				SetState {Default2}
+~~ }
+STATE: {Patrol} ~~ {
+	IF: All
+			Expr {(Beach)#getvar[capturegroup_pathtext]}
+			Expr {$activemode==dino}
+		DO:	DoAll
+				DoExpr {$class!=mage||vtsetsetting[attackdistance,`0.27125`]&& &groupleader==getcharstringprop[1]&& vtsetsetting[NavPriorityBoost,`false`]}
+				DoExpr {$class!=melee||vtsetsetting[DefaultMeleeAttackHeight,`3`]}
+				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
+				SetOpt {SummonPets} {true}
+				DoExpr {clearvar[capturegroup_pathtext]}
+	IF: All
+			Expr {$class==mage}
+			Expr {$activemode==dino}
+		DO:	DoAll
+				EmbedNav nav318_beach {beach}
+				SetState {ActiveLeader}
+	IF: All
+			Expr {$class==melee}
+			Expr {$activemode==dino}
+		DO:	DoAll
+				SetState {ActiveLeader}
 ~~ }
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
 
@@ -11052,4 +11083,19 @@ NAV: nav317_rage once ~~ {
 	tlk -101.718793233236 -70.1158144156138 -0.0249791661898295 -101.56511999766 -70.1242595831553 -0.0249791666865349 37 {Henry}
 	tlk -101.718793233236 -70.1158144156138 -0.0249791661898295 -101.560073343913 -70.1160854180654 -0.0249791666865349 37 {Clara}
 	pnt -101.604565684001 -70.1182911396027 -0.0249791661898295
+~~ }
+NAV: nav318_beach linear ~~ {
+	pnt 80.9246823628744 69.076969909668 0.00437812904516856
+	pnt 80.817592048645 68.9374318758647 -0.000395833452542623
+	pnt 80.6990332126617 68.8644006729126 0.00122088926533858
+	pnt 80.5208554665248 68.9796663920085 0.0024930328130722
+	pnt 80.3927942911784 69.0962193806966 2.08333134651184E-05
+	pnt 80.299418703715 69.1967155456543 0.0039137952029705
+	pnt 80.1588551839193 69.3481050332387 0.00191880750159423
+	pnt 80.1461293856303 69.5058113416036 2.08333134651184E-05
+	pnt 80.1692762374878 69.6296106656392 0.0066550557812055
+	pnt 80.2824869155884 69.774427541097 0.00230997974673907
+	pnt 80.3757347106934 69.8890199025472 -0.000395833359410365
+	pnt 80.6302601496379 69.8539222081502 0.00670917928218842
+	pnt 80.7801103274028 69.7076429049174 0.0285505910714467
 ~~ }
