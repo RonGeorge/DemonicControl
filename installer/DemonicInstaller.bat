@@ -67,11 +67,13 @@ REM Cleanup
 echo Cleaning up...
 del /Q "%zip_file%"
 
+color 2f
 echo Installation successful.
 pause
 goto :eof
 
 :error
+color 4f
 echo Installation failed. Please check the error messages above.
 pause
 exit /b

@@ -606,6 +606,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				SetState {DemonSet}
 	IF:	All
@@ -613,6 +614,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				SetState {DemonSet}
 	IF:	All
@@ -620,6 +622,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				SetState {DPS}
 	IF:	All
@@ -645,6 +648,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				ChatExpr {`/lfg #drop `+wobjectgetstringprop[wobjectgetselection[],1]}
 				SetState {Default2}
@@ -686,6 +690,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				DoExpr {setgvar[persistentjoin,1]}
 				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is on.`}
@@ -710,6 +715,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				SetState {Find Group}
 	IF:	All
@@ -913,6 +919,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				ChatExpr {\/t +getvar[capturegroup_noob]+\, \#goto +coordinatetostring[getplayercoordinates[]]}
 				DoExpr {clearvar[capturegroup_coords]}
@@ -4291,6 +4298,7 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 			Any 
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll 
 				DoExpr {&groupleader=wobjectgetname[wobjectgetselection[]]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&groupleader}
