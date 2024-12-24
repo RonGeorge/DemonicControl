@@ -6756,7 +6756,7 @@ $raretracker=1
 i
 2
 s
-Now tracking rares.
+/lfg Now tracking rares.
 i
 1
 s
@@ -6934,7 +6934,7 @@ n
 s
 e
 s
-`#drop `+wobjectgetstringprop[wobjectgetselection[],1]
+`/lfg #drop `+wobjectgetstringprop[wobjectgetselection[],1]
 i
 1
 s
@@ -21431,7 +21431,7 @@ n
 i
 2
 s
-You need Neftet recall for this Quest navigation. You can do navto Neftet to run.
+/lfg You need Neftet recall for this Quest navigation. You can do navto Neftet to run.
 i
 7
 TABLE
@@ -44157,7 +44157,7 @@ clearvar[capturegroup_navtext]
 i
 2
 s
-Go west, young man.
+/lfg Go west, young man.
 i
 1
 s
@@ -56744,7 +56744,7 @@ true
 i
 2
 s
-#optset enablecombat true
+/lfg #optset enablecombat true
 i
 12
 TABLE
@@ -61493,7 +61493,7 @@ n
 i
 2
 s
-You don't have a Magic Lamp!
+/lfg You don't have a Magic Lamp!
 i
 7
 TABLE
@@ -63841,7 +63841,7 @@ n
 i
 2
 s
-Nothing to do here!
+/lfg Nothing to do here!
 i
 1
 s
@@ -74327,7 +74327,7 @@ n
 i
 2
 s
-I'm broke!
+/lfg I'm broke!
 i
 1
 s
@@ -74505,7 +74505,7 @@ n
 i
 2
 s
-No more gems.
+/lfg No more gems.
 i
 7
 TABLE
@@ -75067,7 +75067,7 @@ true
 i
 2
 s
-Got my rat tails!
+/lfg Got my rat tails!
 s
 ActiveCheck
 i
@@ -75113,7 +75113,7 @@ c
 i
 1
 s
-Got Water!
+/lfg Got Water!
 s
 ActiveCheck
 i
@@ -77204,7 +77204,7 @@ clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]
 i
 2
 s
-Done.
+/lfg Done.
 i
 1
 s
@@ -77284,7 +77284,7 @@ clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]
 i
 2
 s
-Done.
+/lfg Done.
 i
 1
 s
@@ -77377,7 +77377,7 @@ clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]
 i
 2
 s
-Done.
+/lfg Done.
 i
 1
 s
@@ -77688,7 +77688,7 @@ K
 V
 n
 n
-5
+6
 i
 7
 TABLE
@@ -77701,7 +77701,20 @@ n
 s
 e
 s
-$class!=mage||vtsetsetting[attackdistance,`0.27125`]&& &groupleader==getcharstringprop[1]&& vtsetsetting[NavPriorityBoost,`false`]
+&patrol=beach
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+$class!=mage||vtsetsetting[attackdistance,`0.27125`]&& &groupleader=getcharstringprop[1]&& vtsetsetting[NavPriorityBoost,`false`]
 i
 7
 TABLE

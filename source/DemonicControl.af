@@ -4445,7 +4445,8 @@ STATE: {Patrol} ~~ {
 			Expr {(Beach)#getvar[capturegroup_pathtext]}
 			Expr {$activemode==dino}
 		DO:	DoAll
-				DoExpr {$class!=mage||vtsetsetting[attackdistance,`0.27125`]&& &groupleader==getcharstringprop[1]&& vtsetsetting[NavPriorityBoost,`false`]}
+				DoExpr {&patrol=beach}
+				DoExpr {$class!=mage||vtsetsetting[attackdistance,`0.27125`]&& &groupleader=getcharstringprop[1]&& vtsetsetting[NavPriorityBoost,`false`]}
 				DoExpr {$class!=melee||vtsetsetting[DefaultMeleeAttackHeight,`3`]}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
 				SetOpt {SummonPets} {true}
