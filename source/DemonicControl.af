@@ -3280,7 +3280,7 @@ STATE: {Mode} ~~ {
 				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`persistentjoin`,`groupleader`],`cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`],`clearvar[$1]`]}
-				DoExpr {cleargvar[dinodone]&&cleargvar[ragedone]}
+				DoExpr {cleargvar[dinodone]&&cleargvar[ragedone]&&cleargvar[patrol]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Modes reset. Variables cleared.`}
 				SetState {Default2}
 	IF: All
@@ -4278,6 +4278,14 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 	IF: Always
 		DO: DoAll 
 				DoExpr {testvar[counter]&&$counter==5||$counter>=1&&$counter=$counter+1||$counter=1}
+	IF: All
+			Expr {&patrol==beach}
+			Expr {$class==mage}
+			Expr {$activemode==dino}
+		DO: DoAll 
+				EmbedNav nav318_beach {beach}
+				DoExpr {clearvar[counter]}
+				SetState {Default2}
 	IF: All
 			Expr {(target)#getvar[capturegroup_leadertext]}
 			Any 
