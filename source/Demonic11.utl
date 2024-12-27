@@ -1,11 +1,17 @@
 UTL
 1
-122
+126
 Pyreal Bar
 
 0;1;1
 15
 Pyreal Bar
+1
+Gurog
+
+0;1;1
+10
+Gurog
 1
 Crystal Shard
 
@@ -624,7 +630,7 @@ Minor|Major|Epic
 9
 620
 28
-(A) Armor DR25
+(A) Armor dr29
 
 0;1;7;13;3
 3
@@ -635,7 +641,18 @@ Minor|Major|Epic
 9
 29
 371
-    (A) Defender's Set + dr22
+(A) Armor v29
+
+0;1;7;13;3
+3
+2
+10
+9999
+36
+9
+29
+379
+    (A) Defender's Set + dr25
 
 0;1;7;12;3
 3
@@ -646,6 +663,17 @@ Minor|Major|Epic
 9
 25
 371
+    (A) Defender's Set + v25
+
+0;1;7;12;3
+3
+3
+9
+16
+265
+9
+25
+379
     (C) (Shirt) + d25
 
 0;1;7;1;12;3
@@ -1154,6 +1182,21 @@ Celdon Veins (ClearDayBlues)
 11
 Celdon
 1
+Celdon Base (Black)
+
+0;1;7;1;16
+3
+2
+11
+Celdon
+1
+24
+16
+16
+16
+10
+0.1
+0
 SalvageCombine
 760
 1

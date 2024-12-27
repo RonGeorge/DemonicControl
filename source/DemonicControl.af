@@ -231,7 +231,13 @@ STATE: {Action} ~~ {
 				SetState {Default2}
 	IF:	All
 			Expr {(follow)#getvar[capturegroup_actiontext]}
+			Expr {$name==getcharstringprop[1]}
+		DO:	DoAll
+				SetState {Default2}
+	IF:	All
+			Expr {(follow)#getvar[capturegroup_actiontext]}
 			Expr {getvar[name]!=0}
+			Expr {$name!=getcharstringprop[1]}
 		DO:	DoAll
 				SetOpt {NavPriorityBoost} {true}
 				ChatExpr {`/ub follow `+getvar[name]}
@@ -3568,7 +3574,7 @@ STATE: {EquipState} ~~ {
 	IF: All
 			Expr {testvar[monster]==false}
 		DO: DoAll
-				DoExpr {testvar[capturegroup_equiptext]&&setvar[monster,getvar[capturegroup_equiptext]])||setvar[monster,getvar[Drudge Ravener]]}
+				DoExpr {testvar[capturegroup_equiptext]&&setvar[monster,getvar[capturegroup_equiptext]]||setvar[monster,getvar[Drudge Ravener]]}
 	IF: All 
 			Expr {testvar[monster]==true}
 			SecsInStateGE 1
@@ -4212,6 +4218,7 @@ STATE: {ActiveStatus} ~~ { ~~ this is all on
 	IF: Always
 		DO: DoAll
 				SetOpt {enablelooting} {true}
+				SetOpt {lootonlyrarecorpses} {false}
 				SetOpt {enablecombat} {true}
 				SetOpt {EnableBuffing} {true}
 				SetOpt {enablenav} {true}
@@ -4292,7 +4299,7 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 		DO: DoAll 
 				EmbedNav nav318_beach {beach}
 				DoExpr {clearvar[counter]}
-				SetState {Default2}
+				CallState {ActiveStatus} {Default2}
 	IF: All
 			Expr {(target)#getvar[capturegroup_leadertext]}
 			Any 
@@ -4462,7 +4469,7 @@ STATE: {Patrol} ~~ {
 			Expr {$activemode==dino}
 		DO:	DoAll
 				DoExpr {&patrol=beach}
-				DoExpr {$class!=mage||vtsetsetting[attackdistance,`0.27125`]&& &groupleader=getcharstringprop[1]&& vtsetsetting[NavPriorityBoost,`false`]}
+				DoExpr {$class!=mage||&groupleader=getcharstringprop[1]&&vtsetsetting[attackdistance,`0.27125`]&&vtsetsetting[NavPriorityBoost,`0`]}
 				DoExpr {$class!=melee||vtsetsetting[DefaultMeleeAttackHeight,`3`]}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
 				SetOpt {SummonPets} {true}
