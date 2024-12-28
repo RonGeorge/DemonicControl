@@ -89,6 +89,7 @@ Recalls_Button_30,[25233|Tree],#navto Viridian Tree
 Recalls_Button_31,[26526],/mt use Radiant Blood Stronghold Portal Gem
 Recalls_Button_32,TN,/ub bc /tn
 Recalls_Button_33,Sub,/ub bc /sub
+Recalls_Button_34,Hub,/ub bc /fachub
 Nav_Button_01,Tou-Tou KT's,#quest Tou-Tou Killtasks
 Nav_Button_02,Frozen Valley KT's,#quest Frozen Valley Killtasks
 Nav_Button_03,Hoshino KT's,#quest Hoshino Killtasks
