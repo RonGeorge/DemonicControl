@@ -1,6 +1,78 @@
 UTL
 1
-130
+137
+Yellow Stone E
+
+0;10;1;12;12
+30
+19
+Invoking Stone
+1
+18
+27015
+218103809
+18
+26509
+218103850
+Orange Stone E
+
+0;10;1;12;12
+30
+19
+Invoking Stone
+1
+18
+27013
+218103809
+18
+26636
+218103850
+Blue Stone E
+
+0;10;1;12;12
+30
+19
+Invoking Stone
+1
+18
+27017
+218103809
+18
+26529
+218103850
+Green Stone E
+
+0;10;1;12;3
+30
+19
+Invoking Stone
+1
+18
+27018
+218103809
+18
+26530
+218103850
+Yellow Stone W
+
+0;10;1;12
+30
+19
+Invoking Stone
+1
+18
+27015
+218103809
+Blue Stone W
+
+0;10;1;12
+30
+19
+Invoking Stone
+1
+18
+27017
+218103809
 Green Stone
 
 0;10;1;12
@@ -273,13 +345,21 @@ Giant Blessed Moarsman's Severed Head|Tchk'Tain the Tender's Severed Head
 22
 Death Tail's Fang
 1
+    (T) Ornate Bone Key
+
+0;1;1
+20
+Ornate Bone Key
+1
     (T) Pyre Skeleton Jaw
 
-0;10;1
+0;10;1;9999
 8
 22
 Pyre Skeleton Jaw
 1
+6
+true
     (T) Alternate Currency
 
 0;1;1

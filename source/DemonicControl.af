@@ -233,6 +233,8 @@ STATE: {Action} ~~ {
 			Expr {(follow)#getvar[capturegroup_actiontext]}
 			Expr {$name==getcharstringprop[1]}
 		DO:	DoAll
+				EmbedNav nav0___None_ {empty}
+				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(follow)#getvar[capturegroup_actiontext]}
@@ -241,6 +243,7 @@ STATE: {Action} ~~ {
 		DO:	DoAll
 				SetOpt {NavPriorityBoost} {true}
 				ChatExpr {`/ub follow `+getvar[name]}
+				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(follow)#getvar[capturegroup_actiontext]}
@@ -248,6 +251,7 @@ STATE: {Action} ~~ {
 		DO:	DoAll
 				EmbedNav nav5__empty_nav {empty.nav}
 				SetOpt {NavPriorityBoost} {False}
+				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Face East)#getvar[capturegroup_actiontext]}
@@ -373,7 +377,7 @@ STATE: {Action} ~~ {
 				ChatExpr {\/vt forcebuff}
 				SetState {Default2}
 	IF:	All
-			Expr {(AutoReadContracts)#getvar[capturegroup_actiontext]}
+			Expr {(ReadContracts)#getvar[capturegroup_actiontext]}
 		DO:	DoAll
 				DoExpr {actiontryuseitem[wobjectfindininventorybynamerx[(Contract)]]}
 				DoExpr {clearvar[capturegroup_actiontext]}
@@ -579,8 +583,7 @@ STATE: {Default2} ~~ {
 				Expr {$activemode==dragon}
 				Expr {$activemode==rage}
 			ChatCapture {^Your fellow (?<deadname>.*) has died\!$} {}
-			Any 
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_deadname]]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_deadname]]}
 		DO: DoAll
 				SetOpt {enablelooting} {false}
 				SetOpt {enablecombat} {false}
@@ -589,38 +592,44 @@ STATE: {Default2} ~~ {
 				SetState {ActiveDead}
 ~~ End death watching
 	IF: All
-			ChatMatch {#ap}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#ap\"$} {}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
 				Chat {/mt autopack}
 				SetState {Default2}
 	IF: All
-			ChatMatch {#id}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#id\"$} {}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
 				Chat {/ub clearbugged}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#patrol (?<pathtext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO: DoAll
 				SetState {Patrol}
-
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset (?<settingtext>.*) (?<settingvartext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				SetState {DemonSet}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset (?<settingtext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				SetState {DemonSet}
 	IF:	All
@@ -634,9 +643,9 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#raretracker\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO: DoAll
 				DoExpr {$raretracker=1}
 				Chat {/lfg Now tracking rares.}
@@ -644,9 +653,9 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#gamble\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO: DoAll
 				SetState {Gamble}
 	IF:	All
@@ -657,6 +666,7 @@ STATE: {Default2} ~~ {
 				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				ChatExpr {`/lfg #drop `+wobjectgetstringprop[wobjectgetselection[],1]}
+				DoExpr {clearvar[capturegroup_name]}
 				SetState {Default2}
 	IF: All
 			ChatMatch {You have killed 250 Monouga Barbarians!}
@@ -666,191 +676,194 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#watchlist (?<watchlisttext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				DoExpr {listadd[getvar[watchlist], $watchlisttext]}
 				ChatExpr {`/tell `+getcharstringprop[1]+`, `+$watchlisttext+` added to list to watch for deaths.`}
-				DoExpr {clearvar[watchlisttext]}
+				DoExpr {clearvar[watchlisttext]&&clearvar[capturegroup_name]}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leader (?<leadertext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {ActiveLeader}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#drop (?<itemtext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				DoExpr {setvar[capturegroup_actiontext,Drop]}
 				SetState {Action}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruit\"$} {}
 			Any
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				DoExpr {setgvar[persistentjoin,1]}
 				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is on.`}
+				DoExpr {clearvar[capturegroup_name]}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruit\"$} {}
-			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-			Expr {getcharstringprop[1]!=getvar[capturegroup_name]}
+			Expr {getfellowshipstatus[]==0}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				ChatExpr {`/recruitme `+getvar[capturegroup_name]}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#critlist\"$} {}
 			Any
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {CriticalList}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#findgroup\"$} {}
 			Any
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				SetState {Find Group}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#critcheck\"$} {}
 			Any
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {WandCheck}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#skillcheck\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {SkillCheck}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#sort (?<sorttext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Sort}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#bite (?<bitetext>.*)\"$} {}
 			Any
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Sort}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#mule (?<muletext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Mule}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#spellcheck\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {SpellCheck}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#reveal\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Reveal}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#unlock\"$} {}
 			Any
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Unlock}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#coords\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				ChatExpr {coordinatetostring[getplayercoordinates[]]}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#refill\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {RefillSummons}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#equip (?<equiptext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {EquipState}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#mode (?<modetext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Mode}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#check\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO: DoAll
 				SetState {QuestCheck}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#check750\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO: DoAll
 				SetState {QuestCheck750}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#echo (?<telltext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
-				ChatExpr {getvar[capturegroup_telltext]}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#navto (?<navtext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
@@ -858,50 +871,50 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#optset (?<opttext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Opt Set}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#action (?<actiontext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				DoExpr {setvar[name,getvar[capturegroup_name]]}
 				SetState {Action}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#quest (?<questtext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Quest}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#jump (?<jumptext>.*)\"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==think}
 				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				SetState {Jump}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#ext (?<exttext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Extension}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#craft (?<crafttext>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {Craft}
 	IF:	All
@@ -914,18 +927,15 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#goto (?<coords>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
-				DoExpr {setvar[followname,getvar[capturegroup_name]]}
 				SetState {Go To}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#cometome (?<noob>.*)\"$} {}
-			Any
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				ChatExpr {\/t +getvar[capturegroup_noob]+\, \#goto +coordinatetostring[getplayercoordinates[]]}
 				DoExpr {clearvar[capturegroup_coords]}
@@ -933,27 +943,18 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#chase (?<pursued>.*)\"$} {}
 			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	SetState {Chase}
-	IF:	All
-			Expr {getvar[AutoReadContracts]==1}
-			SecsInStateGE 3
-			Not Expr {wobjectfindininventorybynamerx[(Contract)]==0}
-			NoMobsInDist 15
-		DO:	DoAll
-				DoExpr {setvar[capturegroup_actiontext, AutoReadContracts]}
-				SetState {Action}
 	IF:	All
 			Expr {getvar[goto]==true}
 			Expr {getvar[capturegroup_coords]==coordinatetostring[getplayercoordinates[]]}
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_coords]}
-				DoExpr {setvar[capturegroup_actiontext, follow]}
 				DoExpr {clearvar[goto]}
+				EmbedNav nav6___None_ {[none]}
 				SetState {Action}
-				DoExpr {setvar[name,getvar[followname]]}
 	IF:	All
 			SecsInStateGE 5
 			Expr {testvar[credit]==0}
@@ -1532,6 +1533,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				Chat {/tn}
 				EmbedNav nav319_title {Qalabar}
 				SetOpt {enablenav} {true}
+				SetState {Default2}
 	IF: All 
 			Expr {(Lum)#getvar[capturegroup_navtext]}
 			Expr {getcharquadprop[6]==250000000}
@@ -1926,7 +1928,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 			Expr {(Facility Hub)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5175]==0} ~~ SpellId 5175 is "Facility Hub Recall".
 		DO:	DoAll
-				EmbedNav nav101___None_ {[none]}
+				Chat {/fachub}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -3301,7 +3303,7 @@ STATE: {Mode} ~~ {
 				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`persistentjoin`,`groupleader`],`cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`],`clearvar[$1]`]}
-				DoExpr {cleargvar[dinodone]&&cleargvar[ragedone]&&cleargvar[patrol]}
+				DoExpr {listmap[listcreate[`dinodone`,`ragedone`, `patrol`], `cleargvar[$1]`]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Modes reset. Variables cleared.`}
 				SetState {Default2}
 	IF: All
@@ -3815,10 +3817,7 @@ STATE: {Mule} ~~ {
 				DoExpr {$muleconfirm=1}
 	IF: All 
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"yes\"$} {}
-			Any
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 			Expr {$muleconfirm=1}
 			Expr {$mulefilter!=0}
 			Expr {$muleid!=0}
@@ -3828,10 +3827,7 @@ STATE: {Mule} ~~ {
 				SetState {Mule Mover}
 	IF: All 
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"no\"$} {}
-			Any
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 			Expr {$muleconfirm==1}
 			Expr {$mulefilter!=0}
 			Expr {$muleid!=0}
@@ -3842,10 +3838,7 @@ STATE: {Mule} ~~ {
 			Any 
 				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#cancel\"$} {}
 				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#clear\"$} {}
-			Any
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				DoExpr {$muleexit=1}
 ~~ }
@@ -3920,10 +3913,7 @@ STATE: {Mule Mover} ~~ {
 			Any 
 				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#cancel\"$} {}
 				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#clear\"$} {}
-			Any
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO: DoAll
 				Chat {/ms stop}
 				DoExpr {$muleexit=1}
@@ -4070,7 +4060,7 @@ STATE: {Find Group} ~~ {
 				DoExpr {$PlayersToAttempt=listfilter[$PlayersNotInFellow,`listcontains[&charlist,$1]==false`]}
 				Chat {/mt send f4}
 	IF:	All
-			SecsInStateGE 5
+			SecsInStateGE 10
 			Expr {getfellowshipstatus[]==false}
 			Expr {listcount[$PlayersToAttempt]>=1}
 		DO:	DoAll
@@ -4300,47 +4290,48 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 	IF: Always
 		DO: DoAll 
 				DoExpr {testvar[counter]&&$counter==5||$counter>=1&&$counter=$counter+1||$counter=1}
-	IF: All
+	IF: All ~~ for patrol this sets the mage as leader and then he exits
 			Expr {&patrol==beach}
 			Expr {$class==mage}
 			Expr {$activemode==dino}
 		DO: DoAll 
+				DoExpr {&groupleader=getcharstringprop[1]}
 				EmbedNav nav318_beach {beach}
 				DoExpr {clearvar[counter]}
 				CallState {ActiveStatus} {Default2}
-	IF: All
+	IF: All ~~ makes sure the speaker's target is grabbed only, Target and recycles
 			Expr {(target)#getvar[capturegroup_leadertext]}
-			Any 
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+			Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll 
 				DoExpr {&groupleader=wobjectgetname[wobjectgetselection[]]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&groupleader}
 				DoExpr {clearvar[capturegroup_leadertext]}
-	IF: All 
-			Expr {testvar[capturegroup_leadertext]}
-			Not Expr {(follow)#getvar[capturegroup_leadertext]}
-			Not Expr {(target)#getvar[capturegroup_leadertext]}
+	IF: All  ~~ main catch, this got a leader name and its not a special command
+			Expr {testvar[capturegroup_leadertext]} ~~ got leader text from command
+			Not Expr {(follow)#getvar[capturegroup_leadertext]} ~~ not follow
+			Not Expr {(target)#getvar[capturegroup_leadertext]} ~~ not target
 		DO: DoAll
 				DoExpr {setgvar[groupleader,getvar[capturegroup_leadertext]}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&groupleader}
 				EmbedNav nav0___None_ {empty} ~~ forces empty
 				DoExpr {clearvar[capturegroup_leadertext]}
-	IF: All
-			Expr {(follow)#getvar[capturegroup_leadertext]}
-			Expr {testgvar[groupleader]}
-			Expr {&groupleader!=getcharstringprop[1]}
+	IF: All ~~ main activate condition, character is not leader but its set
+			Expr {testgvar[groupleader]} ~~ leader is set
+			Expr {&groupleader!=getcharstringprop[1]} ~~ character is not leader
+			Any ~~ is empty or follow
+				NavEmpty ~~ nav is empty
+				Expr {(follow)#getvar[capturegroup_leadertext]} ~~ is follow
 		DO: DoAll
 				ChatExpr {`/ub follow `+&groupleader}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Rejoining `+&groupleader}
 				DoExpr {clearvar[capturegroup_leadertext]}
-	IF: All
-			NavEmpty
-			Expr {testgvar[groupleader]}
-		DO: DoAll 
-				ChatExpr {`/ub follow `+&groupleader}
-	IF: All
+	IF: Any ~~ this is the exit condition
+			ChatMatch {#reset}
+			Not NavEmpty
+			Expr {&groupleader==getcharstringprop[1]} ~~ character is leader
+		DO: DoAll
+				DoExpr {clearvar[counter]}
+				CallState {ActiveStatus} {Default2}
+~~ Resident conditions
+	IF: All ~~ no variable
 			Not Expr {testgvar[groupleader]}
 		DO: DoAll
 				ChatExpr {`/t `+getcharstringprop[1]+`,use #leader <name> to set a group leader`}
@@ -4348,19 +4339,9 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 		DO: SetWatchdog 5 5 {ActiveLeader}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leader (?<leadertext>.*)\"$} {}
-			Any
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {ActiveLeader}
-	IF: Any ~~ this is the exit condition
-			ChatMatch {#reset}
-			Not NavEmpty
-			Expr {&groupleader==getcharstringprop[1]}
-		DO: DoAll
-				DoExpr {clearvar[counter]}
-				CallState {ActiveStatus} {Default2}
 	IF: Expr {$counter>=5}
 		DO: DoAll
 				DoExpr {clearvar[counter]}
@@ -4479,7 +4460,7 @@ STATE: {Patrol} ~~ {
 				DoExpr {&patrol=beach}
 				DoExpr {$class!=mage||(&groupleader=getcharstringprop[1]&&vtsetsetting[attackdistance,`0.27125`]&&vtsetsetting[NavPriorityBoost,`0`])}
 				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.062`]&&vtsetsetting[NavPriorityBoost,`1`])}
-				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
+				SetOpt {navclosestoprange} {0.021} ~~ follow to 4
 				SetOpt {SummonPets} {true}
 				DoExpr {clearvar[capturegroup_pathtext]}
 	IF: All
@@ -6714,22 +6695,6 @@ NAV: nav98___None_ once ~~ {
 ~~ }
 NAV: nav99___None_ once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Gear Knight Invasion Area Camp Recall}
-~~ }
-NAV: nav101___None_ once ~~ {
-	pnt -101.65451892217 -96.6065424442291 2.08333134651184E-05
-	pnt -101.633702786764 -96.6300383885702 2.08333134651184E-05
-	pnt -101.626543045044 -96.650261815389 2.08333134651184E-05
-	pnt -101.634258524577 -96.6626789093018 2.08333134651184E-05
-	pnt -101.64698193868 -96.682897567749 2.08333134651184E-05
-	pnt -101.65803381602 -96.7061534881592 2.08333134651184E-05
-	pnt -101.659695593516 -96.7198820114136 2.08333134651184E-05
-	pnt -101.659079265594 -96.7406025250753 2.08333134651184E-05
-	pnt -101.663871924082 -96.7563703219096 2.08333134651184E-05
-	pnt -101.680394140879 -96.7640974362691 2.08333134651184E-05
-	pnt -101.693027750651 -96.7653968811035 2.08333134651184E-05
-	pnt -101.715797185898 -96.7661259333293 2.08333134651184E-05
-	pnt 8.69432957967122 -100.724679597219 0.0250208338101705
-	ptl -101.716477664312 -96.7631772677104 2.08333134651184E-05 -101.726858329773 -96.7666458447774 -0.000262499845121056 14 {Portal to Facility Hub}
 ~~ }
 NAV: nav102___None_ once ~~ {
 	rcl 95.4576822916667 2.27521910667419 0.24168750445048 {Facility Hub Recall}
