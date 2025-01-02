@@ -11,7 +11,7 @@ n
 n
 n
 n
-609
+610
 i
 26
 i
@@ -64823,15 +64823,15 @@ K
 V
 n
 n
-9
+10
+i
+2
+s
+/ub quests check killtaskmagiclamptimer
 i
 2
 s
 /ub quests check shrethsmasherkt
-i
-2
-s
-/ub quests check rabidbulldogkilltask
 i
 2
 s
@@ -64847,6 +64847,14 @@ s
 i
 2
 s
+/ub quests check rabidbulldogkilltask
+i
+2
+s
+/ub quests check tukorakilltask
+i
+2
+s
 /ub quests check killtaskdrudgepeppermintboss
 i
 2
@@ -64855,11 +64863,26 @@ s
 i
 2
 s
-/ub quests check tukorakilltask
-i
-2
+/ub quests check bestowerbasepiece
 s
-/ub quests check killtaskmagiclamptimer
+QuestCheck300
+i
+4
+i
+7
+s
+killtaskmagiclamptimer is ready
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+echo[BlueLady is ready,13]
 s
 QuestCheck300
 i
@@ -64879,25 +64902,6 @@ s
 e
 s
 echo[Shreths are ready,13]
-s
-QuestCheck300
-i
-4
-i
-7
-s
-rabidbulldogkilltask is ready
-TABLE
-2
-k
-v
-n
-n
-1
-s
-e
-s
-echo[Dogs is ready,13]
 s
 QuestCheck300
 i
@@ -64962,6 +64966,44 @@ i
 i
 7
 s
+rabidbulldogkilltask is ready
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+echo[Dogs is ready,13]
+s
+QuestCheck300
+i
+4
+i
+7
+s
+tukorakilltask is ready
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+echo[POTB is ready,13]
+s
+QuestCheck300
+i
+4
+i
+7
+s
 killtaskdrudgepeppermintboss is ready
 TABLE
 2
@@ -64992,7 +65034,7 @@ n
 s
 e
 s
-echo[Peppermint is ready,13]
+echo[Grievvers is ready,13]
 s
 QuestCheck300
 i
@@ -65000,7 +65042,7 @@ i
 i
 7
 s
-tukorakilltask is ready
+bestowerbasepiece is ready
 TABLE
 2
 k
@@ -65011,26 +65053,7 @@ n
 s
 e
 s
-echo[POTB is ready,13]
-s
-QuestCheck300
-i
-4
-i
-7
-s
-killtaskmagiclamptimer is ready
-TABLE
-2
-k
-v
-n
-n
-1
-s
-e
-s
-echo[BlueLady is ready,13]
+echo[Title is ready,13]
 s
 QuestCheck300
 i
@@ -65038,7 +65061,7 @@ i
 i
 3
 s
-killtaskmagiclamptimer is
+bestowerbasepiece is
 TABLE
 2
 K

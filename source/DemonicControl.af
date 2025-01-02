@@ -3274,34 +3274,37 @@ STATE: {QuestCheck300} ~~ {
 		DO: Chat {/myquests}
 	IF:	ChatMatch {Quest data updated}
 		DO:	DoAll
+				Chat {/ub quests check killtaskmagiclamptimer}
 				Chat {/ub quests check shrethsmasherkt}
-				Chat {/ub quests check rabidbulldogkilltask}
 				Chat {/ub quests check stuffytokenwait}
 				Chat {/ub quests check paradoxcarapacepickup}
 				Chat {/ub quests check tormentshardpickup}
+				Chat {/ub quests check rabidbulldogkilltask}
+				Chat {/ub quests check tukorakilltask}
 				Chat {/ub quests check killtaskdrudgepeppermintboss}
 				Chat {/ub quests check grievverbosstokenwait}
-				Chat {/ub quests check tukorakilltask}
-				Chat {/ub quests check killtaskmagiclamptimer}
+				Chat {/ub quests check bestowerbasepiece}
+	IF: ChatMatch {killtaskmagiclamptimer is ready}
+		DO: DoExpr {echo[BlueLady is ready,13]}
 	IF: ChatMatch {shrethsmasherkt is ready}
 		DO: DoExpr {echo[Shreths are ready,13]}
-	IF: ChatMatch {rabidbulldogkilltask is ready}
-		DO: DoExpr {echo[Dogs is ready,13]}
 	IF: ChatMatch {stuffytokenwait is ready}
 		DO: DoExpr {echo[Bear is ready,13]}
 	IF: ChatMatch {paradoxcarapacepickup is ready}
 		DO: DoExpr {echo[Queen is ready,13]}
 	IF: ChatMatch {tormentshardpickup is ready}
 		DO: DoExpr {echo[Curator is ready,13]}
+	IF: ChatMatch {rabidbulldogkilltask is ready}
+		DO: DoExpr {echo[Dogs is ready,13]}
+	IF: ChatMatch {tukorakilltask is ready}
+		DO: DoExpr {echo[POTB is ready,13]}
 	IF: ChatMatch {killtaskdrudgepeppermintboss is ready}
 		DO: DoExpr {echo[Peppermint is ready,13]}
 	IF: ChatMatch {grievverbosstokenwait is ready}
-		DO: DoExpr {echo[Peppermint is ready,13]}
-	IF: ChatMatch {tukorakilltask is ready}
-		DO: DoExpr {echo[POTB is ready,13]}
-	IF: ChatMatch {killtaskmagiclamptimer is ready}
-		DO: DoExpr {echo[BlueLady is ready,13]}
-	IF:	ChatMatch {killtaskmagiclamptimer is}
+		DO: DoExpr {echo[Grievvers is ready,13]}
+	IF: ChatMatch {bestowerbasepiece is ready}
+		DO: DoExpr {echo[Title is ready,13]}
+	IF:	ChatMatch {bestowerbasepiece is}
 		DO:	DoAll
 				ChatExpr {\/t +getcharstringprop[1]+\, Done\.}
 				SetState {Default2}
