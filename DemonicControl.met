@@ -20933,7 +20933,7 @@ n
 s
 e
 s
-getcharquadprop[6]==250000000
+getcharquadprop[6]>=250000000
 TABLE
 2
 K

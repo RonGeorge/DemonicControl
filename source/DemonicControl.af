@@ -1538,7 +1538,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				SetState {Default2}
 	IF: All 
 			Expr {(Lum)#getvar[capturegroup_navtext]}
-			Expr {getcharquadprop[6]==250000000}
+			Expr {getcharquadprop[6]>=250000000}
 		DO: DoAll
 				Chat {/sub}
 				SetOpt {navclosestoprange} {0.00833} ~~set follow to 2 for corners
