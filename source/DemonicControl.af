@@ -465,7 +465,6 @@ STATE: {Default} ~~ {
 	IF:	Always
 		DO:	DoAll
 				Chat {/ub opt set QuestTracker.AutoRequest false}
-				Chat {/mt autopack}
 	IF: Always
 		DO: DoAll 
 				DoExpr {setvar[DemonicOptions, 1]}
@@ -496,7 +495,7 @@ STATE: {Default2} ~~ {
 			Any
 				Expr {$activemode==rats}
 		DO: DoAll
-				SetState {ActiveStatus}
+				SetState {ActiveCheck}
 ~~Start of Rage Notify
 	IF: All
 			Expr {$activemode==rage}
@@ -843,22 +842,6 @@ STATE: {Default2} ~~ {
 		DO: DoAll
 				SetState {QuestCheck}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#check750\"$} {}
-			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO: DoAll
-				SetState {QuestCheck750}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#check300\"$} {}
-			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO: DoAll
-				SetState {QuestCheck300}
-	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#echo (?<telltext>.*)\"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
@@ -968,13 +951,14 @@ STATE: {Default2} ~~ {
 			Expr {testvar[credit]==0}
 		DO:	DoAll
 				DoExpr {echo[`What's new in DemonicControl?`,13]}
-				DoExpr {echo[`#demonset config, #watchlist, #leader`,13]}
+				DoExpr {echo[`#check, #patrol beach, #demonset config, #watchlist, #leader`,13]}
 				DoExpr {setvar[credit,1]}
 	IF: Always
 		DO: DoAll
 				DoExpr {ifthen[getcharquadprop[6]==1000000000,`echo[Your luminance is full,15]`]}
 				DoExpr {ifthen[getcharquadprop[6]==500000000,`echo[Your luminance is full,15]`]}
 				DoExpr {ifthen[getcharquadprop[6]==250000000,`echo[Your luminance is full,15]`]}
+				DoExpr {ifthen[getcharquadprop[6]>=250000000,`echo[Luminance upgrade available,16]`]}
 ~~ }
 STATE: {Fellow Create} ~~ {
 	IF:	Always
@@ -1023,6 +1007,7 @@ STATE: {Jump} ~~ {
 ~~ }
 STATE: {Nav To} ~~ {
 	IF:	Any
+			Expr {(Shreth)#getvar[capturegroup_navtext]}
 			Expr {(Title)#getvar[capturegroup_navtext]}
 			Expr {(Holding\|Aerbax's Holding)#getvar[capturegroup_navtext]}
 			Expr {(Lum)#getvar[capturegroup_navtext]}
@@ -1534,6 +1519,15 @@ STATE: {Nav To} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
+	IF: All
+			Expr {(Shreth)#getvar[capturegroup_navtext]}
+		DO: DoAll
+				Chat {/tn}
+				SetOpt {idlepeacemode} {true}
+				EmbedNav nav320_shreth {Shreth}
+				SetOpt {enablebuffing} {true}
+				SetOpt {enablenav} {true}
+				SetState {Default2}
 	IF: All
 			Expr {(Title)#getvar[capturegroup_navtext]}
 		DO: DoAll
@@ -3204,115 +3198,108 @@ STATE: {Unlock} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {QuestCheck} ~~ {
-	IF: Always
-		DO: Chat {/myquests}
-	IF:	ChatMatch {Quest data updated}
-		DO:	DoAll
-				Chat {/ub quests check ascendedvirindikt}
-				Chat {/ub quests check killtaskascendedshadowtimer}
-				Chat {/ub quests check monougaribtokenwait}
-				Chat {/ub quests check killtaskmonougabarbariantimer}
-				Chat {/ub quests check killtaskmonougacontrollertimer}
-				Chat {/ub quests check buttersworthmainwait}
-				Chat {/ub quests check buttersworthdrudgemossykilltask}
-				Chat {/ub quests check tethbanderlingkilltask}
-				Chat {/ub quests check killtasktethskeleton}
-				Chat {/ub quests check killtasktethgolem}
-				Chat {/ub quests check killtasktethwasp}
-				Chat {/ub quests check tormentshardpickup}
-				Chat {/ub quests check paradoxcarapacepickup}
-				Chat {/ub quests check killtaskmagiclamptimer}
-				Chat {/ub quests check stuffytokenwait}
-				Chat {/ub quests check rabidbulldogkilltask}
-	IF: ChatMatch {ascendedvirindikt is ready}
-		DO: DoExpr {echo[Hollows are ready,13]}
-	IF: ChatMatch {killtaskmonougabarbariantimer is ready}
-		DO: DoExpr {echo[Monougas are ready,13]}
-	IF: ChatMatch {buttersworthmainwait is ready}
-		DO: DoExpr {echo[Buttersworth is ready,13]}
-	IF: ChatMatch {tethbanderlingkilltask is ready}
-		DO: DoExpr {echo[Banderlings are ready,13]}
-	IF: ChatMatch {killtasktethskeleton is ready}
-		DO: DoExpr {echo[Teth is ready,13]}
-	IF: ChatMatch {tormentshardpickup is ready}
-		DO: DoExpr {echo[Curator is ready,13]}
-	IF: ChatMatch {paradoxcarapacepickup is ready}
-		DO: DoExpr {echo[Queen is ready,13]}
-	IF: ChatMatch {killtaskmagiclamptimer is ready}
-		DO: DoExpr {echo[Bluelady is ready,13]}
-	IF: ChatMatch {stuffytokenwait is ready}
-		DO: DoExpr {echo[Bear is ready,13]}
-	IF: ChatMatch {rabidbulldogkilltask is ready}
-		DO: DoExpr {echo[Dogs is ready,13]}
-	IF:	ChatMatch {rabidbulldogkilltask is}
-		DO:	DoAll
-				ChatExpr {\/t +getcharstringprop[1]+\, Done\.}
+	IF: All 
+			Expr {$myquests==0}
+		DO: DoAll
+				DoExpr {echo[`Quests need updated first`,15]}
+				DoExpr {$level=getcharintprop[25]}
+				Chat {/myquests}
+	IF: All 
+			ChatMatch {Quest data updated}
+			Expr {$myquests==0}
+		DO: DoAll
+				DoExpr {$myquests=1}
+				DoExpr {echo[`-Available Quests-`,14]}
+				DoExpr {getqueststatus[bestowerbasepiece]==0||echo[Bestower Title is ready,13]}
+	IF: All
+			Expr {getcharintprop[25]<=150}
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[Less than 150,14]}
+				DoExpr {echo[Glendon Woods Snowmen (up to 150),13]}
+				DoExpr {echo[Al Araqs Skeletons (75+ with adept gear),13]}
+	IF: All
+			Expr {getcharintprop[25]>=150}
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[`----------150----------`,14]}
+				DoExpr {getqueststatus[tormentshardpickup]==0||echo[Curator is ready,13]}
+				DoExpr {getqueststatus[paradoxcarapacepickup]==0||echo[Queen is ready,13]}
+	IF: All
+			Expr {getcharintprop[25]>=250}
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[`----------250----------`,14]}
+				DoExpr {getqueststatus[stuffytokenwait]==0||echo[Bear is ready,13]}
+				DoExpr {getqueststatus[tukorakilltask]==0||echo[PotB is ready,13]}
+				DoExpr {getqueststatus[shrethsmasherkt]==0||echo[Shreth is ready,13]}
+	IF: All
+			Expr {getcharintprop[25]>=300}
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[`----------300----------`,14]}
+				DoExpr {getqueststatus[stuffytokenwait]==0||echo[Bear is ready,13]}
+				DoExpr {getqueststatus[grievverbosstokenwait]==0||echo[Grievver is ready,13]}
+				DoExpr {getqueststatus[rabidbulldogkilltask]==0||echo[Dogs is ready,13]}
+				DoExpr {getqueststatus[killtaskdrudgepeppermintboss]==0||echo[Peppermint is ready,13]}
+				DoExpr {getqueststatus[killtaskmagiclamptimer]==0||echo[Bluelady is ready,13]}
+	IF: All
+			Expr {getcharintprop[25]>=400}
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[`----------400----------`,14]}
+				DoExpr {getqueststatus[killtasktethskeleton]==0||echo[Teth is ready,13]}
+				DoExpr {getqueststatus[tethbanderlingkilltask]==0||echo[Banderlings is ready,13]}
+				DoExpr {getqueststatus[killtaskkemeroicrystaltimer]==0||echo[Rage is ready,13]}
+	IF: All
+			Expr {getcharintprop[25]>=500}
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[`----------500----------`,14]}
+				DoExpr {getqueststatus[buttersworthmainwait]==0||echo[Buttersworth is ready,13]}
+				DoExpr {getqueststatus[monougaribtokenwait]==0||echo[Monouga Rib is ready,13]}
+				DoExpr {getqueststatus[killtaskmonougabarbariantimer]==0||echo[Monouga is ready,13]}
+				DoExpr {getqueststatus[ascendedvirindikt]==0||echo[Hollow is ready,13]}
+				DoExpr {getqueststatus[killtaskascendedshadowtimer]==0||echo[Shadows is ready,13]}
+	IF: All
+			Expr {getcharintprop[25]>=750}
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[`----------750----------`,14]}
+				DoExpr {getqueststatus[killtaskterradinotimer]==0||echo[Dino is ready,13]}
+	IF: All
+			Expr {$myquests==1}
+		DO: DoAll
+				DoExpr {echo[`----------Done----------`,14]}
 				SetState {Default2}
-~~ }
-STATE: {QuestCheck750} ~~ {
-	IF: Always
-		DO: Chat {/myquests}
-	IF:	ChatMatch {Quest data updated}
-		DO:	DoAll
-				Chat {/ub quests check killtaskelderterradinotimer}
-				Chat {/ub quests check killtaskterradinotimer}
-				Chat {/ub quests check killtaskvelocifangtimer}
-				Chat {/ub quests check killtaskkemeroicrystalminiontimer}
-				Chat {/ub quests check killtaskkemeroicrystallordtimer}
-				Chat {/ub quests check killtaskkemeroicrystaltimer}
-	IF: ChatMatch {killtaskelderterradinotimer is ready}
-		DO: DoExpr {echo[Dinos are ready,13]}
-	IF: ChatMatch {killtaskkemeroicrystalminiontimer is ready}
-		DO: DoExpr {echo[Rage is ready,13]}
-	IF:	ChatMatch {killtaskkemeroicrystalminiontimer is}
-		DO:	DoAll
-				ChatExpr {\/t +getcharstringprop[1]+\, Done\.}
-				SetState {Default2}
-~~ }
-STATE: {QuestCheck300} ~~ {
-	IF: Always
-		DO: Chat {/myquests}
-	IF:	ChatMatch {Quest data updated}
-		DO:	DoAll
-				Chat {/ub quests check killtaskmagiclamptimer}
-				Chat {/ub quests check shrethsmasherkt}
-				Chat {/ub quests check stuffytokenwait}
-				Chat {/ub quests check paradoxcarapacepickup}
-				Chat {/ub quests check tormentshardpickup}
-				Chat {/ub quests check rabidbulldogkilltask}
-				Chat {/ub quests check tukorakilltask}
-				Chat {/ub quests check killtaskdrudgepeppermintboss}
-				Chat {/ub quests check grievverbosstokenwait}
-				Chat {/ub quests check bestowerbasepiece}
-	IF: ChatMatch {killtaskmagiclamptimer is ready}
-		DO: DoExpr {echo[BlueLady is ready,13]}
-	IF: ChatMatch {shrethsmasherkt is ready}
-		DO: DoExpr {echo[Shreths are ready,13]}
-	IF: ChatMatch {stuffytokenwait is ready}
-		DO: DoExpr {echo[Bear is ready,13]}
-	IF: ChatMatch {paradoxcarapacepickup is ready}
-		DO: DoExpr {echo[Queen is ready,13]}
-	IF: ChatMatch {tormentshardpickup is ready}
-		DO: DoExpr {echo[Curator is ready,13]}
-	IF: ChatMatch {rabidbulldogkilltask is ready}
-		DO: DoExpr {echo[Dogs is ready,13]}
-	IF: ChatMatch {tukorakilltask is ready}
-		DO: DoExpr {echo[POTB is ready,13]}
-	IF: ChatMatch {killtaskdrudgepeppermintboss is ready}
-		DO: DoExpr {echo[Peppermint is ready,13]}
-	IF: ChatMatch {grievverbosstokenwait is ready}
-		DO: DoExpr {echo[Grievvers is ready,13]}
-	IF: ChatMatch {bestowerbasepiece is ready}
-		DO: DoExpr {echo[Title is ready,13]}
-	IF:	ChatMatch {bestowerbasepiece is}
-		DO:	DoAll
-				ChatExpr {\/t +getcharstringprop[1]+\, Done\.}
+	IF: Any
+			ChatMatch {QuestTracker: Timeout}
+			SecsInStateGE 15
+		DO: DoAll
+				DoExpr {echo[Error,15]}
 				SetState {Default2}
 ~~ }
 STATE: {Mode} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {listmap[listcreate[`capturegroup_equiptext`, `monster`, `counter`, `equipexit`], `clearvar[$1]`]}
+	IF: All
+			Expr {(Rats)#getvar[capturegroup_modetext]}
+		DO:	DoAll
+				DoExpr {$activemode=rats}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rats`}
+				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
+				SetOpt {SummonPets} {true}
+				SetOpt {idlepeacemode} {false}
+				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
+				DoExpr {vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`90`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`80`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {setvar[monster,Sanguinary Rat]}
+				DoExpr {clearvar[capturegroup_modetext]}
+				SetState {EquipState}
 	IF: All
 			Expr {(Rage)#getvar[capturegroup_modetext]}
 		DO:	DoAll
@@ -3865,29 +3852,23 @@ STATE: {Mule} ~~ {
 				DoExpr {$muleconfirm=1}
 	IF: All 
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"yes\"$} {}
-			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 			Expr {$muleconfirm=1}
 			Expr {$mulefilter!=0}
 			Expr {$muleid!=0}
 		DO: DoAll
 				DoExpr {clearvar[muleconfirm]}
-				DoExpr {echo[Type \#cancel to stop the muling\.,23]}
 				SetState {Mule Mover}
 	IF: All 
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"no\"$} {}
-			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 			Expr {$muleconfirm==1}
 			Expr {$mulefilter!=0}
 			Expr {$muleid!=0}
 		DO:	DoAll
 				DoExpr {clearvar[muleconfirm]}
-				DoExpr {$muleexit=1}
-	IF: All 
-			Any 
-				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#cancel\"$} {}
-				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#clear\"$} {}
-			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-		DO:	DoAll
 				DoExpr {$muleexit=1}
 ~~ }
 STATE: {Mule Mover} ~~ {
@@ -3957,15 +3938,6 @@ STATE: {Mule Mover} ~~ {
 				Chat {/ms start}
 				DoExpr {setvar[mulecounter,getvar[mulecounter]+1]}
 				SetState {Mule Mover}
-	IF: All 
-			Any 
-				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#cancel\"$} {}
-				ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#clear\"$} {}
-			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-		DO: DoAll
-				Chat {/ms stop}
-				DoExpr {$muleexit=1}
-				SetState {Mule}
 ~~ }
 STATE: {Sort} ~~ {
 	IF:	All 
@@ -4248,13 +4220,13 @@ STATE: {ActiveCheck} ~~ { ~~ this is to check equipment, inventory
 			ItemCountGE 10 {Sanguinary Rat Tail}
 		DO: DoAll
 				SetOpt {lootonlyrarecorpses} {true}
-				Chat {/lfg Got my rat tails!}
+				Chat {/f Got my rat tails! Looting Rares only!}
 	IF: Always
 		DO: SetState {Default2}
 	IF: All
 			SecsInStateGE 4
 			ItemCountGE 1 {Bottled Water}
-		DO: Chat {/lfg Got Water!}
+		DO: Chat {/f Got Water!}
 	IF: All
 			ItemCountGE 1 {Bottled Water}
 			ExitPortal
@@ -4387,7 +4359,10 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 		DO: SetWatchdog 5 5 {ActiveLeader}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leader (?<leadertext>.*)\"$} {}
-			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				SetState {ActiveLeader}
 	IF: Expr {$counter>=5}
@@ -4523,6 +4498,22 @@ STATE: {Patrol} ~~ {
 		DO:	DoAll
 				SetState {ActiveLeader}
 ~~ }
+STATE: {Vendor} ~~ {
+	IF: All
+			ItemCountLE 10 {Resister's Crystal}
+		DO:	DoAll
+				Chat {/ub vendor addbuy Resister's Crystal}
+				Chat {/ub vendor buyall}
+	IF: All
+			SecsInStateGE 2
+		DO:	DoAll
+				SetState {Vendor}
+	IF: All
+			ItemCountGE 10 {Resister's Crystal}
+		DO:	DoAll
+				SetState {Default2}
+~~ }
+
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
 
 NAV: nav0___None_ circular ~~ {
@@ -11119,8 +11110,7 @@ NAV: nav316_holdingnospell once ~~ {
 	ptl -71.1239351908366 -62.396644560496 0.300020853678385 -71.1005249977112 -62.3993629137675 0.299737513065338 14 {Aerbax's Holding}
 ~~ }
 NAV: nav317_rage once ~~ {
-	pnt -101.74227291743 -70.1158212979635 2.08333134651184E-05
-	pnt -101.733020273844 -70.1160724480947 2.08333134651184E-05
+	pnt -101.686167669296 -70.1162599245707 -0.0249791661898295
 	cht -101.58126595815 -70.1162599245707 -0.0249791661898295 {/vt jump 90 true 200}
 	pnt -101.686167669296 -70.1162599245707 -0.0249791661898295
 	pnt -101.644645786285 -70.1162599245707 -0.0249791661898295
@@ -11166,4 +11156,59 @@ NAV: nav319_title once ~~ {
 	pnt 19.0376324017843 -73.8929973244667 0.425020853678385
 	pnt 19.0735088030497 -73.8991726438204 0.425020853678385
 	pnt 19.1073622226715 -73.906397485733 0.423770840962728
+~~ }
+NAV: nav320_shreth once ~~ {
+	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
+	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
+	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
+	pnt -101.614928627014 -96.6359806060791 2.08333134651184E-05
+	pnt -101.60205672582 -96.6410076141357 2.08333134651184E-05
+	pnt -101.595234680176 -96.6420009613037 2.08333134651184E-05
+	pnt -101.566503238678 -96.6410771052043 2.08333134651184E-05
+	pnt -101.558403046926 -96.6408270200094 2.08333134651184E-05
+	pnt -101.541905752818 -96.6405443191528 2.08333134651184E-05
+	pnt -101.540815385183 -96.62674964269 2.08333134651184E-05
+	pnt -101.538498306274 -96.6077011108398 2.08333134651184E-05
+	pnt -101.535810248057 -96.5857377847036 2.08333134651184E-05
+	ptl -101.535126431783 -96.5850825468699 2.08333134651184E-05 -101.533333333333 -96.5734350045522 -0.000262499845121056 14 {Portal to Shoushi}
+	pnt 72.8025083223979 -33.5431425412496 0.0833541631698608
+	pnt 72.7911134401957 -33.5802393277486 0.0833541631698608
+	pnt 72.5685839017232 -33.8261385440826 0.0833541631698608
+	pnt 72.4326330820719 -34.009725634257 0.0833541631698608
+	pnt 72.0531471888224 -34.5426076889038 0.0833541631698608
+	pnt 71.9042871952057 -34.7820534388224 0.0860252857208252
+	pnt 71.8204120477041 -34.9227725982666 0.103816262880961
+	pnt 71.7268823941549 -35.0822996139526 0.125020829836528
+	pnt 71.5814305623372 -35.3857576052348 0.133354155222575
+	pnt 71.444780476888 -35.6385581970215 0.140734020868937
+	pnt 71.349987634023 -35.8213862101237 0.164301999409993
+	pnt 71.2396508216858 -35.9785638173421 0.158354171117147
+	pnt 71.1163626035055 -36.126390282313 0.158354171117147
+	pnt 70.9684313376745 -36.2663649559021 0.158354171117147
+	pnt 70.8166430155436 -36.3721490224202 0.158354171117147
+	pnt 70.7692979176839 -36.4045225143433 0.155418793360392
+	pnt 70.6780870437622 -36.5175768534342 0.13510586420695
+	pnt 70.4925487200419 -36.6977534294128 0.133787902196248
+	pnt 70.3036452293396 -36.8947354316711 0.158354171117147
+	ptl -100.854270331065 3.277641137441 2.08333134651184E-05 70.2791666666667 -36.9208333333333 0.158070832490921 14 {Dungeon Mei Portal}
+	pnt -100.890744018555 3.31670948664347 2.08333134651184E-05
+	pnt -100.867314592997 3.31590709686279 2.08333134651184E-05
+	pnt -100.861238670349 3.30097637176514 2.08333134651184E-05
+	pnt -100.854436047872 3.27897612253825 2.08333134651184E-05
+	pnt -100.851689910889 3.26875200271606 2.08333134651184E-05
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.843363761902 3.27121540705363 2.08333131013205E-05 37 {Shreth Hunter}
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.8459745725 3.26309334437052 2.08333131013205E-05 37 {Emissary of Shoushi}
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.853139591217 3.25950291951497 2.08333131013205E-05 37 {Smasher Basher}
+	pnt -100.854270331065 3.277641137441 2.08333134651184E-05
+~~ }
+NAV: nav320_shrethnpc once ~~ {
+	pnt -100.890744018555 3.31670948664347 2.08333134651184E-05
+	pnt -100.867314592997 3.31590709686279 2.08333134651184E-05
+	pnt -100.861238670349 3.30097637176514 2.08333134651184E-05
+	pnt -100.854436047872 3.27897612253825 2.08333134651184E-05
+	pnt -100.851689910889 3.26875200271606 2.08333134651184E-05
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.843363761902 3.27121540705363 2.08333131013205E-05 37 {Shreth Hunter}
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.8459745725 3.26309334437052 2.08333131013205E-05 37 {Emissary of Shoushi}
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.853139591217 3.25950291951497 2.08333131013205E-05 37 {Smasher Basher}
+	pnt -100.854270331065 3.277641137441 2.08333134651184E-05
 ~~ }
