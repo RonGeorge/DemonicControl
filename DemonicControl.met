@@ -65001,7 +65001,7 @@ K
 V
 n
 n
-6
+5
 i
 7
 TABLE
@@ -65015,19 +65015,6 @@ s
 e
 s
 echo[`----------300----------`,14]
-i
-7
-TABLE
-2
-k
-v
-n
-n
-1
-s
-e
-s
-getqueststatus[stuffytokenwait]==0||echo[Bear is ready,13]
 i
 7
 TABLE

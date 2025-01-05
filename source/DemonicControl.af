@@ -3238,7 +3238,6 @@ STATE: {QuestCheck} ~~ {
 			Expr {$myquests==1}
 		DO: DoAll
 				DoExpr {echo[`----------300----------`,14]}
-				DoExpr {getqueststatus[stuffytokenwait]==0||echo[Bear is ready,13]}
 				DoExpr {getqueststatus[grievverbosstokenwait]==0||echo[Grievver is ready,13]}
 				DoExpr {getqueststatus[rabidbulldogkilltask]==0||echo[Dogs is ready,13]}
 				DoExpr {getqueststatus[killtaskdrudgepeppermintboss]==0||echo[Peppermint is ready,13]}
