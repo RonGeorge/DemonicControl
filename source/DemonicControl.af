@@ -478,13 +478,6 @@ STATE: {Default2} ~~ {
 			SecsInStateGE 30
 		DO: SetState {RareTracker}
 	IF: All 
-			Expr {testgvar[persistentjoin]}
-			SecsInStateGE 10
-			Expr {getfellowshipstatus[]==0}
-		DO: DoAll 
-				ChatExpr {`/ub bc /recruit `+getcharstringprop[1]}
-				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is on, so requesting invite.`}
-	IF: All 
 			Death
 			Expr {testvar[activemode]}
 		DO: DoAll
@@ -707,8 +700,6 @@ STATE: {Default2} ~~ {
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
-				DoExpr {setgvar[persistentjoin,1]}
-				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is on.`}
 				DoExpr {clearvar[capturegroup_name]}
 				SetState {Default2}
 	IF:	All
@@ -964,8 +955,6 @@ STATE: {Fellow Create} ~~ {
 	IF:	Always
 		DO:	DoAll 
 				ChatExpr {`/ub fellow create `+&fellowname}
-				DoExpr {&persistentjoin=1]}
-				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is on.`}
 	IF:	Expr {getfellowshipstatus[]==1}
 		DO:	SetState {Fellow Invite}
 	IF:	SecsInStateGE 1
@@ -2970,6 +2959,10 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
 			CellE 01020121
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				EmbedNav nav299_buttertoeggs {[starttoeggs]}
 				SetOpt {enablecombat} {true}
@@ -2981,6 +2974,10 @@ STATE: {Quest} ~~ {
 			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
 			CellE 01020371
 			ItemCountGE 1 {Buttersworth Crate O' Eggs}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				EmbedNav nav300_buttertomilk {[eggstomilk]}
 				SetOpt {OpenDoors} {true}
@@ -2990,6 +2987,10 @@ STATE: {Quest} ~~ {
 			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
 			CellE 01020436
 			ItemCountGE 1 {Buttersworth Milk}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				EmbedNav nav301_buttertoflour {[milktoflour]}
 				SetOpt {OpenDoors} {true}
@@ -2999,6 +3000,10 @@ STATE: {Quest} ~~ {
 			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
 			CellE 0102026E
 			ItemCountGE 1 {Buttersworth Flour}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				EmbedNav nav302_buttertosugar {[flourtosugar]}
 				SetOpt {OpenDoors} {true}
@@ -3010,6 +3015,10 @@ STATE: {Quest} ~~ {
 				CellE 0102026E
 				CellE 0102034C
 			ItemCountGE 1 {Buttersworth Sugar}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO:	DoAll
 				EmbedNav nav303_buttertobutter {[buttertobutter]}
 				SetOpt {OpenDoors} {true}
@@ -3336,7 +3345,7 @@ STATE: {Mode} ~~ {
 				SetOpt {LootFellowCorpses} {true}
 				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`persistentjoin`,`groupleader`],`cleargvar[$1]`]}
-				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`],`clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`,`rageminion`,`ragesentients`,`ragelord`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinodone`,`ragedone`, `patrol`], `cleargvar[$1]`]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Modes reset. Variables cleared.`}
 				SetState {Default2}
@@ -4091,7 +4100,6 @@ STATE: {Find Group} ~~ {
 			Expr {testvar[ClosePlayers]==true}
 		DO: DoAll
 				DoExpr {listmap[listcreate[`ClosePlayers`, `PlayersNotInFellow`, `PlayersToAttempt`], `clearvar[$1]`]}
-				DoExpr {setgvar[persistentjoin,1]}
 				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is on.`}
 				SetState {Recruit Team}
 	IF: Any
