@@ -105,7 +105,7 @@ Nav_Button_12,Peppermint Factory,#navto peppermint
 Nav_Button_13,Buttersworth,#navto Buttersworth
 Nav_Button_14,Dogs,#navto Dogs
 Nav_Button_15,Gromnies,#navto Viridian
-Nav_Button_16,Deru Tree Gem,/ub bc /mt use Viridian Rise Deru Portal Sending Gem
+Nav_Button_16,Rage Gem,/ub bc /mt use Mausoleum of Rage Portal Gem
 Nav_Button_17,Banderlings,#quest Banderlings
 Nav_Button_18,Bluelady,#navto BlueLady
 Nav_Button_19,Grievvers,#navto grievvers
@@ -142,7 +142,7 @@ Nav2_Button_11,Al-Arqas,#navto al-arqas
 Nav2_Button_12,Bluespire,#navto bluespire
 Nav2_Button_13,Dryreach,#navto dryreach
 Nav2_Button_14,Kara,#navto kara
-Nav2_Button_15,Al-Jalima,#navto al jalima
+Nav2_Button_15,Al-Jalima,#navto al-jalima
 Nav2_Button_16,Redspire,#navto redspire
 Nav2_Button_17,Eastham,#navto eastham
 Nav2_Button_18,Kryst,#navto kryst
@@ -314,3 +314,53 @@ Subway_Button_47,NOTSET,#command
 Subway_Button_48,NOTSET,#command
 Subway_Button_49,NOTSET,#command
 Subway_Button_50,NOTSET,#command
+Portals_Button_01,Ron,#command
+Portals_Button_02,Teth,#action sum7a
+Portals_Button_03,-,#action sum7b
+Portals_Button_04,RonUSMC,#command
+Portals_Button_05,Teth,#action sum4a
+Portals_Button_06,Buttersworth,#action sum4b
+Portals_Button_07,Ron II,#command
+Portals_Button_08,Teth,#action sum6a
+Portals_Button_09,BDC,#action sum6b
+Portals_Button_10,Demonic,#command
+Portals_Button_11,Teth,#action sum5a
+Portals_Button_12,Dogs,#action sum5b
+Portals_Button_13,Ron IV,#NONE
+Portals_Button_14,Teth,#action sum3a
+Portals_Button_15,BDC,#action sum3b
+Portals_Button_16,Ron V,#command
+Portals_Button_17,Teth,#action sum2a
+Portals_Button_18,Butter,#action sum2b
+Portals_Button_19,Ron VI,#command
+Portals_Button_20,Teth,#action sum1a
+Portals_Button_21,Teth Incursion,#action sum1b
+Portals_Button_22,-,#command
+Portals_Button_23,-,#command
+Portals_Button_24,closest portal,#action ucp
+Demon_Button_01,/lvl,/lvl
+Demon_Button_02,/myshare,/myshare
+Demon_Button_03,/tn,/ub bc /tn
+Demon_Button_04,/sub,/ub bc /sub
+Demon_Button_05,/recruitme NAME,/ub mexec chatboxpaste[`/recruitme `]
+Demon_Button_06,/recruit NAME,/ub mexec chatboxpaste[`/recruit `]
+Demon_Button_07,#check,#check
+Demon_Button_08,/myquests,/myquests
+Demon_Button_09,#refill,#refill
+Demon_Button_10,#findgroup,#findgroup
+Demon_Button_11,#recruit,#recruit
+Demon_Button_12,Fellow Quit,/ub bc /ub fellow quit
+Demon_Button_13,#critlist,#critlist
+Demon_Button_14,#reveal,#reveal
+Demon_Button_15,#mule packer,#mule packer
+Demon_Button_16,-,#command
+Demon_Button_17,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
+Demon_Button_18,-,#command
+Demon_Button_19,Reload Loot Profiles,/ub bc /vt loot load Demonic11.utl
+Demon_Button_20,Reload Metas,/ub bc /vt meta load DemonicControl
+Demon_Button_21,mode Teth, #mode Teth
+Demon_Button_22,mode Dino, #mode dino
+Demon_Button_23,mode Dragon, #mode dragon
+Demon_Button_24,Watchlist <target>, #watchlist target
+Demon_Button_25,Leader <target>, #leader target
+Demon_Button_26,mode RESET, #mode reset

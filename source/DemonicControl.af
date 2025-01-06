@@ -1158,7 +1158,7 @@ STATE: {Nav To} ~~ {
 				SetState {Default2}
 	IF:	All
 			Any
-				Expr {(Al Jalima)#getvar[capturegroup_navtext]}
+				Expr {(Al-Jalima)#getvar[capturegroup_navtext]}
 			CellE 00070143
 		DO:	DoAll
 				EmbedNav nav12___None_ {[none]}
@@ -2954,6 +2954,12 @@ STATE: {Quest} ~~ {
 				SetOpt {enablenav} {true}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablebuffing} {false}
+				DoExpr {clearvar[capturegroup_quest]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
+			Expr {getvar[capturegroup_name]!=getcharstringprop[1]}
+		DO:	DoAll
 				DoExpr {clearvar[capturegroup_quest]}
 				SetState {Default2}
 	IF:	All
