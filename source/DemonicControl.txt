@@ -15,7 +15,7 @@ Basic_Button_13,Nav On,#optset enablenav true
 Basic_Button_14,Nav Off,#optset enablenav false
 Basic_Button_15,Loot All,#action loot all
 Basic_Button_16,Loot Rares Only,#action rares only
-Basic_ToggleButton_17,Summon,#optset summonpets true,#optset summonpets false
+Basic_Button_17,Summon,#optset summonpets true
 Basic_Button_18,Summon Off,#optset summonpets false
 Basic_Button_19,Peace Mode On,#optset idlepeacemode true
 Basic_Button_20,Peace Mode Off,#optset idlepeacemode false
