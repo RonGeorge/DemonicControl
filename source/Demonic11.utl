@@ -733,9 +733,9 @@ Bane|Tink
 83
 Sollerets|Gauntlets|Greaves|Tassets|Pauldrons|Vambraces|Breastplate|Girth|Helm
 1
-    (A) Cov Multi-Legendary + dr25
+(A) Cov Multi-Legendary + dr25
 
-0;1;7;9;1;3;12;9;3
+0;1;7;9;1;3;12;9
 3
 2
 513
@@ -746,7 +746,7 @@ Bane|Tink
 Cov|Olthoi
 1
 9
-29
+25
 371
 10
 9999
@@ -755,9 +755,6 @@ Cov|Olthoi
 Bane
 Minor|Major|Epic
 7
-9
-620
-28
 (A) Armor dr29
 
 0;1;7;13;3
@@ -780,7 +777,7 @@ Minor|Major|Epic
 9
 29
 379
-    (A) Defender's Set + dr25
+(A) Defender's Set + dr25
 
 0;1;7;12;3
 3
@@ -791,7 +788,7 @@ Minor|Major|Epic
 9
 25
 371
-    (A) Defender's Set + v25
+(A) Defender's Set + v25
 
 0;1;7;12;3
 3
@@ -858,7 +855,7 @@ Pants|Pantaloons|Trousers
 9
 29
 370
-    (J) M-Legendary +d25
+(J) M-Legendary +d25
 
 0;1;7;9;3
 3
@@ -870,7 +867,7 @@ Tink
 9
 29
 370
-    (J) Colo Ring
+(J) Colo Ring
 
 0;1;7;1
 3

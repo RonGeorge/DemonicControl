@@ -37,7 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
-STATE: {*** DemonicControl 218***} ~~ {
+STATE: {*** DemonicControl 219***} ~~ {
 	IF:	Expr {getvar[view]==true}
 		DO:	DoAll
 				DoExpr {setvar[view, false]}
@@ -64,6 +64,37 @@ STATE: {*** DemonicControl 218***} ~~ {
 		DO:	SetState {SpellCheck}
 ~~ }
 STATE: {Action} ~~ {
+	IF: All 
+			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
+			CellE 01AC011B
+		DO: DoAll
+				Chat {/ub vendor open Imogen}
+				SetState {Vendor}
+	IF: All 
+			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
+		DO: DoAll
+				SetOpt {navclosestoprange} {0.0083}
+				EmbedNav nav323_rarevendor {rarevendor}
+				SetOpt {enablecombat} {false}
+				SetOpt {enablenav} {true}
+	IF: All 
+			Expr {(BuyRage)#getvar[capturegroup_actiontext]}
+			Not CellE 4FF1001B
+		DO: DoAll
+				CallState {Fortress} {Action}
+	IF: All 
+			Expr {(BuyRage)#getvar[capturegroup_actiontext]}
+			CellE 4FF1001B
+		DO: DoAll
+				SetOpt {navclosestoprange} {0.0083}
+				SetOpt {idlepeacemode} {true}
+				Chat {/mt combatstate peace}
+				SetOpt {opendoors} {true}
+				SetOpt {enablecombat} {false}
+				EmbedNav nav322_buyrage {buyrage}
+				SetOpt {enablenav} {true}
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Default2}
 	IF:	All
 			Expr {(food)#getvar[capturegroup_actiontext]}
 		DO:	DoAll
@@ -448,7 +479,7 @@ STATE: {Default} ~~ {
 				Chat {/vt echo Variables Cleared}
 	IF:	Always ~~ remoteview and chaos control settings
 		DO:	DoAll
-				DoExpr {setvar[view, true]} ~~ mini remote
+				DoExpr {setvar[view, false]} ~~ mini remote
 				Chat {/ch setprofile DemonicControl.txt}
 				Chat {/ch setchatcommand /lfg}
 				Chat {/ch settab 4}
@@ -470,12 +501,12 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[DemonicOptions, 1]}
 				Chat {/vt echo Config Loaded}
 				DoExpr {setvar[capturegroup_actiontext, none]}
-				SetState {*** DemonicControl 218***}
+				SetState {*** DemonicControl 219***}
 ~~ }
 STATE: {Default2} ~~ {
 	IF: All 
 			Expr {testvar[raretracker]}
-			SecsInStateGE 30
+			SecsInStateGE 20
 		DO: SetState {RareTracker}
 	IF: All 
 			Death
@@ -584,6 +615,24 @@ STATE: {Default2} ~~ {
 				SetState {ActiveDead}
 ~~ End death watching
 	IF: All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#givegarbage\"$} {}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+		DO: DoAll
+				ChatExpr {`/ub givep `+wobjectgetstringprop[wobjectgetselection[],1]+` to `+wobjectgetstringprop[wobjectfindnearestbyobjectclass[37],1]}
+				SetState {Default2}
+	IF: All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#givehim\"$} {}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+		DO: DoAll
+				ChatExpr {`/ub givep `+wobjectgetstringprop[wobjectgetselection[],1]+` to `+wobjectgetstringprop[wobjectfindnearestbyobjectclass[24],1]}
+				SetState {Default2}
+	IF: All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#ap\"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
@@ -633,14 +682,24 @@ STATE: {Default2} ~~ {
 		DO: DoAll
 				SetState {DPS}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#raretracker\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#rareon\"$} {}
 			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll
 				DoExpr {$raretracker=1}
-				Chat {/lfg Now tracking rares.}
+				Chat {/lfg Rare tracking turned on.}
+				SetState {Default2}
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#rareoff\"$} {}
+			Any
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+		DO: DoAll
+				DoExpr {clearvar[raretracker]}
+				Chat {/lfg Rare tracking turned off.}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#gamble\"$} {}
@@ -831,6 +890,15 @@ STATE: {Default2} ~~ {
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
+				SetState {QuestCheck}
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#checku?\"$} {}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+		DO: DoAll
+				DoExpr {$myquests=0}
 				SetState {QuestCheck}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#echo (?<telltext>.*)\"$} {}
@@ -2534,6 +2602,14 @@ STATE: {Opt Set} ~~ {
 ~~ }
 STATE: {Quest} ~~ {
 	IF:	All
+			Expr {(Shreth)#getvar[capturegroup_questtext]}
+			BlockE 01840000
+		DO:	DoAll
+				SetOpt {enablenav} {true}
+				SetOpt {enablecombat} {false}
+				EmbedNav nav321_shrethnpc {[Recall]}
+				DoExpr {clearvar[capturegroup_questtext]}
+	IF:	All
 			Expr {(Rage)#getvar[capturegroup_questtext]}
 		DO:	DoAll
 				Chat {/mt use Mausoleum of Rage Portal Gem}
@@ -4177,17 +4253,13 @@ STATE: {Gamble} ~~ {
 ~~ }
 STATE: {RareTracker} ~~ {
 	IF: All 
-			ItemCountLE 0 {Pearl of Pierce Baning}
-			ItemCountLE 0 {Pearl of Lightning Baning}
-			ItemCountLE 0 {Pearl of Blade Baning}
+			ItemCountLE 0 {Resister's Crystal}
 		DO: DoAll
 				Chat {/lfg No more gems.}
 				DoExpr {clearvar[raretracker]}
 				SetState {Default2}
 	IF: All
-			Expr {getspellexpirationbyname[Prodigal Blade Protection]<50&&getspellexpirationbyname[Prodigal Blade Protection]>1&&actiontryuseitem[wobjectfindininventorybyname[Pearl of Blade Baning]]}
-			Expr {getspellexpirationbyname[Prodigal Lightning Protection]<50&&getspellexpirationbyname[Prodigal Lightning Protection]>1&&actiontryuseitem[wobjectfindininventorybyname[Pearl of Lightning Baning]]}
-			Expr {getspellexpirationbyname[Prodigal Piercing Protection]<50&&getspellexpirationbyname[Prodigal Piercing Protection]>1&&actiontryuseitem[wobjectfindininventorybyname[Pearl of Pierce Baning]]}
+			Expr {getspellexpirationbyname[Prodigal Magic Resistance]<50&&getspellexpirationbyname[Prodigal Magic Resistance]>1&&actiontryuseitem[wobjectfindininventorybyname[Resister's Crystal]]}
 		DO: None
 	IF: Always
 		DO: SetState {Default2}
@@ -4513,16 +4585,22 @@ STATE: {Patrol} ~~ {
 ~~ }
 STATE: {Vendor} ~~ {
 	IF: All
-			ItemCountLE 10 {Resister's Crystal}
+			ItemCountLE 5 {Resister's Crystal}
 		DO:	DoAll
 				Chat {/ub vendor addbuy Resister's Crystal}
+				Chat {/ub vendor buyall}
+	IF: All
+			ItemCountLE 5 {Evader's Crystal}
+		DO:	DoAll
+				Chat {/ub vendor addbuy Evader's Crystal}
 				Chat {/ub vendor buyall}
 	IF: All
 			SecsInStateGE 2
 		DO:	DoAll
 				SetState {Vendor}
 	IF: All
-			ItemCountGE 10 {Resister's Crystal}
+			ItemCountGE 5 {Resister's Crystal}
+			ItemCountGE 5 {Evader's Crystal}
 		DO:	DoAll
 				SetState {Default2}
 ~~ }
@@ -11123,9 +11201,10 @@ NAV: nav316_holdingnospell once ~~ {
 	ptl -71.1239351908366 -62.396644560496 0.300020853678385 -71.1005249977112 -62.3993629137675 0.299737513065338 14 {Aerbax's Holding}
 ~~ }
 NAV: nav317_rage once ~~ {
-	pnt -101.686167669296 -70.1162599245707 -0.0249791661898295
-	cht -101.58126595815 -70.1162599245707 -0.0249791661898295 {/vt jump 90 true 200}
-	pnt -101.686167669296 -70.1162599245707 -0.0249791661898295
+	pnt -101.734757328033 -70.1166666666667 2.08333134651184E-05
+	pnt -101.7278479894 -70.1166666666667 2.08333134651184E-05
+	pnt -101.723387416204 -70.1166666666667 2.08333134651184E-05
+	cht -101.723387416204 -70.1166666666667 2.08333134651184E-05 {/vt jump 90 true 200}
 	pnt -101.644645786285 -70.1162599245707 -0.0249791661898295
 	pnt -101.58126595815 -70.1162599245707 -0.0249791661898295
 	tlk -101.718793233236 -70.1158144156138 -0.0249791661898295 -101.57051375707 -70.1323745886485 -0.0249791666865349 37 {Evelyn}
@@ -11224,4 +11303,48 @@ NAV: nav320_shrethnpc once ~~ {
 	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.8459745725 3.26309334437052 2.08333131013205E-05 37 {Emissary of Shoushi}
 	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.853139591217 3.25950291951497 2.08333131013205E-05 37 {Smasher Basher}
 	pnt -100.854270331065 3.277641137441 2.08333134651184E-05
+~~ }
+NAV: nav321_shrethnpc once ~~ {
+	rcl -67.0941124916077 -87.5012548645337 0.200020837783813 {Portal Recall}
+	pnt -100.890744018555 3.31670948664347 2.08333134651184E-05
+	pnt -100.867314592997 3.31590709686279 2.08333134651184E-05
+	pnt -100.861238670349 3.30097637176514 2.08333134651184E-05
+	pnt -100.854436047872 3.27897612253825 2.08333134651184E-05
+	pnt -100.851689910889 3.26875200271606 2.08333134651184E-05
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.843363761902 3.27121540705363 2.08333131013205E-05 37 {Shreth Hunter}
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.8459745725 3.26309334437052 2.08333131013205E-05 37 {Emissary of Shoushi}
+	tlk -100.854270331065 3.277641137441 2.08333134651184E-05 -100.853139591217 3.25950291951497 2.08333131013205E-05 37 {Smasher Basher}
+	pnt -100.854270331065 3.277641137441 2.08333134651184E-05
+~~ }
+NAV: nav322_buyrage once ~~ {
+	pnt -38.4335504849752 91.2497528076172 0.350020853678385
+	pnt -38.4341486612956 91.2701137224833 0.350020853678385
+	pnt -38.4080095609029 91.2712856292725 0.350020853678385
+	pnt -38.4215320269267 91.3084465026855 0.350020853678385
+	pnt -38.4225468317668 91.3195425987244 0.350020853678385
+	pnt -38.3961210886637 91.3186418851217 0.350020853678385
+	pnt -38.3741753896078 91.3407701810201 0.350020853678385
+	pnt -38.3652497291565 91.3370421409607 0.350020853678385
+	pnt -38.3653224945068 91.3301338195801 0.350020853678385
+	pnt -38.3598049799601 91.3104462305705 0.350020853678385
+	pnt -38.3607124010722 91.2815099716186 0.370020834604899
+	pnt -38.3675129254659 91.2803840001424 0.370020834604899
+	pnt -38.3689702669779 91.2878156344096 0.370020834604899
+	pnt -38.3701782226563 91.3090443929036 0.370020834604899
+	pnt -38.3711782137553 91.3193925539652 0.370020834604899
+	pnt -38.3734692891439 91.3371350288391 0.370020834604899
+	cht -38.4040516535441 91.0538149992625 0.350020853678385 {/vt opt set opendoors false}
+	cht -38.4040516535441 91.0538149992625 0.350020853678385 {/ub vendor open Bartendress Kimmy}
+~~ }
+NAV: nav323_rarevendor once ~~ {
+	cht -101.078973619143 35.5670833349228 2.08333134651184E-05 {/haven}
+	cht -101.078973619143 35.5670833349228 2.08333134651184E-05 {/vt opt set opendoors true}
+	pnt -101.078973619143 35.5670833349228 2.08333134651184E-05
+	pnt -101.041297006607 35.5695899883906 2.08333134651184E-05
+	pnt -101.010140959422 35.5822202126185 2.08333134651184E-05
+	pnt -100.985659313202 35.6201033294201 2.08333134651184E-05
+	pnt -100.983860890071 35.6393648554881 2.08333134651184E-05
+	pnt -100.990218989054 35.6417675361037 2.08333134651184E-05
+	cht -100.990218989054 35.6417675361037 2.08333134651184E-05 {/ub vendor open Imogen}
+	cht -100.990218989054 35.6417675361037 2.08333134651184E-05 {/vt opt set opendoors false}
 ~~ }
