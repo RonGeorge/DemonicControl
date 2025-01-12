@@ -65,19 +65,6 @@ STATE: {*** DemonicControl 219***} ~~ {
 ~~ }
 STATE: {Action} ~~ {
 	IF: All 
-			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
-			CellE 01AC011B
-		DO: DoAll
-				Chat {/ub vendor open Imogen}
-				SetState {Vendor}
-	IF: All 
-			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
-		DO: DoAll
-				SetOpt {navclosestoprange} {0.0083}
-				EmbedNav nav323_rarevendor {rarevendor}
-				SetOpt {enablecombat} {false}
-				SetOpt {enablenav} {true}
-	IF: All 
 			Expr {(BuyRage)#getvar[capturegroup_actiontext]}
 			Not CellE 4FF1001B
 		DO: DoAll
@@ -95,6 +82,14 @@ STATE: {Action} ~~ {
 				SetOpt {enablenav} {true}
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
+	IF:	All
+			Expr {(ParagonBuy)#getvar[capturegroup_actiontext]}
+		DO:	DoAll
+				SetState {ParagonBuy}
+	IF:	All
+			Expr {(ParagonApply)#getvar[capturegroup_actiontext]}
+		DO:	DoAll
+				SetState {ParagonApply}
 	IF:	All
 			Expr {(vendor)#getvar[capturegroup_actiontext]}
 		DO:	DoAll
@@ -1077,6 +1072,7 @@ STATE: {Jump} ~~ {
 ~~ }
 STATE: {Nav To} ~~ {
 	IF:	Any
+			Expr {(RareVendor)#getvar[capturegroup_navtext]}
 			Expr {(Shreth)#getvar[capturegroup_navtext]}
 			Expr {(Title)#getvar[capturegroup_navtext]}
 			Expr {(Holding\|Aerbax's Holding)#getvar[capturegroup_navtext]}
@@ -1589,6 +1585,19 @@ STATE: {Nav To} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
+	IF: All 
+			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
+			CellE 01AC011B
+		DO: DoAll
+				Chat {/ub vendor open Imogen}
+				SetState {RareVendor}
+	IF: All 
+			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
+		DO: DoAll
+				SetOpt {navclosestoprange} {0.0083}
+				EmbedNav nav323_rarevendor {rarevendor}
+				SetOpt {enablecombat} {false}
+				SetOpt {enablenav} {true}
 	IF: All
 			Expr {(Shreth)#getvar[capturegroup_navtext]}
 		DO: DoAll
@@ -4604,7 +4613,7 @@ STATE: {Patrol} ~~ {
 		DO:	DoAll
 				SetState {ActiveLeader}
 ~~ }
-STATE: {Vendor} ~~ {
+STATE: {RareVendor} ~~ {
 	IF: All
 			ItemCountLE 5 {Resister's Crystal}
 		DO:	DoAll
