@@ -664,6 +664,18 @@ Legendary Blood Thirst
 Legendary Defender
 6
 true
+Wand (56%)
+
+0;1;7;5;0;0
+4
+31
+11
+1.56
+152
+25
+Legendary Spirit Thirst
+20
+Legendary Defender
 Wand (42%)
 
 0;1;7;12;5;0;0
@@ -696,7 +708,7 @@ Legendary Spirit Thirst
 Legendary Defender
 6
 true
-(A) Defender's+ DR25
+(A) Defender's +dr
 
 0;1;7;12;0;13;1;3
 3
@@ -715,7 +727,7 @@ Jerkin|Pants|Coat|Cuirass|Sleeves|Shirt|Hauberk|Leggings|Cuirass|Breastplate|Gir
 9
 25
 371
-    (A) Dedication Set + Legendary
+(A) Dedication Set
 
 0;1;7;12;9;13;1
 3
@@ -755,107 +767,80 @@ Cov|Olthoi
 Bane
 Minor|Major|Epic
 7
-(A) Armor dr29
+(A) Cov Multi-Legendary + v25
 
-0;1;7;13;3
+0;1;7;9;1;3;12;9
 3
 2
-10
-9999
-36
-9
-29
-371
-(A) Armor v29
-
-0;1;7;13;3
-3
+513
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Heavy|Legendary Light|Legendary Finesse|Legendary Dirty|Legendary Shield|Legendary Reck|Legendary Dual|Legendary Sneak|Legendary Missile|Legendary Two|Legendary Dece|Legendary Heal|Legendary Summ
+Bane|Tink
 2
-10
-9999
-36
-9
-29
-379
-(A) Defender's Set + dr25
-
-0;1;7;12;3
-3
-3
-9
-16
-265
-9
-25
-371
-(A) Defender's Set + v25
-
-0;1;7;12;3
-3
-3
-9
-16
-265
+15
+Cov|Olthoi
+1
 9
 25
 379
-    (C) (Shirt) + d25
+10
+9999
+36
+27
+Bane
+Minor|Major|Epic
+7
+(A) Armor DR29
 
-0;1;7;1;12;3
+0;1;7;3
 3
-3
-16
-Smock|Shirt
-1
-16
-104
-218103821
-9
-29
-370
-    (C) (Shirt) + dr25
-
-0;1;7;1;12;3
-3
-3
-16
-Smock|Shirt
-1
-16
-104
-218103821
+2
 9
 29
 371
-    (C) (Pants) + dr25
+(A) Armor V29
 
-0;1;7;1;12;3
+0;1;7;3
 3
-3
-30
-Pants|Pantaloons|Trousers
-1
-15
-22
-218103821
+2
 9
 29
-371
-    (C) (Pants) + d25
+379
+    (C) (Defender Clothes)
 
-0;1;7;1;12;3
+0;1;7;3;12
 3
 3
-30
-Pants|Pantaloons|Trousers
-1
-15
-22
-218103821
+9
+25
+370
+9
+16
+265
+    (C) (Clothing) Damage
+
+0;1;7;3
+3
+3
 9
 29
 370
-(J) M-Legendary +d25
+    (C) (Clothing) DamageResist
+
+0;1;7;3
+3
+3
+9
+29
+371
+    (C) (Clothing) Vitality
+
+0;1;7;3
+3
+3
+9
+29
+379
+(J) M-Legendary +d29
 
 0;1;7;9;3
 3
@@ -877,7 +862,7 @@ Empyrean Ring
 1
 (CL) Cloak (D29)
 
-0;1;1;7;3;3
+0;1;1;7;3;3;0
 10
 Cloak
 1
@@ -889,6 +874,8 @@ Cloak
 9
 29
 370
+18
+Cloaked in Skill
 (CL) Cloak - Creeping Blight
 
 0;1;1

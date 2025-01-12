@@ -96,6 +96,18 @@ STATE: {Action} ~~ {
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF:	All
+			Expr {(vendor)#getvar[capturegroup_actiontext]}
+		DO:	DoAll
+				SetState {Vendor}
+	IF:	All
+			Expr {(VendorExchange)#getvar[capturegroup_actiontext]}
+		DO:	DoAll
+				SetState {VendorExchange}
+	IF:	All
+			Expr {(junk)#getvar[capturegroup_actiontext]}
+		DO:	DoAll
+				SetState {Junk}
+	IF:	All
 			Expr {(food)#getvar[capturegroup_actiontext]}
 		DO:	DoAll
 				SetState {Food}
@@ -586,6 +598,7 @@ STATE: {Default2} ~~ {
 			ChatMatch {Jade Flintlock tells you, "Nice work out there}
 		DO: DoAll
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`],`clearvar[$1]`]}
+				DoExpr {cleargvar[dinodone]}
 ~~ End of Dino Notify
 ~~ Being death watching
 	IF: All
@@ -2613,6 +2626,7 @@ STATE: {Quest} ~~ {
 			Expr {(Rage)#getvar[capturegroup_questtext]}
 		DO:	DoAll
 				Chat {/mt use Mausoleum of Rage Portal Gem}
+				DoExpr {testgvar[ragedone]==1||cleargvar[ragedone]}
 				EmbedNav nav317_rage {[Rage]}
 				SetOpt {enablenav} {true}
 				SetOpt {enablecombat} {false}
@@ -3350,7 +3364,6 @@ STATE: {QuestCheck} ~~ {
 				DoExpr {getqueststatus[monougaribtokenwait]==0||echo[Monouga Rib is ready,13]}
 				DoExpr {getqueststatus[killtaskmonougabarbariantimer]==0||echo[Monouga is ready,13]}
 				DoExpr {getqueststatus[ascendedvirindikt]==0||echo[Hollow is ready,13]}
-				DoExpr {getqueststatus[killtaskascendedshadowtimer]==0||echo[Shadows is ready,13]}
 	IF: All
 			Expr {getcharintprop[25]>=750}
 			Expr {$myquests==1}
@@ -3880,6 +3893,13 @@ STATE: {Mule} ~~ {
 			Expr {(Celdon)#getvar[capturegroup_muletext]}
 		DO:	DoAll
 				ChatExpr {`/ub givep celdon to `+wobjectgetstringprop[wobjectfindnearestbyobjectclass[24],1]}
+				DoExpr {clearvar[capturegroup_muletext]}
+				SetState {Default2}
+	IF:	All 
+			Expr {(Keys)#getvar[capturegroup_muletext]}
+		DO:	DoAll
+				ChatExpr {`/ub givep Primal Moon Chest Key to `+wobjectgetstringprop[wobjectfindnearestbyobjectclass[24],1]}
+				DoExpr {clearvar[capturegroup_muletext]}
 				SetState {Default2}
 	IF:	Always 
 		DO:	DoAll
@@ -4274,8 +4294,9 @@ STATE: {ActiveDead} ~~ {
 				SetOpt {enablelooting} {false}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablebuffing} {false}
-				SetWatchdog 5 5 {ActiveMover}
+				SetWatchdog 5 50 {ActiveMover}
 	IF: All ~~ this step is for not dead people to use to get to the ls
+			SecsInStateGE 3
 			Any 
 				Expr {$activemode==dino}
 				Expr {$activemode==dragon}
@@ -4588,20 +4609,96 @@ STATE: {Vendor} ~~ {
 			ItemCountLE 5 {Resister's Crystal}
 		DO:	DoAll
 				Chat {/ub vendor addbuy Resister's Crystal}
-				Chat {/ub vendor buyall}
 	IF: All
 			ItemCountLE 5 {Evader's Crystal}
 		DO:	DoAll
 				Chat {/ub vendor addbuy Evader's Crystal}
-				Chat {/ub vendor buyall}
 	IF: All
 			SecsInStateGE 2
 		DO:	DoAll
+				Chat {/ub vendor buyall}
 				SetState {Vendor}
 	IF: All
 			ItemCountGE 5 {Resister's Crystal}
 			ItemCountGE 5 {Evader's Crystal}
 		DO:	DoAll
+				SetState {Default2}
+~~ }
+STATE: {Junk} ~~ {
+	IF: Not Expr {testvar[jcounter]}
+		DO:	DoAll
+				DoExpr {$jcounter=0}
+				DoExpr {$junk=listcreate[Scarlet Red Letter,Braced Mana Forge Key,Blank Augmentation Gem,Rock,Fishing Pole,Sealed crate of Salvaged Sandstone,Mythic Chest Key,Durable Legendary Key,Bone Sword]}
+	IF: All
+			Expr {wobjectfindininventorybyname[listgetitem[$junk,getvar[jcounter]]]!=0}
+		DO: DoAll
+				ChatExpr {`/ub give `+listgetitem[$junk,$jcounter]+` to garbage barrel`}
+	IF:	Any
+			All 
+				ChatMatch {^.+ItemGiver finished+.$}
+				SecsInStateGE 1
+			Expr {wobjectfindininventorybyname[listgetitem[$junk,getvar[jcounter]]]==0}
+		DO:	DoAll
+				DoExpr {setvar[jcounter,getvar[jcounter]+1]}
+				SetState {Junk}
+	IF:	Any
+			Expr {$jcounter>=listcount[$junk]}
+		DO:	DoAll
+				DoExpr {clearvar[jcounter]&&clearvar[junk]}
+				DoExpr {echo[Junk has been thrown,13]}
+				SetState {Default2}
+~~ }
+STATE: {VendorExchange} ~~ {
+	IF: Always
+		DO: DoAll
+				Chat {/mt giveP A'nekshay Token to Higashiyama Akako}
+	IF: All
+			SecsInStateGE 1
+		DO: DoAll
+				Chat {/mt click yes}
+	IF: All
+			SecsInStateGE 3
+		DO: DoAll
+				SetState {VendorExchange}
+	IF: ItemCountLE 1 {A'nekshay Token}
+		DO: SetState {Default2}
+~~ }
+STATE: {ParagonBuy} ~~ {
+	IF: Not Expr {testvar[paragonlist]}
+		DO: DoAll
+				DoExpr {$paragonlist=listcreate[`1st`,`2nd`,`3rd`,`4th`,`5th`,`6th`,`7th`,`8th`,`9th`,`10th`,`11th`,`12th`,`13th`,`14th`,`15th`,`16th`,`17th`,`18th`,`19th`,`20th`,`21st`,`22nd`,`23rd`,`24th`,`25th`,`26th`,`27th`,`28th`,`29th`,`30th`,`31st`,`32nd`,`33rd`,`34th`,`35th`,`36th`,`37th`,`38th`,`39th`,`40th`,`41st`,`42nd`,`43rd`,`44th`,`45th`,`46th`,`47th`,`48th`,`49th`,`50th`]}
+	IF: Expr {listcount[$paragonlist]>=1}
+		DO: DoAll
+				DoExpr {chatbox[`/ub vendor addbuy Luminous Amber of the `+listpop[$paragonlist]+` Tier Paragon`]}
+				SetState {ParagonBuy}
+	IF: Expr {listcount[$paragonlist]==0}
+		DO: DoAll
+				DoExpr {clearvar[paragonlist]}
+				SetState {Default2}
+~~ }
+STATE: {ParagonApply} ~~ {
+	IF: Not Expr {testvar[paragonlist]}
+		DO: DoAll
+				DoExpr {$paragonlist=listcreate[`2nd`,`3rd`,`4th`,`5th`,`6th`,`7th`,`8th`,`9th`,`10th`,`11th`,`12th`,`13th`,`14th`,`15th`,`16th`,`17th`,`18th`,`19th`,`20th`,`21st`,`22nd`,`23rd`,`24th`,`25th`,`26th`,`27th`,`28th`,`29th`,`30th`,`31st`,`32nd`,`33rd`,`34th`,`35th`,`36th`,`37th`,`38th`,`39th`,`40th`,`41st`,`42nd`,`43rd`,`44th`,`45th`,`46th`,`47th`,`48th`,`49th`,`50th`]}
+	IF: All
+			Not Expr {testvar[weaponname]}
+		DO: DoAll
+				DoExpr {$weaponname=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {$gemlevel=wobjectgetintprop[wobjectfindininventorybyname[$weaponname],319]-1}
+	IF: All 
+			SecsInStateGE 1
+			Expr {listcount[$paragonlist]>=1}
+			Expr {testvar[weaponname]}
+			Expr {listgetitem[$paragonlist,$gemlevel]!=0}
+		DO: DoAll
+				DoExpr {actiontryapplyitem[wobjectfindininventorybynamerx[`Luminous Amber of the `+listpop[$paragonlist,$gemlevel]+` Tier Paragon`],wobjectfindininventorybynamerx[$weaponname]]}
+				SetState {ParagonApply}
+	IF: Any 
+			Expr {listcount[$paragonlist]==0}
+			Expr {wobjectgetintprop[wobjectfindininventorybyname[$weaponname],319]==50}
+			Expr {listgetitem[$paragonlist,$gemlevel]!=0}
+		DO: DoAll
+				DoExpr {clearvar[paragonlist]&&clearvar[weaponname]&&clearvar[gemlevel]}
 				SetState {Default2}
 ~~ }
 

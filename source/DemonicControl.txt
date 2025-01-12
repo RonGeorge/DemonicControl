@@ -49,7 +49,7 @@ Adv_Button_24,Attack Height Medium,#optset defaultmeleeattackheight 2
 Adv_Button_25,Attack Height High,#optset defaultmeleeattackheight 1
 Adv_Button_26,Create and Recruit Fellow,/tell [player],#action fellow
 Adv_Button_27,Disband Fellow,#action disband
-Adv_Button_28,NOTSET,#command
+Adv_Button_28,Go into Peace,/ub bc /mt combatstate peace
 Adv_Button_29,Fastcast Buffs On,#optset fastcastbuffs true
 Adv_Button_30,Fastcast Buffs Off,#optset fastcastbuffs false
 Adv_Button_31,Breakable Turn To On,#optset usebreakableturnto true
@@ -58,7 +58,7 @@ Adv_Button_33,Don't Shoot At Walls On,#optset useprojectileawareness true
 Adv_Button_34,Don't Shoot At Walls Off,#optset useprojectileawareness false
 Recalls_Button_01,Use Gateway,#action ucp
 Recalls_Button_02,Use Closest Portal,#action ucp
-Recalls_Button_03,Marketplace,#navto marketplace
+Recalls_Button_03,Marketplace,/ub bc /mp
 Recalls_Button_04,Haven,/ub bc /haven
 Recalls_Button_05,[9561],#navto Primary
 Recalls_Button_06,[9562],#navto Secondary
@@ -72,13 +72,13 @@ Recalls_Button_13,[10726],#navto Mount Lethe
 Recalls_Button_14,[10729],#navto Ulgrim
 Recalls_Button_15,[26219],#navto Bur
 Recalls_Button_16,[26325],#navto Paradox
-Recalls_Button_17,[26556],#navto Graveyard
+Recalls_Button_17,[26293],#navto Graveyard
 Recalls_Button_18,[26329],#navto Colosseum
 Recalls_Button_19,[28169],#navto Gear Knight
-Recalls_Button_20,[28656],#navto Neftet
+Recalls_Button_20,[28659],#navto Neftet
 Recalls_Button_21,[19347|Candeth],#navto Candeth Keep
 Recalls_Button_22,[28915|Fac Hub],#navto Facility Hub
-Recalls_Button_23,[29927],#navto Rynthid
+Recalls_Button_23,[28187],#navto Rynthid
 Recalls_Button_24,[9560],#navto Lifestone Recall
 Recalls_Button_25,[9441],#navto Lifestone Sending
 Recalls_Button_26,[8588],#navto Hometown
@@ -87,9 +87,9 @@ Recalls_Button_28,[8383],#navto House
 Recalls_Button_29,[25233|Rise],#navto Viridian Rise
 Recalls_Button_30,[25233|Tree],#navto Viridian Tree
 Recalls_Button_31,[26526],/mt use Radiant Blood Stronghold Portal Gem
-Recalls_Button_32,TN,/ub bc /tn
-Recalls_Button_33,Sub,/ub bc /sub
-Recalls_Button_34,Hub,/ub bc /fachub
+Recalls_Button_32,[19347|TN],/ub bc /tn
+Recalls_Button_33,[19347|Sub],/ub bc /sub
+Recalls_Button_34,[19347|mp],/ub bc /mp
 Nav_Button_01,Tou-Tou KT's,#quest Tou-Tou Killtasks
 Nav_Button_02,Frozen Valley KT's,#quest Frozen Valley Killtasks
 Nav_Button_03,Hoshino KT's,#quest Hoshino Killtasks
@@ -176,7 +176,7 @@ Nav2_Button_45,NOTSET,#Command
 Nav2_Button_46,Tou-Tou,#navto tou-tou
 Nav2_Button_47,NOTSET,#Command
 Nav2_Button_48,Danby's Outpost,#navto danby's outpost
-Nav2_Button_49,NOTSET,#Command
+Nav2_Button_49,Holding,#navto holding
 Nav2_Button_50,NOTSET,#Command
 Nav2_Button_51,Beachfort,#navto Beachfort
 Nav2_Button_52,Linvak Tukal,#navto linvak tukal
@@ -345,7 +345,7 @@ Demon_Button_04,/sub,/ub bc /sub
 Demon_Button_05,/recruitme NAME,/ub mexec chatboxpaste[`/recruitme `]
 Demon_Button_06,/recruit NAME,/ub mexec chatboxpaste[`/recruit `]
 Demon_Button_07,#check,#check
-Demon_Button_08,/myquests,/myquests
+Demon_Button_08,#checku,#checku
 Demon_Button_09,#refill,#refill
 Demon_Button_10,#findgroup,#findgroup
 Demon_Button_11,#recruit,#recruit
@@ -362,5 +362,5 @@ Demon_Button_21,mode Teth, #mode Teth
 Demon_Button_22,mode Dino, #mode dino
 Demon_Button_23,mode Dragon, #mode dragon
 Demon_Button_24,Watchlist <target>, #watchlist target
-Demon_Button_25,Leader <target>, #leader target
+Demon_Button_25,mode Rage, #mode rage
 Demon_Button_26,mode RESET, #mode reset
