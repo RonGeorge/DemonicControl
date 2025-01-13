@@ -1,6 +1,6 @@
 UTL
 1
-140
+143
 Oubliette
 
 0;10;1
@@ -920,10 +920,10 @@ Covenant Shield|Olthoi Shield
 Bane
 Minor|Major|Epic|Legendary
 7
-22
+38
 Impenetrability
-
-2
+Minor|Major|Epic
+1
 Celdon Veins (VirindiBlues)
 
 0;1;7;17;1
@@ -1111,6 +1111,17 @@ Celdon Veins -sleeves (ReefBlue)
 11
 Celdon
 1
+Celdon (SolidRed)
+
+0;1;7;17;1
+3
+2
+9
+0
+1149
+11
+Celdon
+1
 Celdon Veins (SolidRed)
 
 0;1;7;17;1
@@ -1175,7 +1186,35 @@ Celdon (Match)
 11
 Celdon
 1
-Celdon (Ronusmc Match)
+Celdon Spiderman
+
+0;1;7;17;17;1
+3
+2
+9
+0
+1078
+9
+2
+1149
+11
+Celdon
+1
+Celdon Spiderman
+
+0;1;7;17;17;1
+3
+2
+9
+0
+1078
+9
+1
+1149
+11
+Celdon
+1
+Celdon (Match)
 
 0;1;7;17;17;1
 3

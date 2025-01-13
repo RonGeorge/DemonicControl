@@ -104,7 +104,7 @@ Nav_Button_11,Hollow KT's,#quest hollow
 Nav_Button_12,Peppermint Factory,#navto peppermint
 Nav_Button_13,Buttersworth,#navto Buttersworth
 Nav_Button_14,Dogs,#navto Dogs
-Nav_Button_15,Gromnies,#navto Viridian
+Nav_Button_15,Dino,#quest dino
 Nav_Button_16,Rage Gem,/ub bc /mt use Mausoleum of Rage Portal Gem
 Nav_Button_17,Banderlings,#quest Banderlings
 Nav_Button_18,Bluelady,#navto BlueLady
@@ -355,7 +355,7 @@ Demon_Button_14,#reveal,#reveal
 Demon_Button_15,#mule packer,#mule packer
 Demon_Button_16,-,#command
 Demon_Button_17,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
-Demon_Button_18,-,#command
+Demon_Button_18,Autopack,#ap
 Demon_Button_19,Reload Loot Profiles,/ub bc /vt loot load Demonic11.utl
 Demon_Button_20,Reload Metas,/ub bc /vt meta load DemonicControl
 Demon_Button_21,mode Teth, #mode Teth

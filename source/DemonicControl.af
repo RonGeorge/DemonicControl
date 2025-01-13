@@ -345,15 +345,11 @@ STATE: {Action} ~~ {
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_actiontext]}
 				ChatExpr {\/ub fellow disband}
-				DoExpr {cleargvar[persistentjoin]}
-				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is off.`}
 				SetState {Default2}
 	IF:	All
 			Expr {(disband)#getvar[capturegroup_actiontext]}
 			Expr {getfellowshipisleader[]==0}
 		DO:	DoAll 
-				DoExpr {cleargvar[persistentjoin]}
-				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is off.`}
 				SetState {Default2}
 	IF:	All
 			Expr {(ucv)#getvar[capturegroup_actiontext]}
@@ -3212,6 +3208,7 @@ STATE: {Quest} ~~ {
 			Expr {(Dino)#getvar[capturegroup_questtext]}
 		DO: DoAll
 				EmbedNav nav297_dinonpcs {[dinonpcs]}
+				SetOpt {OpenDoors} {false}
 				SetOpt {navclosestoprange} {0.01} ~~ set follow to 2
 				SetOpt {enablebuffing} {true}
 				SetOpt {enablecombat} {false}
@@ -4211,7 +4208,6 @@ STATE: {Find Group} ~~ {
 			Expr {testvar[ClosePlayers]==true}
 		DO: DoAll
 				DoExpr {listmap[listcreate[`ClosePlayers`, `PlayersNotInFellow`, `PlayersToAttempt`], `clearvar[$1]`]}
-				ChatExpr {`/t `+getcharstringprop[1]+`,Persistent join is on.`}
 				SetState {Recruit Team}
 	IF: Any
 			Expr {listcount[$PlayersToAttempt]==0}
