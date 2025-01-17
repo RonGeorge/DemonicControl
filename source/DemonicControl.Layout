@@ -370,7 +370,7 @@ tabvisible: false
 tabsize: 340, 450
 tabposition: 390, 50
 cols: 3 
-rows: 8
+rows: 10
 Button_01: 1
 Button_02: 1
 Button_03: 1
@@ -395,6 +395,12 @@ Button_21: 1
 Button_22: 1
 Button_23: 1
 Button_24: 1
+Button_25: 1
+Button_26: 1
+Button_27: 1
+Button_28: 1
+Button_29: 1
+Button_30: 1
 tab: Demon
 tabvisible: false
 tabsize: 340, 450

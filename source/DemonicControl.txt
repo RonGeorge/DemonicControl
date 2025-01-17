@@ -335,32 +335,38 @@ Portals_Button_18,Butter,#action sum2b
 Portals_Button_19,Ron VI,#command
 Portals_Button_20,Teth,#action sum1a
 Portals_Button_21,Teth Incursion,#action sum1b
-Portals_Button_22,-,#command
-Portals_Button_23,-,#command
-Portals_Button_24,closest portal,#action ucp
-Demon_Button_01,/lvl,/lvl
-Demon_Button_02,/myshare,/myshare
-Demon_Button_03,/tn,/ub bc /tn
-Demon_Button_04,/sub,/ub bc /sub
-Demon_Button_05,/recruitme NAME,/ub mexec chatboxpaste[`/recruitme `]
-Demon_Button_06,/recruit NAME,/ub mexec chatboxpaste[`/recruit `]
-Demon_Button_07,#check,#check
-Demon_Button_08,#checku,#checku
-Demon_Button_09,#refill,#refill
-Demon_Button_10,#findgroup,#findgroup
-Demon_Button_11,#recruit,#recruit
-Demon_Button_12,Fellow Quit,/ub bc /ub fellow quit
-Demon_Button_13,#critlist,#critlist
-Demon_Button_14,#reveal,#reveal
-Demon_Button_15,#mule packer,#mule packer
-Demon_Button_16,-,#command
-Demon_Button_17,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
-Demon_Button_18,Autopack,#ap
-Demon_Button_19,Reload Loot Profiles,/ub bc /vt loot load Demonic11.utl
-Demon_Button_20,Reload Metas,/ub bc /vt meta load DemonicControl
-Demon_Button_21,mode Teth, #mode Teth
+Portals_Button_22,Hellhound,#command
+Portals_Button_23,-,#action sum9a
+Portals_Button_24,Banders,#action sum9b
+Portals_Button_25,Gargoyle,#command
+Portals_Button_26,-,#action sum8a
+Portals_Button_27,BDC,#action sum8b
+Portals_Button_28,-,#command
+Portals_Button_29,-,#command
+Portals_Button_30,closest portal,#action ucp
+Demon_Button_01,#navto bluelady,#navto bluelady
+Demon_Button_02,Follow,#action follow
+Demon_Button_03,#quest bluelady,#quest bluelady
+Demon_Button_04,All On,#action all on
+Demon_Button_05,#navto curator,#navto curator
+Demon_Button_06,Navigation Only,#action nav only
+Demon_Button_07,#quest curator,#quest curator
+Demon_Button_08,#check,#check
+Demon_Button_09,#quest Queen,#quest queen
+Demon_Button_10,#checkg,#checkg
+Demon_Button_11,#quest Monouga,#quest monouga
+Demon_Button_12,#checku,#checku
+Demon_Button_13,#quest dino,#quest dino
+Demon_Button_14,#recruit,#recruit
+Demon_Button_15,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
+Demon_Button_16,Find Group,#findgroup
+Demon_Button_17,Reload Loot Profiles,/ub bc /vt loot load Demonic11.utl
+Demon_Button_18,Create Fellow,/tell [player],#action fellow
+Demon_Button_19,Reload Metas,/ub bc /vt meta load DemonicControl
+Demon_Button_20,Fellow Quit,/ub bc /ub fellow quit
+Demon_Button_21,mode Monouga, #mode monouga
 Demon_Button_22,mode Dino, #mode dino
 Demon_Button_23,mode Dragon, #mode dragon
-Demon_Button_24,Watchlist <target>, #watchlist target
-Demon_Button_25,mode Rage, #mode rage
+Demon_Button_24,mode Rage, #mode rage
+Demon_Button_25,Load Society,/ub bc /vt meta load Society
 Demon_Button_26,mode RESET, #mode reset

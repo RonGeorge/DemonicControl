@@ -507,6 +507,14 @@ STATE: {Default} ~~ {
 				SetState {*** DemonicControl 219***}
 ~~ }
 STATE: {Default2} ~~ {
+	IF: All
+			SecsInStateGE 4
+			ItemCountGE 1 {Bottled Water}
+		DO: Chat {/f Got Water!}
+	IF: All
+			ItemCountGE 1 {Bottled Water}
+			ExitPortal
+		DO: SetState {Default2}
 	IF: All 
 			Expr {testvar[raretracker]}
 			SecsInStateGE 20
@@ -903,6 +911,15 @@ STATE: {Default2} ~~ {
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
 				DoExpr {$myquests=0}
+				SetState {QuestCheck}
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#checkg?\"$} {}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+		DO: DoAll
+				DoExpr {$gemcheck=1}
 				SetState {QuestCheck}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#echo (?<telltext>.*)\"$} {}
@@ -1582,13 +1599,13 @@ STATE: {Nav To} ~~ {
 ~~ }
 STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 	IF: All 
-			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
+			Expr {(RareVendor)#getvar[capturegroup_navtext]}
 			CellE 01AC011B
 		DO: DoAll
 				Chat {/ub vendor open Imogen}
 				SetState {RareVendor}
 	IF: All 
-			Expr {(RareVendor)#getvar[capturegroup_actiontext]}
+			Expr {(RareVendor)#getvar[capturegroup_navtext]}
 		DO: DoAll
 				SetOpt {navclosestoprange} {0.0083}
 				EmbedNav nav323_rarevendor {rarevendor}
@@ -2236,9 +2253,12 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				EmbedNav nav128___None_ {[empty]}
 ~~ }
 STATE: {Nav To Sub} ~~ {
-	IF:	Always
+	IF:	All 
+			Not CellE 01C9022D
 		DO: DoAll
 				Chat {/sub}
+	IF:	Always
+		DO: DoAll
 				SetOpt {navclosestoprange} {0.00833} ~~set follow to 2 for corners
 	IF:	Any
 			Expr {(Path of the Blind)#getvar[capturegroup_navtext]}
@@ -2477,9 +2497,8 @@ STATE: {Nav To Sub} ~~ {
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 	IF:	All
-			Expr {(Halls of Metos)#getvar[capturegroup_navtext]}
+			Expr {(Hall of Metos)#getvar[capturegroup_navtext]}
 			CellE 01C9022D
-			ExitPortal
 		DO:	DoAll
 				EmbedNav nav248___sub_ {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
@@ -2619,6 +2638,86 @@ STATE: {Opt Set} ~~ {
 				DoExpr {clearvar[capturegroup_opttext]}
 ~~ }
 STATE: {Quest} ~~ {
+	IF:	All ~~ the entrance
+			ItemCountGE 0 {Magic Lamp}
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			CellE 8B640024
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[37]]}
+	IF:	All ~~ the exit
+			ItemCountGE 1 {Magic Lamp}
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+		DO: DoAll
+				EmbedNav nav295_blueladyturnin {[Blueladyturnin]}
+				SetOpt {enablecombat} {false}
+				SetOpt {enablenav} {true}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All ~~ the loop after a water
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			SecsInStateGE 4
+			ItemCountGE 1 {Bottled Water}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[37,`Cactus`]]}
+				SetState {Quest}
+	IF:	All ~~ letter S
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Magic Lamp}
+			CellE 02E101AD ~~ letter S
+		DO: DoAll
+				SetOpt {NavPriorityBoost} {false}
+				SetOpt {LootPriorityBoost} {true}
+				SetOpt {enablecombat} {true}
+				SetOpt {enablenav} {true}
+				SetOpt {enablelooting} {true}
+				SetOpt {lootonlyrarecorpses} {false}
+				SetOpt {navclosestoprange} {0.0083}
+				SetOpt {attackdistance} {.12}
+				SetOpt {ApproachDistance} {.042} ~~ set approach to 10 for loot
+				EmbedNav nav325_letters {letters}
+	IF:	All ~~ letter T
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Magic Lamp}
+			CellE 02E101E2 ~~ letter t
+		DO: DoAll
+				EmbedNav nav326_lettert {lettert}
+	IF:	All ~~ letter O
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Magic Lamp}
+			CellE 02E10214 ~~ letter o
+		DO: DoAll
+				EmbedNav nav327_lettero {lettero}
+	IF:	All ~~ letter P
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Magic Lamp}
+			CellE 02E10254 ~~ letter p
+		DO: DoAll
+				EmbedNav nav328_letterp {letterp}
+	IF:	All
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Magic Lamp}
+			CellE 003F03EA
+			Any
+				ExitPortal
+				Expr {isportaling[]==0}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[37,`Kalentha's Pet Cactus`]]}
+				SetOpt {enablelooting} {false}
+				SetOpt {NavPriorityBoost} {true}
+				SetOpt {attackdistance} {.24}
+	IF:	All
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Magic Lamp}
+			ChatMatch {The spines of the cactus}
+		DO: DoAll
+				EmbedNav nav324_cactusparta {cactuspartA}
+	IF:	All
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Magic Lamp}
+			ChatMatch {You have killed 20 Mu-miyah}
+		DO: DoAll
+				EmbedNav nav324_cactuspartb {cactuspartb}
+				SetOpt {enablecombat} {false}
 	IF:	All
 			Expr {(Shreth)#getvar[capturegroup_questtext]}
 			BlockE 01840000
@@ -2992,6 +3091,15 @@ STATE: {Quest} ~~ {
 				SetState {Default2}
 	IF:	All
 			Expr {(Monouga)#getvar[capturegroup_questtext]}
+			CellE 4FF10023
+		DO:	DoAll
+				EmbedNav nav329_monougas {[monougas]}
+				SetOpt {enablenav} {true}
+				SetOpt {enablecombat} {true}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Monouga)#getvar[capturegroup_questtext]}
 			Any 
 				CellE 4FF1001B
 				CellE 4FF10023
@@ -3054,6 +3162,8 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
 			Expr {getvar[capturegroup_name]!=getcharstringprop[1]}
+			Expr {getvar[capturegroup_saythink]!=say}
+			Expr {getvar[capturegroup_saythink]!=think}
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_quest]}
 				SetState {Default2}
@@ -3163,22 +3273,6 @@ STATE: {Quest} ~~ {
 				Chat {/sub}
 				SetOpt {navclosestoprange} {0.00833} ~~set follow to 2 for corners
 				EmbedNav nav294_banderlings {[Banderlings]}
-				SetOpt {enablecombat} {false}
-				SetOpt {enablenav} {true}
-				DoExpr {clearvar[capturegroup_questtext]}
-				SetState {Default2}
-	IF:	All
-			ItemCountLE 0 {Magic Lamp}
-			Expr {(Bluelady)#getvar[capturegroup_questtext]}
-		DO: DoAll
-				Chat {/lfg You don't have a Magic Lamp!}
-				DoExpr {clearvar[capturegroup_questtext]}
-				SetState {Default2}
-	IF:	All
-			ItemCountGE 1 {Magic Lamp}
-			Expr {(Bluelady)#getvar[capturegroup_questtext]}
-		DO: DoAll
-				EmbedNav nav295_blueladyturnin {[Blueladyturnin]}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
 				DoExpr {clearvar[capturegroup_questtext]}
@@ -3320,11 +3414,14 @@ STATE: {QuestCheck} ~~ {
 			Expr {$myquests==0}
 		DO: DoAll
 				DoExpr {$myquests=1}
-				DoExpr {echo[`-Available Quests-`,14]}
-				DoExpr {getqueststatus[bestowerbasepiece]==0||echo[Bestower Title is ready,13]}
+	IF: All 
+			Expr {testvar[myquests]}
+		DO: DoAll
+				DoExpr {echo[`----Available Quests----`,16]}
 	IF: All
 			Expr {getcharintprop[25]<=150}
 			Expr {$myquests==1}
+			Expr {$gemcheck==0}
 		DO: DoAll
 				DoExpr {echo[Less than 150,14]}
 				DoExpr {echo[Glendon Woods Snowmen (up to 150),13]}
@@ -3332,6 +3429,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=150}
 			Expr {$myquests==1}
+			Expr {$gemcheck==0}
 		DO: DoAll
 				DoExpr {echo[`----------150----------`,14]}
 				DoExpr {getqueststatus[tormentshardpickup]==0||echo[Curator is ready,13]}
@@ -3339,6 +3437,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=250}
 			Expr {$myquests==1}
+			Expr {$gemcheck==0}
 		DO: DoAll
 				DoExpr {echo[`----------250----------`,14]}
 				DoExpr {getqueststatus[stuffytokenwait]==0||echo[Bear is ready,13]}
@@ -3347,6 +3446,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=300}
 			Expr {$myquests==1}
+			Expr {$gemcheck==0}
 		DO: DoAll
 				DoExpr {echo[`----------300----------`,14]}
 				DoExpr {getqueststatus[grievverbosstokenwait]==0||echo[Grievver is ready,13]}
@@ -3356,6 +3456,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=400}
 			Expr {$myquests==1}
+			Expr {$gemcheck==0}
 		DO: DoAll
 				DoExpr {echo[`----------400----------`,14]}
 				DoExpr {getqueststatus[killtasktethskeleton]==0||echo[Teth is ready,13]}
@@ -3364,6 +3465,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=500}
 			Expr {$myquests==1}
+			Expr {$gemcheck==0}
 		DO: DoAll
 				DoExpr {echo[`----------500----------`,14]}
 				DoExpr {getqueststatus[buttersworthmainwait]==0||echo[Buttersworth is ready,13]}
@@ -3373,9 +3475,20 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=750}
 			Expr {$myquests==1}
+			Expr {$gemcheck==0}
 		DO: DoAll
 				DoExpr {echo[`----------750----------`,14]}
 				DoExpr {getqueststatus[killtaskterradinotimer]==0||echo[Dino is ready,13]}
+	IF: All
+			Expr {$gemcheck==1}
+			Expr {$myquests==1}
+		DO: DoAll 
+				DoExpr {echo[`---Augmentation Gems---`,14]}
+				DoExpr {getqueststatus[augmentationblankgemacquired]==0||echo[Bella is ready,9]}
+				DoExpr {getqueststatus[paradoxeggpickup]==0||echo[Queen Egg is ready,9]}
+				DoExpr {getqueststatus[blankaugluminancetimer_0511]==0||echo[Lum Gem purchase is ready,9]}
+				DoExpr {getqueststatus[stipendtimer_0812]==0||echo[Stipend is ready,9]}
+				DoExpr {clearvar[gemcheck]}
 	IF: All
 			Expr {$myquests==1}
 		DO: DoAll
@@ -3426,7 +3539,7 @@ STATE: {Mode} ~~ {
 				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`80`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
 				SetOpt {SummonPets} {true}
-				DoExpr {setvar[monster,Kemeroi Crystal Minion]}
+				DoExpr {setvar[monster,Kemeroai Crystal Minion]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
 	IF: All
@@ -4089,7 +4202,51 @@ STATE: {SkillCheck} ~~ {
 	IF:	Always
 		DO:	DoAll
 				DoExpr {echo[Starting Character Check\.\.\.,13]}
-				DoExpr {echo[Checking Resists\.\.\.,13]}
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[Checking Nalicana\.\.\.,17]}
+				DoExpr {ifthen[getcharintprop[338]<5,`echo[You are missing Aura of Aetheric Vision \+getcharintprop[338]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[343]<5,`echo[You are missing Aura of the Craftsman \+getcharintprop[343]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[335]<5,`echo[You are missing Aura of Glory \+getcharintprop[335]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[339]<5,`echo[You are missing Aura of Mana Flow \+getcharintprop[339]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[340]<5,`echo[You are missing Aura of Mana Infusion \+getcharintprop[340]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[342]<5,`echo[You are missing Aura of Purity \+getcharintprop[342]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[336]<5,`echo[You are missing Aura of Temperance \+getcharintprop[336]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[334]<5,`echo[You are missing Aura of Protection \+getcharintprop[334]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[333]<5,`echo[You are missing Aura of Valor \+getcharintprop[333]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[365]<11,`echo[You are missing Aura of the World \+getcharintprop[365]\+\\/11,15]`]}
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[Seers\.\.\.,17]}
+				DoExpr {ifthen[getcharintprop[344]<10,`echo[You are missing Aura of Specialization \+getcharintprop[344]\+\\/10,15]`]}
+				DoExpr {ifthen[getcharintprop[334]<45,`echo[You are missing Aura of Invulnerability or Aura of Protection \+getcharintprop[334]\+\\/45,15]`]}
+				DoExpr {ifthen[getcharintprop[342]<15,`echo[You are missing Aura of Purity \+getcharintprop[342]\+\\/15,15]`]}
+				DoExpr {ifthen[getcharintprop[333]<45,`echo[You are missing Aura of Destruction or Aura of Valor \+getcharintprop[333]\+\\/45,15]`]}
+				DoExpr {ifthen[getcharintprop[335]<20,`echo[You are missing Aura of Retribution or Aura of Glory \+getcharintprop[335]\+\\/20,15]`]}
+				DoExpr {ifthen[getcharintprop[336]<20,`echo[You are missing Aura of Hardening or Aura of Temperance \+getcharintprop[336]\+\\/20,15]`]}
+				DoExpr {ifthen[getcharintprop[365]<41,`echo[You are missing Aura of the World \+getcharintprop[365]\+\\/41,15]`]}
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[Augmentation Gems\.\.\.,17]}
+				DoExpr {ifthen[getcharintprop[230]<5,`echo[You are missing Might of the Seventh Mule \+getcharintprop[230]\+\\/5,15]`]}
+				DoExpr {ifthen[getcharintprop[297]!=1,`echo[You are missing Infused War Magic,15]`]}
+				DoExpr {ifthen[getcharintprop[296]!=1,`echo[You are missing Infused Life Magic,15]`]}
+				DoExpr {ifthen[getcharintprop[295]!=1,`echo[You are missing Infused Item Magic,15]`]}
+				DoExpr {ifthen[getcharintprop[294]!=1,`echo[You are missing Infused Creature Magic,15]`]}
+				DoExpr {ifthen[getcharintprop[328]!=1,`echo[You are missing Infused Void Magic,15]`]}
+				DoExpr {ifthen[getcharintprop[237]<2,`echo[You are missing Innate Renewal \+getcharintprop[237]\+\\/2,15]`]}
+				DoExpr {ifthen[getcharintprop[238]<5,`echo[You are missing Archmage\'s Endurance \+getcharintprop[238]\+\\/5,15]`]}
+				DoExpr {echo[Ratings\.\.\.,17]}
+				DoExpr {ifthen[getcharintprop[233]!=1,`echo[You are missing Critical Protection,15]`]}
+				DoExpr {ifthen[getcharintprop[309]!=1,`echo[You are missing Frenzy of the Slayer,15]`]}
+				DoExpr {ifthen[getcharintprop[310]!=1,`echo[You are missing Iron Skin of the Invincible,15]`]}
+				DoExpr {ifthen[getcharintprop[298]!=1,`echo[You are missing Eye of the Remorseless,15]`]}
+				DoExpr {ifthen[getcharintprop[299]!=1,`echo[You are missing Hand of the Remorseless,15]`]}
+				DoExpr {echo[Skills\.\.\.,17]}
+				DoExpr {ifthen[getcharintprop[300]!=1,`echo[You are missing Master of the Steel Circle,15]`]}
+				DoExpr {ifthen[getcharintprop[302]!=1,`echo[You are missing Master of the Five Fold Path,15]`]}
+				DoExpr {ifthen[getcharintprop[301]!=1,`echo[You are missing Master of the Focused Eye,15]`]}
+				DoExpr {echo[Checking Innate Resistance\.\.\.,17]}
 				DoExpr {ifthen[getcharintprop[240]<2,`echo[You are missing Enhancement of the Blade Turner,15]`]}
 				DoExpr {ifthen[getcharintprop[241]<2,`echo[You are missing Enhancement of the Arrow Turner,15]`]}
 				DoExpr {ifthen[getcharintprop[242]<2,`echo[You are missing Enhancement of the Mace Turner,15]`]}
@@ -4099,49 +4256,7 @@ STATE: {SkillCheck} ~~ {
 				DoExpr {ifthen[getcharintprop[246]<2,`echo[You are missing Storm\'s Enhancement,15]`]}
 	IF: Always
 		DO: DoAll
-				DoExpr {echo[Checking Nalicana\.\.\.,13]}
-				DoExpr {ifthen[getcharintprop[338]<5,`echo[You are missing Aura of Aetheric Vision,15]`]}
-				DoExpr {ifthen[getcharintprop[343]<5,`echo[You are missing Aura of the Craftsman,15]`]}
-				DoExpr {ifthen[getcharintprop[335]<5,`echo[You are missing Aura of Glory,15]`]}
-				DoExpr {ifthen[getcharintprop[339]<5,`echo[You are missing Aura of Mana Flow,15]`]}
-				DoExpr {ifthen[getcharintprop[340]<5,`echo[You are missing Aura of Mana Infusion,15]`]}
-				DoExpr {ifthen[getcharintprop[342]<5,`echo[You are missing Aura of Purity,15]`]}
-				DoExpr {ifthen[getcharintprop[336]<5,`echo[You are missing Aura of Temperance,15]`]}
-	IF: Always
-		DO: DoAll
-				DoExpr {echo[Seers\.\.\.,13]}
-				DoExpr {ifthen[getcharintprop[344]<10,`echo[You are missing Aura of Specialization \+getcharintprop[334]\+\\/10,15]`]}
-				DoExpr {ifthen[getcharintprop[334]<45,`echo[You are missing Aura of Invulnerability or Aura of Protection \+getcharintprop[334]\+\\/45,15]`]}
-				DoExpr {ifthen[getcharintprop[342]<15,`echo[You are missing Aura of Purity \+getcharintprop[342]\+\\/15,15]`]}
-				DoExpr {ifthen[getcharintprop[333]<45,`echo[You are missing Aura of Destruction or Aura of Valor \+getcharintprop[333]\+\\/45,15]`]}
-				DoExpr {ifthen[getcharintprop[335]<20,`echo[You are missing Aura of Retribution or Aura of Glory \+getcharintprop[335]\+\\/20,15]`]}
-				DoExpr {ifthen[getcharintprop[336]<20,`echo[You are missing Aura of Hardening or Aura of Temperance \+getcharintprop[336]\+\\/20,15]`]}
-				DoExpr {ifthen[getcharintprop[365]<41,`echo[You are missing Aura of the World \+getcharintprop[365]\+\\/41,15]`]}
-	IF: Always
-		DO: DoAll
-				DoExpr {echo[Augmentation Gems\.\.\.,13]}
-				DoExpr {ifthen[getcharintprop[230]<5,`echo[You are missing Might of the Seventh Mule,15]`]}
-				DoExpr {ifthen[getcharintprop[297]!=1,`echo[You are missing Infused War Magic,15]`]}
-				DoExpr {ifthen[getcharintprop[296]!=1,`echo[You are missing Infused Life Magic,15]`]}
-				DoExpr {ifthen[getcharintprop[295]!=1,`echo[You are missing Infused Item Magic,15]`]}
-				DoExpr {ifthen[getcharintprop[294]!=1,`echo[You are missing Infused Creature Magic,15]`]}
-				DoExpr {ifthen[getcharintprop[328]!=1,`echo[You are missing Infused Void Magic,15]`]}
-				DoExpr {ifthen[getcharintprop[237]<2,`echo[You are missing Innate Renewal,15]`]}
-				DoExpr {ifthen[getcharintprop[333]<5,`echo[You are missing Aura of Temperance,15]`]}
-				DoExpr {ifthen[getcharintprop[238]<5,`echo[You are missing Archmage\'s Endurance,15]`]}
-				DoExpr {echo[Ratings\.\.\.,13]}
-				DoExpr {ifthen[getcharintprop[233]!=1,`echo[You are missing Critical Protection,15]`]}
-				DoExpr {ifthen[getcharintprop[309]!=1,`echo[You are missing Frenzy of the Slayer,15]`]}
-				DoExpr {ifthen[getcharintprop[310]!=1,`echo[You are missing Iron Skin of the Invincible,15]`]}
-				DoExpr {ifthen[getcharintprop[298]!=1,`echo[You are missing Eye of the Remorseless,15]`]}
-				DoExpr {ifthen[getcharintprop[299]!=1,`echo[You are missing Hand of the Remorseless,15]`]}
-				DoExpr {echo[Skills\.\.\.,13]}
-				DoExpr {ifthen[getcharintprop[300]!=1,`echo[You are missing Master of the Steel Circle,15]`]}
-				DoExpr {ifthen[getcharintprop[302]!=1,`echo[You are missing Master of the Five Fold Path,15]`]}
-				DoExpr {ifthen[getcharintprop[301]!=1,`echo[You are missing Master of the Focused Eye,15]`]}
-	IF: Always
-		DO: DoAll
-				DoExpr {echo[Attributes\.\.\.,13]}
+				DoExpr {echo[Attributes\.\.\.,17]}
 				DoExpr {setvar[attributecheck,0]}
 				DoExpr {setvar[attributecheck,getvar[attributecheck]+getcharintprop[218]+getcharintprop[219]+getcharintprop[220]+getcharintprop[221]+getcharintprop[222]+getcharintprop[223]]}
 	IF: All 
@@ -4622,10 +4737,12 @@ STATE: {RareVendor} ~~ {
 			SecsInStateGE 2
 		DO:	DoAll
 				Chat {/ub vendor buyall}
-				SetState {Vendor}
-	IF: All
-			ItemCountGE 5 {Resister's Crystal}
-			ItemCountGE 5 {Evader's Crystal}
+				SetState {RareVendor}
+	IF: Any 
+			All
+				ItemCountGE 5 {Resister's Crystal}
+				ItemCountGE 5 {Evader's Crystal}
+			SecsInStateGE 10
 		DO:	DoAll
 				SetState {Default2}
 ~~ }
@@ -4633,7 +4750,7 @@ STATE: {Junk} ~~ {
 	IF: Not Expr {testvar[jcounter]}
 		DO:	DoAll
 				DoExpr {$jcounter=0}
-				DoExpr {$junk=listcreate[Scarlet Red Letter,Braced Mana Forge Key,Blank Augmentation Gem,Rock,Fishing Pole,Sealed crate of Salvaged Sandstone,Mythic Chest Key,Durable Legendary Key,Bone Sword]}
+				DoExpr {$junk=listcreate[Altered Dark Remoran Fin,Drudge Mask,Legendary Key,Scarlet Red Letter,Braced Mana Forge Key,Rock,Fishing Pole,Sealed crate of Salvaged Sandstone,Mythic Chest Key,Durable Legendary Key,Bone Sword]}
 	IF: All
 			Expr {wobjectfindininventorybyname[listgetitem[$junk,getvar[jcounter]]]!=0}
 		DO: DoAll
@@ -4706,7 +4823,60 @@ STATE: {ParagonApply} ~~ {
 				DoExpr {clearvar[paragonlist]&&clearvar[weaponname]&&clearvar[gemlevel]}
 				SetState {Default2}
 ~~ }
-
+STATE: {Tokens} ~~ {
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Aetheric Vision]+getcharintprop[338])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Aetheric Vision}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Glory]+getcharintprop[335])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Glory}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Temperance]+getcharintprop[336])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Glory}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Valor]+getcharintprop[333])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Valor}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Protection]+getcharintprop[334])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Protection}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Purity]+getcharintprop[342])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Purity}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of the Craftsman]+getcharintprop[343])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of the Craftsman}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Mana Flow]+getcharintprop[339])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Mana Flow}
+	IF: All
+			Expr {(getitemcountininventorybyname[Token of the Aura of Mana Infusion]+getcharintprop[340])<5}
+		DO: DoAll
+				Chat {/mt usel Token of the Aura of Mana Infusion}
+	IF: All
+			Expr {getcharintprop[338]==5}
+			Expr {getcharintprop[335]==5}
+			Expr {getcharintprop[336]==5}
+			Expr {getcharintprop[333]==5}
+			Expr {getcharintprop[334]==5}
+			Expr {getcharintprop[342]==5}
+			Expr {getcharintprop[343]==5}
+			Expr {getcharintprop[339]==5}
+			Expr {getcharintprop[340]==5}
+		DO: DoAll
+				SetState {Default2}
+	IF: All
+			SecsInStateGE 3
+		DO: DoAll 
+				SetState {Tokens}
+~~ }
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
 
 NAV: nav0___None_ circular ~~ {
@@ -11449,4 +11619,54 @@ NAV: nav323_rarevendor once ~~ {
 	pnt -100.990218989054 35.6417675361037 2.08333134651184E-05
 	cht -100.990218989054 35.6417675361037 2.08333134651184E-05 {/ub vendor open Imogen}
 	cht -100.990218989054 35.6417675361037 2.08333134651184E-05 {/vt opt set opendoors false}
+~~ }
+NAV: nav324_cactusparta once ~~ {
+	pnt -100.686835479736 -51.6747636556625 2.08333134651184E-05
+	pnt -100.826000595093 -51.6732056538264 2.08333134651184E-05
+	pnt -100.825768280029 -51.6826018492381 2.08333134651184E-05
+	pnt -100.825050354004 -51.7411137104034 0.0039638397594293
+	pnt -100.823888142904 -51.7592341899872 0.0125208338101705
+	pnt -100.86990331014 -51.757669321696 0.0375208298365275
+	pnt -100.86728108724 -51.6700879096985 0.0500208298365275
+~~ }
+NAV: nav324_cactuspartb once ~~ {
+	pnt -101.203892008464 -51.6746553023656 0.0500208298365275
+	pnt -101.200688680013 -51.5895506223043 0.0375208298365275
+	pnt -101.246393966675 -51.5909701426824 0.0125208338101705
+	pnt -101.241918118795 -51.6752439816793 2.08333134651184E-05
+	pnt -101.531119569143 -51.6754338423411 2.08333134651184E-05
+	pnt -101.532124932607 -51.6315491358439 2.08333134651184E-05
+	tlk -101.70553188324 -51.6412470420202 2.08333134651184E-05 -101.532983334859 -51.6259762525558 2.08333131013205E-05 37 {Kalentha}
+	pnt -101.701636791229 -51.6482811609904 2.08333134651184E-05
+	tlk -101.70553188324 -51.6412470420202 2.08333134651184E-05 -101.710107088089 -51.636850420634 2.08333131013205E-05 37 {Lirael}
+~~ }
+NAV: nav325_letters once ~~ {
+	pnt -99.6101664861043 76.5095818837484 -0.0499791701634725
+	pnt -99.6451941172282 76.509019724528 -0.0499791701634725
+	pnt -99.6426243464152 76.4852540334066 -0.0499791701634725
+	pnt -99.602243232727 76.4404416402181 -0.0499791701634725
+~~ }
+NAV: nav326_lettert once ~~ {
+	pnt -99.4747433344523 76.4282015482585 -0.0499791701634725
+	pnt -99.4738585789998 76.460299428304 -0.0499791701634725
+	pnt -99.4724198023478 76.5124627431234 -0.0499791701634725
+	pnt -99.4571306864421 76.5114002227783 -0.0499791701634725
+~~ }
+NAV: nav327_lettero once ~~ {
+	pnt -99.3727537790934 76.4246508280436 -0.0499791701634725
+	pnt -99.3884099960327 76.4398834228516 -0.0499791701634725
+	pnt -99.3908270517985 76.4586194356283 -0.0499791701634725
+	pnt -99.3913947423299 76.4913899739583 -0.0499791701634725
+	pnt -99.3611245473226 76.5130238850911 -0.0499791701634725
+~~ }
+NAV: nav328_letterp once ~~ {
+	pnt -99.2262388865153 76.4534587860107 -0.0499791701634725
+	pnt -99.2168226877848 76.4665813446045 -0.0499791701634725
+~~ }
+NAV: nav329_monougas once ~~ {
+	pnt -38.3316260973612 91.039007584254 0.350020853678385
+	ptl -39.0635285059611 91.3045685450236 -0.00372916658719381 -38.3292499860128 91.0166608333588 0.349737524986267 14 {Portal to the Western Front Lines}
+	pnt -38.6479491154353 91.2070295651754 0.350020853678385
+	jmp -39.0635285059611 91.3045685450236 -0.00372916658719381 270 {False} 700.00003
+	pnt -39.0635285059611 91.3045685450236 -0.00372916658719381
 ~~ }

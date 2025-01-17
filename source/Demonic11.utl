@@ -745,7 +745,7 @@ Bane|Tink
 83
 Sollerets|Gauntlets|Greaves|Tassets|Pauldrons|Vambraces|Breastplate|Girth|Helm
 1
-(A) Cov Multi-Legendary + dr25
+(A) Covenant (Damage Resist)
 
 0;1;7;9;1;3;12;9
 3
@@ -767,7 +767,7 @@ Cov|Olthoi
 Bane
 Minor|Major|Epic
 7
-(A) Cov Multi-Legendary + v25
+(A) Covenant (Vitality)
 
 0;1;7;9;1;3;12;9
 3
@@ -789,23 +789,29 @@ Cov|Olthoi
 Bane
 Minor|Major|Epic
 7
-(A) Armor DR29
+(A) Armor (Damage Resist)
 
-0;1;7;3
+0;1;7;3;13
 3
 2
 9
 29
 371
-(A) Armor V29
+10
+9999
+36
+(A) Armor (Vitality)
 
-0;1;7;3
+0;1;7;3;13
 3
 2
 9
 29
 379
-    (C) (Defender Clothes)
+10
+9999
+36
+(C) (Defender Clothes)
 
 0;1;7;3;12
 3
@@ -816,7 +822,7 @@ Minor|Major|Epic
 9
 16
 265
-    (C) (Clothing) Damage
+(C) (Clothing) Damage
 
 0;1;7;3
 3
@@ -824,7 +830,7 @@ Minor|Major|Epic
 9
 29
 370
-    (C) (Clothing) DamageResist
+(C) (Clothing) DamageResist
 
 0;1;7;3
 3
@@ -832,7 +838,7 @@ Minor|Major|Epic
 9
 29
 371
-    (C) (Clothing) Vitality
+(C) (Clothing) Vitality
 
 0;1;7;3
 3
