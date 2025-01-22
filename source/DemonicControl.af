@@ -515,6 +515,7 @@ STATE: {Default} ~~ {
 		DO: DoAll
 				DoExpr {testgvar[charlist]||setgvar[charlist,listcreate[getcharstringprop[1]]]}
 				DoExpr {listcontains[getgvar[charlist],getcharstringprop[1]]||listadd[getgvar[charlist],getcharstringprop[1]]}
+				DoExpr {testgvar[leaderlist]||setgvar[leaderlist,listcreate[Ron VI,Ron V,Ron IV,Ronusmc,Demonic,Ron II,Ron,Gargoyle,Hellhound]]}
 	IF:	Always
 		DO:	DoAll
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]]}
@@ -534,12 +535,14 @@ STATE: {Default} ~~ {
 STATE: {Default2} ~~ {
 	IF:	All 
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"![Dd]inos\"$} {}
+			Expr {&patrolleader==getcharstringprop[1]}
 			Expr {&patrol==beach}
 		DO:	DoAll
 				ChatExpr {`\/vt echo- Located at `+coordinatetostring[getplayercoordinates[]]+ ' There are '+getfellowshipcount[]+' of us.'}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (says|tells you), \"recruit\"$} {}
+			Expr {&patrolleader==getcharstringprop[1]}
 			Expr {&patrol==beach}
 		DO:	DoAll
 				ChatExpr {`/tell `+getvar[capturegroup_name]+`, #recruiting`}
@@ -548,6 +551,7 @@ STATE: {Default2} ~~ {
 	IF:	All 
 			Death
 			Expr {&patrol==beach}
+			Expr {&patrolleader==getcharstringprop[1]}
 		DO:	DoAll
 				Chat {/f #reset}
 	IF: All 
@@ -713,7 +717,7 @@ STATE: {Default2} ~~ {
 				Chat {/ub clearbugged}
 				SetState {Default2}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#patrol (?<pathtext>.*)\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#patrol(?:\s(?<pathtext>.*))?\"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
@@ -3580,7 +3584,7 @@ STATE: {Mode} ~~ {
 			Expr {(Rage)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				DoExpr {$activemode=rage}
-				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&groupleader=getcharstringprop[1]`]}
+				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&patrolleader=getcharstringprop[1]`]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rage`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Rage`]}
@@ -3600,8 +3604,8 @@ STATE: {Mode} ~~ {
 			Expr {(off)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				DoExpr {listmap[listcreate[`capturegroup_modetext`,`activemode`],`clearvar[$1]`]}
-				DoExpr {listmap[listcreate[`persistentjoin`,`groupleader`],`cleargvar[$1]`]}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Modes off. Variables cleared.`}
+				DoExpr {listmap[listcreate[`patrolleader`],`cleargvar[$1]`]}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Modes off.`}
 				SetState {Default2}
 	IF: All
 			Expr {(reset)#getvar[capturegroup_modetext]}
@@ -3612,7 +3616,7 @@ STATE: {Mode} ~~ {
 				SetOpt {OpenDoors} {false}
 				SetOpt {LootFellowCorpses} {true}
 				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
-				DoExpr {listmap[listcreate[`persistentjoin`,`groupleader`],`cleargvar[$1]`]}
+				DoExpr {listmap[listcreate[`patrolleader`],`cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`,`rageminion`,`ragesentients`,`ragelord`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinodone`,`ragedone`, `patrol`], `cleargvar[$1]`]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Modes reset. Variables cleared.`}
@@ -3869,7 +3873,7 @@ STATE: {Mode} ~~ {
 			Expr {(Dino)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				DoExpr {$activemode=dino}
-				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&groupleader=getcharstringprop[1]`]}
+				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&patrolleader=getcharstringprop[1]`]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Dino`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Dino`]}
@@ -4599,54 +4603,46 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 				SetState {Default2}
 ~~ }
 STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
-	IF: Always
+	IF: Always ~~ clear counter
 		DO: DoAll 
 				DoExpr {testvar[counter]&&$counter==5||$counter>=1&&$counter=$counter+1||$counter=1}
-	IF: All ~~ for patrol this sets the mage as leader and then he exits
-			Expr {&patrol==beach}
-			Expr {$class==mage}
-			Expr {$activemode==dino}
-		DO: DoAll 
-				DoExpr {&groupleader=getcharstringprop[1]}
-				EmbedNav nav318_beach {beach}
-				DoExpr {clearvar[counter]}
-				CallState {ActiveStatus} {Default2}
 	IF: All ~~ makes sure the speaker's target is grabbed only, Target and recycles
 			Expr {(target)#getvar[capturegroup_leadertext]}
 			Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 		DO: DoAll 
-				DoExpr {&groupleader=wobjectgetname[wobjectgetselection[]]}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&groupleader}
+				DoExpr {&patrolleader=wobjectgetname[wobjectgetselection[]]}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&patrolleader}
 				DoExpr {clearvar[capturegroup_leadertext]}
 	IF: All  ~~ main catch, this got a leader name and its not a special command
 			Expr {testvar[capturegroup_leadertext]} ~~ got leader text from command
 			Not Expr {(follow)#getvar[capturegroup_leadertext]} ~~ not follow
 			Not Expr {(target)#getvar[capturegroup_leadertext]} ~~ not target
 		DO: DoAll
-				DoExpr {setgvar[groupleader,getvar[capturegroup_leadertext]}
+				DoExpr {setgvar[patrolleader,getvar[capturegroup_leadertext]}
 				EmbedNav nav0___None_ {empty} ~~ forces empty
 				DoExpr {clearvar[capturegroup_leadertext]}
 	IF: All ~~ main activate condition, character is not leader but its set
-			Expr {testgvar[groupleader]} ~~ leader is set
-			Expr {&groupleader!=getcharstringprop[1]} ~~ character is not leader
-			Any ~~ is empty or follow
+			Expr {testgvar[patrolleader]} ~~ leader is set
+			Expr {&patrolleader!=getcharstringprop[1]} ~~ character is not leader
+			Any ~~ is empty or follow command
 				NavEmpty ~~ nav is empty
 				Expr {(follow)#getvar[capturegroup_leadertext]} ~~ is follow
 		DO: DoAll
-				ChatExpr {`/ub follow `+&groupleader}
+				ChatExpr {`/ub follow `+&patrolleader}
 				DoExpr {clearvar[capturegroup_leadertext]}
 	IF: Any ~~ this is the exit condition
 			ChatMatch {#reset}
 			Not NavEmpty
-			Expr {&groupleader==getcharstringprop[1]} ~~ character is leader
+			Expr {&patrolleader==getcharstringprop[1]} ~~ character is leader
 		DO: DoAll
 				DoExpr {clearvar[counter]}
 				CallState {ActiveStatus} {Default2}
+	IF: All
+			Not Expr {testgvar[patrolleader]} ~~ no leader set
+			Expr {testgvar[patrol]} ~~ is patrolling
+		DO: DoAll 
+				CallState {ActiveStatus} {PatrolFollow}
 ~~ Resident conditions
-	IF: All ~~ no variable
-			Not Expr {testgvar[groupleader]}
-		DO: DoAll
-				ChatExpr {`/t `+getcharstringprop[1]+`,use #leader <name> to set a group leader`}
 	IF: Always
 		DO: SetWatchdog 5 5 {ActiveLeader}
 	IF:	All
@@ -4940,7 +4936,7 @@ STATE: {FindLeader} ~~ {
 STATE: {PatrolFollow} ~~ {
 	IF: Always 
 		DO: DoAll
-				DoExpr {testvar[patrol]||$patrol=f}
+~~				DoExpr {testvar[patrol]||$patrol=f}
 				Chat {/vt opt set navpriorityboost true}
 				Chat {/vt opt set enablenav true}
 				Chat {/vt opt set enablelooting true}
@@ -4949,16 +4945,17 @@ STATE: {PatrolFollow} ~~ {
 				Chat {/vt opt set EnableMeta true}
 				SetWatchdog 5 120 {PatrolLimbo}
 	IF:	All
-			Expr {testvar[patrolleader]}
-			Expr {getfellowshipstatus[]}
+			Expr {testvar[patrolleader]} ~~ have leader
+			Expr {getfellowshipstatus[]} ~~ in a fellow
 			NavEmpty
 		DO:	DoAll
-				ChatExpr {`/ub follow `+$patrolleader}
+				ChatExpr {`/ub follow `+&patrolleader}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruiting\"$} {}
 			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
+			Expr {getfellowshipstatus[]==0}
 		DO:	DoAll
-				DoExpr {$patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
+				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
 				ChatExpr {`/tell `+getvar[capturegroup_name]+`, recruit`}
 				EmbedNav nav331_dinorecall {dinorecall}
 				SetState {PatrolFollow}
@@ -4966,7 +4963,7 @@ STATE: {PatrolFollow} ~~ {
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#reset\"$} {}
 			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
 		DO:	DoAll 
-				DoExpr {$patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
+				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
 				EmbedNav nav331_dinorecall {dinorecall}
 				SetState {PatrolFollow}
 	IF:	All
@@ -4999,7 +4996,7 @@ STATE: {PatrolLimbo} ~~ {
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruiting\"$} {}
 			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
 		DO:	DoAll
-				DoExpr {$patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
+				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
 				ChatExpr {`/tell `+getvar[capturegroup_name]+`, recruit`}
 				EmbedNav nav331_dinorecall {dinorecall}
 				SetState {PatrolFollow}
@@ -5009,27 +5006,38 @@ STATE: {PatrolLimbo} ~~ {
 				SetState {PatrolLimbo}
 ~~ }
 STATE: {Patrol} ~~ {
-	IF: All ~~ starts the motion
+	IF: Any ~~ no pathtext or not on leader list
+			Expr {testvar[capturegroup_pathtext]==0} ~~ if its only #patrol with nothing after
+			Not Expr {listcontains[&leaderlist,getcharstringprop[1]]}
+		DO: DoAll 
+				SetState {PatrolFollow}
+	IF: All ~~ settings for the speaker
 			Expr {(Beach)#getvar[capturegroup_pathtext]}
 			Expr {$activemode==dino}
+			Any
+				Expr {$capturegroup_name==getcharstringprop[1]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				DoExpr {&patrol=beach}
-				DoExpr {$class!=mage||(&groupleader=getcharstringprop[1]&&vtsetsetting[attackdistance,`0.27125`]&&vtsetsetting[NavPriorityBoost,`0`])}
+				DoExpr {$class!=mage||(&patrolleader=getcharstringprop[1]&&vtsetsetting[attackdistance,`0.27125`]&&vtsetsetting[NavPriorityBoost,`0`])}
 				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.062`]&&vtsetsetting[NavPriorityBoost,`1`])}
 				SetOpt {navclosestoprange} {0.021} ~~ follow to 4
 				SetOpt {SummonPets} {true}
 				DoExpr {clearvar[capturegroup_pathtext]}
-	IF: All
-			Expr {$class==mage}
+	IF: All~~ the speaker can lead
 			Expr {$activemode==dino}
+			Expr {&patrol==beach}
+			Any
+				Expr {$capturegroup_name==getcharstringprop[1]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				EmbedNav nav318_beach {beach}
-				SetState {ActiveLeader}
-	IF: All
-			Expr {$class==melee}
-			Expr {$activemode==dino}
+				CallState {ActiveStatus} {Default2}
+	IF: Always
 		DO:	DoAll
-				SetState {ActiveLeader}
+				SetState {PatrolFollow}
 ~~ }
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
 
