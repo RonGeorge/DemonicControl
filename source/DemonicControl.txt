@@ -319,7 +319,7 @@ Portals_Button_02,Teth,#action sum7a
 Portals_Button_03,-,#action sum7b
 Portals_Button_04,RonUSMC,#command
 Portals_Button_05,Teth,#action sum4a
-Portals_Button_06,Buttersworth,#action sum4b
+Portals_Button_06,Teth Incursion,#action sum4b
 Portals_Button_07,Ron II,#command
 Portals_Button_08,Teth,#action sum6a
 Portals_Button_09,BDC,#action sum6b
@@ -367,6 +367,6 @@ Demon_Button_20,Fellow Quit,/ub bc /ub fellow quit
 Demon_Button_21,mode Monouga, #mode monouga
 Demon_Button_22,mode Dino, #mode dino
 Demon_Button_23,mode Dragon, #mode dragon
-Demon_Button_24,mode Rage, #mode rage
+Demon_Button_24,#quest Bear, #quest Bear
 Demon_Button_25,Load Society,/ub bc /vt meta load Society
 Demon_Button_26,mode RESET, #mode reset
