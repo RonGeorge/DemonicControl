@@ -1,7 +1,7 @@
 windowposition: 150, 50
 windowstartopen: true
 windowsize: 500, 250
-buttonpadding: 7
+buttonpadding: 8
 tab: Basic
 tabvisible: false
 tabsize: 340, 400
@@ -403,10 +403,10 @@ Button_29: 1
 Button_30: 1
 tab: Demon
 tabvisible: false
-tabsize: 340, 450
+tabsize: 340, 600
 tabposition: 390, 50
 cols: 6
-rows: 16
+rows: 21
 Button_01: 3
 Button_02: 3
 Button_03: 3
@@ -427,9 +427,16 @@ Button_17: 3
 Button_18: 3
 Button_19: 3
 Button_20: 3
-Button_21: 6
-Button_22: 6
-Button_23: 6
+Button_21: 2
+Button_22: 2
+Button_23: 2
 Button_24: 6
 Button_25: 6
 Button_26: 6
+Button_27: 6
+Button_28: 6
+Button_29: 6
+Button_30: 6
+Button_31: 6
+Basic_ToggleButton_32: 6
+Button_33: 6

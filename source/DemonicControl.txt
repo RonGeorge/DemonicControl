@@ -127,7 +127,7 @@ Nav_Button_34,Grocer,#navto Grocer
 Nav_Button_35,Buy Medkits,#action medkits
 Nav_Button_36,Stipend,#navto Stipend
 Nav_Button_37,Recomp at Jeeves,#action recomp
-Nav_Button_38,Haven (version 21),/ub bc /haven
+Nav_Button_38,Haven (version 22),/ub bc /haven
 Nav2_Button_01,Holtburg,#navto Holtburg
 Nav2_Button_02,Shoushi,#navto shoushi
 Nav2_Button_03,Yaraq,#navto yaraq
@@ -350,23 +350,30 @@ Demon_Button_03,#quest bluelady,#quest bluelady
 Demon_Button_04,All On,#action all on
 Demon_Button_05,#navto curator,#navto curator
 Demon_Button_06,Navigation Only,#action nav only
-Demon_Button_07,#quest curator,#quest curator
-Demon_Button_08,#check,#check
+Demon_Button_07,#quest Curator,#quest curator
+Demon_Button_08,#recruit,#recruit
 Demon_Button_09,#quest Queen,#quest queen
-Demon_Button_10,#checkg,#checkg
+Demon_Button_10,Fellow Quit,/ub bc /ub fellow quit
 Demon_Button_11,#quest Monouga,#quest monouga
-Demon_Button_12,#checku,#checku
+Demon_Button_12,Find Group,#findgroup
 Demon_Button_13,#quest dino,#quest dino
-Demon_Button_14,#recruit,#recruit
-Demon_Button_15,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
-Demon_Button_16,Find Group,#findgroup
-Demon_Button_17,Reload Loot Profiles,/ub bc /vt loot load Demonic11.utl
-Demon_Button_18,Create Fellow,/tell [player],#action fellow
-Demon_Button_19,Reload Metas,/ub bc /vt meta load DemonicControl
-Demon_Button_20,Fellow Quit,/ub bc /ub fellow quit
-Demon_Button_21,mode Monouga, #mode monouga
-Demon_Button_22,mode Dino, #mode dino
-Demon_Button_23,mode Dragon, #mode dragon
-Demon_Button_24,#quest Bear, #quest Bear
-Demon_Button_25,Load Society,/ub bc /vt meta load Society
-Demon_Button_26,mode RESET, #mode reset
+Demon_Button_14,Create Fellow,/tell [player],#action fellow
+Demon_Button_15,#quest Bear, #quest Bear
+Demon_Button_16,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
+Demon_Button_17,#quest Dragon,#quest Dragon
+Demon_Button_18,Reload Loot Profiles,/ub bc /vt loot load Demonic11.utl
+Demon_Button_19,Load Society,/ub bc /vt meta load Society
+Demon_Button_20,Reload Metas,/ub bc /vt meta load DemonicControl
+Demon_Button_21,#checkg,#checkg
+Demon_Button_22,#checku,#checku
+Demon_Button_23,#check,#check
+Demon_Button_24,mode Teth,#mode teth
+Demon_Button_25,mode Dino, #mode dino
+Demon_Button_26,mode Monouga, #mode monouga
+Demon_Button_27,mode Dragon, #mode dragon
+Demon_Button_28,mode Rage,#mode rage
+Demon_Button_29,mode RESET, #mode reset
+Demon_Button_30,
+Demon_Button_31,
+Demon_ToggleButton_32,Combat,#optset enablecombat true,#optset enablecombat false
+Demon_Button_33,closest portal,#action ucp

@@ -66,6 +66,10 @@ STATE: {*** DemonicControl 219***} ~~ {
 STATE: {Action} ~~ {
 	IF: All 
 			Expr {(Range)#getvar[capturegroup_actiontext]}
+			Any
+				Expr {$capturegroup_name==getcharstringprop[1]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll 
 				ChatExpr {`Range is `+coordinatedistanceflat[getplayercoordinates[], wobjectgetphysicscoordinates[wobjectgetselection[]]]}
 				SetState {Default2}
@@ -4936,23 +4940,22 @@ STATE: {FindLeader} ~~ {
 STATE: {PatrolFollow} ~~ {
 	IF: Always 
 		DO: DoAll
-~~				DoExpr {testvar[patrol]||$patrol=f}
 				Chat {/vt opt set navpriorityboost true}
 				Chat {/vt opt set enablenav true}
 				Chat {/vt opt set enablelooting true}
 				Chat {/vt opt set enablebuffing true}
 				Chat {/vt opt set enablecombat true}
 				Chat {/vt opt set EnableMeta true}
-				SetWatchdog 5 120 {PatrolLimbo}
+				SetWatchdog 2 300 {PatrolLimbo}
 	IF:	All
-			Expr {testvar[patrolleader]} ~~ have leader
+			Expr {testgvar[patrolleader]} ~~ have leader
 			Expr {getfellowshipstatus[]} ~~ in a fellow
 			NavEmpty
 		DO:	DoAll
 				ChatExpr {`/ub follow `+&patrolleader}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruiting\"$} {}
-			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
 			Expr {getfellowshipstatus[]==0}
 		DO:	DoAll
 				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
@@ -4961,21 +4964,21 @@ STATE: {PatrolFollow} ~~ {
 				SetState {PatrolFollow}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#reset\"$} {}
-			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
 		DO:	DoAll 
 				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
 				EmbedNav nav331_dinorecall {dinorecall}
 				SetState {PatrolFollow}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leave\"$} {}
-			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				SetState {PatrolLimbo}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leader (?<leadertext>.*)\"$} {}
-			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
 		DO:	DoAll
-				DoExpr {listcontains[&leaders,$capturegroup_leadertext]&&listremove[&leaders,$capturegroup_leadertext]||listadd[&leaders,$capturegroup_leadertext]}
+				DoExpr {listcontains[&leaderlist,$capturegroup_leadertext]&&listremove[&leaderlist,$capturegroup_leadertext]||listadd[&leaderlist,$capturegroup_leadertext]}
 				Chat {/f Done.}
 				SetState {PatrolFollow}
 	IF: Death
@@ -4994,7 +4997,7 @@ STATE: {PatrolLimbo} ~~ {
 				Chat {/ls}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruiting\"$} {}
-			Expr {listcontains[getgvar[leaders],getvar[capturegroup_name]]}
+			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
 				ChatExpr {`/tell `+getvar[capturegroup_name]+`, recruit`}
