@@ -581,7 +581,7 @@ STATE: {Default2} ~~ {
 			Expr {$activemode==monouga}
 			ItemCountGE 7 {Monouga Rib}
 		DO: DoAll
-				Chat {Monouga Rib hunter confirmed!}
+				~~Chat {Monouga Rib hunter confirmed!}
 	IF: All
 			Expr {$activemode==monouga}
 			ExitPortal
@@ -2039,6 +2039,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 			Expr {(Neftet)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5541]==1} ~~ SpellId 5541 is "Lost City of Neftet Recall".
 		DO:	DoAll
+				Chat {/tn}
 				EmbedNav nav95___None_ {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
@@ -5038,7 +5039,7 @@ STATE: {Patrol} ~~ {
 		DO:	DoAll
 				EmbedNav nav318_beach {beach}
 				CallState {ActiveStatus} {Default2}
-	IF: Always
+	IF: Always ~~ catch all
 		DO:	DoAll
 				SetState {PatrolFollow}
 ~~ }

@@ -708,25 +708,6 @@ Legendary Spirit Thirst
 Legendary Defender
 6
 true
-(A) Defender's +dr
-
-0;1;7;12;0;13;1;3
-3
-2
-9
-16
-265
-361
-Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Missile|Legendary Two|Legendary Heal|Legendary Summ|Impen
-10
-9999
-36
-384
-Jerkin|Pants|Coat|Cuirass|Sleeves|Shirt|Hauberk|Leggings|Cuirass|Breastplate|Girth|Pauldrons|Bracers|Greaves|Tassets|Vambraces|Shorts|Over-robe|Vest|Kote|Helm|Armet|Basinet|Baigha|Cap|Circlet|Coif|Coronet|Cowl|Crown|Diadem|Heaume|Kabuton|Gauntlets|Boots|Sandals|Sollerets|Shoes|Over-Robe|Loafer|Slippers|Gauntlets|Gloves|Turban|Hood|Bandana|Kasa|Kabuton|Qafiya|Beret|Cap|Fez|Vest
-1
-9
-25
-371
 (A) Dedication Set
 
 0;1;7;12;9;13;1
@@ -745,6 +726,19 @@ Bane|Tink
 83
 Sollerets|Gauntlets|Greaves|Tassets|Pauldrons|Vambraces|Breastplate|Girth|Helm
 1
+(A) Defender's +dr
+
+0;1;7;12;0;3
+3
+2
+9
+16
+265
+361
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Missile|Legendary Two|Legendary Heal|Legendary Summ|Impen
+9
+25
+371
 (A) Covenant (Damage Resist)
 
 0;1;7;9;1;3;12;9
