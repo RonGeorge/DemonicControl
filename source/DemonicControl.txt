@@ -86,7 +86,7 @@ Recalls_Button_27,[8590],#navto Mansion
 Recalls_Button_28,[8383],#navto House
 Recalls_Button_29,[25233|Rise],#navto Viridian Rise
 Recalls_Button_30,[25233|Tree],#navto Viridian Tree
-Recalls_Button_31,[26526],/mt use Radiant Blood Stronghold Portal Gem
+Recalls_Button_31,[26526],#navto Society
 Recalls_Button_32,[19347|TN],/ub bc /tn
 Recalls_Button_33,[19347|Sub],/ub bc /sub
 Recalls_Button_34,[19347|mp],/ub bc /mp
@@ -325,7 +325,7 @@ Portals_Button_08,Teth,#action sum6a
 Portals_Button_09,BDC,#action sum6b
 Portals_Button_10,Demonic,#command
 Portals_Button_11,Teth,#action sum5a
-Portals_Button_12,Dogs,#action sum5b
+Portals_Button_12,Butter,#action sum5b
 Portals_Button_13,Ron IV,#NONE
 Portals_Button_14,Teth,#action sum3a
 Portals_Button_15,BDC,#action sum3b

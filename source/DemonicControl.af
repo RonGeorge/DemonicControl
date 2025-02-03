@@ -467,7 +467,38 @@ STATE: {Action} ~~ {
 				DoExpr {clearvar[capturegroup_itemtext]}
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
-
+	IF:	All
+			Expr {(Critcheck)#getvar[capturegroup_actiontext]}
+		DO:	DoAll
+				ChatExpr {wobjectgetstringprop[wobjectgetselection[],1]+` - `+wobjectgetdoubleprop[wobjectgetselection[],147]}
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Default2}
+	IF: All 
+			Expr {(Unlock)#getvar[capturegroup_actiontext]}
+			Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==0}
+		DO:	DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestdoor[]]}
+				DoExpr {actiontryuseitem[wobjectfindnearestdoor[]]}
+				DoExpr {actiontryuseitem[wobjectfindnearestdoor[]]}
+	IF: All 
+			Expr {(Unlock)#getvar[capturegroup_actiontext]}
+			Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==1}
+		DO:	DoAll
+				Chat {/lfg Nothing to do here!}
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Default2}
+	IF: All 
+			Expr {(Unlock)#getvar[capturegroup_actiontext]}
+			SecsInStateGE 4
+			Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==0}
+		DO:	DoAll
+				DoExpr {actiontryequipanywand[]}
+				SetOpt {idlepeacemode} {false}
+				DoExpr {actiontrycastbyidontarget[4420,wobjectfindnearestdoor[]]}
+				DoExpr {actiontrycastbyidontarget[4420,wobjectfindnearestdoor[]]}
+				DoExpr {actiontrycastbyidontarget[4420,wobjectfindnearestdoor[]]}
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Default2}
 	IF:	Any
 			Not Expr {getvar[capturegroup_actiontext]#`Medkits|AutoCraft|disband|buff|rares only|Backpack Open|npc|ucp|fpo|select|afk|stay|recomp|follow|Face East|Face West|Face North|Face South|Face Southeast|Face Southwest|Face Northeast|Face Northwest|fellow|ucv|All On|All Off|loot all|nav only|tap jump|sum\d+(a|b)`}
 		DO:	DoAll
@@ -513,7 +544,7 @@ STATE: {Default} ~~ {
 		DO:	DoAll
 				DoExpr {setvar[view, false]} ~~ mini remote
 				Chat {/ch setprofile DemonicControl.txt}
-				Chat {/ch setchatcommand /lfg}
+				Chat {/ch setchatcommand /crp}
 				Chat {/ch settab 4}
 	IF: Always
 		DO: DoAll
@@ -537,27 +568,10 @@ STATE: {Default} ~~ {
 				SetState {*** DemonicControl 219***}
 ~~ }
 STATE: {Default2} ~~ {
-	IF:	All 
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"![Dd]inos\"$} {}
-			Expr {&patrolleader==getcharstringprop[1]}
-			Expr {&patrol==beach}
-		DO:	DoAll
-				ChatExpr {`\/vt echo- Located at `+coordinatetostring[getplayercoordinates[]]+ ' There are '+getfellowshipcount[]+' of us.'}
-				SetState {Default2}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (says|tells you), \"recruit\"$} {}
-			Expr {&patrolleader==getcharstringprop[1]}
-			Expr {&patrol==beach}
-		DO:	DoAll
-				ChatExpr {`/tell `+getvar[capturegroup_name]+`, #recruiting`}
-				ChatExpr {`/ub fellow recruit `+$capturegroup_name}
-				SetState {Default2}
-	IF:	All 
-			Death
-			Expr {&patrol==beach}
-			Expr {&patrolleader==getcharstringprop[1]}
-		DO:	DoAll
-				Chat {/f #reset}
+	IF: All 
+			Expr {testvar[activemode]}
+		DO: DoAll 
+				DoExpr {echo[`Active Mode: `+$activemode,20]}
 	IF: All 
 			Death
 			Expr {testvar[activemode]}
@@ -568,46 +582,61 @@ STATE: {Default2} ~~ {
 			SecsInStateGE 4
 			ItemCountGE 1 {Bottled Water}
 		DO: Chat {/f Got Water!}
-	IF: All
-			ItemCountGE 1 {Bottled Water}
-			ExitPortal
-		DO: SetState {Default2}
 	IF: All 
 			Expr {testvar[raretracker]}
 			SecsInStateGE 20
 		DO: SetState {RareTracker}
+~~Start of Teth Notify
+	IF: All
+			Expr {$tethtask1==0||$tethtask2==0||$tethtask3==0}
+			Expr {$activemode==teth}
+			ChatCapture {^You have killed (?<tethnum>\d+) Teth (?<creature>[A-Za-z]+)s! Your task is complete!$} {}
+		DO: DoAll
+				DoExpr {($capturegroup_tethnum==600&&$tethtask1=1)||($capturegroup_tethnum==400&&$tethtask2=1)||($capturegroup_tethnum==300&&$tethtask3=1)}
+				DoExpr {clearvar[capturegroup_tethnum]&&clearvar[capturegroup_creature]}
+				SetState {Default2}
+	IF: All
+			Expr {$activemode==teth}
+			Expr {$tethtask1==1&&$tethtask2==1&&$tethtask3==1}
+		DO: DoAll
+				DoExpr {echo[Teth Complete,13]}
+				SetState {Default2}
 ~~ Monouga mode
 	IF: All
 			Expr {$activemode==monouga}
 			ItemCountGE 7 {Monouga Rib}
 		DO: DoAll
-				~~Chat {Monouga Rib hunter confirmed!}
+				DoExpr {echo[Full on Ribs,13]}
 	IF: All
 			Expr {$activemode==monouga}
 			ExitPortal
 			Any 
 				CellE 4EF10001
 				CellE 4FF10040
+				CellE 4EF10008
 		DO: DoAll
 				SetState {ActiveMover}
-~~Start of Rage Notify
+~~ Rage mode
 	IF: All
 			Expr {$activemode==rage}
 			ChatMatch {You have killed 250 Kemeroi Crystal Minions! Your task is complete!}
 			Not Expr {testvar[rageminion]}
 		DO: DoAll
 				DoExpr {$rageminion=1}
+				DoExpr {echo[Minions Done,13]}
 	IF: All
 			Expr {$activemode==rage}
 			ChatMatch {You have killed 25 Sentient Kemeroi Crystals! Your task is complete!}
 			Not Expr {testvar[ragesentients]}
 		DO: DoAll
+				DoExpr {echo[Sentients Done,13]}
 				DoExpr {$ragesentients=1}
 	IF: All
 			Expr {$activemode==rage}
 			ChatMatch {You have killed 25 Kemeroi Crystal Lords! Your task is complete!}
 			Not Expr {testvar[ragelord]}
 		DO: DoAll
+				DoExpr {echo[Lords Done,13]}
 				DoExpr {$ragelord=1}
 	IF: All
 			Expr {$rageminion==1}
@@ -622,6 +651,11 @@ STATE: {Default2} ~~ {
 				ChatExpr {`/tell `+getcharstringprop[1]+`, Everyone is done with Rageeeeeeee.`}
 ~~ End of Rage Notify
 ~~Start of Dino Notify
+	IF: All 
+			ChatMatch {\[Fellowship\] ().* (say|says), \"Restart\"$}
+			Expr {$activemode==dino}
+		DO:	DoAll 
+				SetState {ActiveMover}
 	IF: All
 			Expr {$activemode==dino}
 			ChatMatch {You have killed 25 Elder Terradons! Your task is complete!}
@@ -686,15 +720,6 @@ STATE: {Default2} ~~ {
 				SetState {ActiveDead}
 ~~ End death watching
 	IF: All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#givegarbage\"$} {}
-			Any
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
-		DO: DoAll
-				ChatExpr {`/ub givep `+wobjectgetstringprop[wobjectgetselection[],1]+` to `+wobjectgetstringprop[wobjectfindnearestbyobjectclass[37],1]}
-				SetState {Default2}
-	IF: All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#givehim\"$} {}
 			Any
 				Expr {getvar[capturegroup_saythink]==say}
@@ -715,6 +740,9 @@ STATE: {Default2} ~~ {
 	IF: All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#id\"$} {}
 			Any
+				All 
+					Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+					Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
@@ -723,23 +751,19 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#patrol(?:\s(?<pathtext>.*))?\"$} {}
 			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				All 
+					Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+					Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
 				SetState {Patrol}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset (?<settingtext>.*) (?<settingvartext>.*)\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset (?<settingtext>.*?)( (?<settingvartext>.*))?\"$} {}
 			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO: DoAll
-				SetState {DemonSet}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset (?<settingtext>.*)\"$} {}
-			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				All 
+					Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+					Expr {getvar[capturegroup_name]==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
@@ -859,14 +883,6 @@ STATE: {Default2} ~~ {
 		DO:	DoAll
 				SetState {Find Group}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#critcheck\"$} {}
-			Any
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO:	DoAll
-				SetState {WandCheck}
-	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#skillcheck\"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
@@ -915,21 +931,13 @@ STATE: {Default2} ~~ {
 		DO:	DoAll
 				SetState {Reveal}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#unlock\"$} {}
-			Any
-				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO:	DoAll
-				SetState {Unlock}
-	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#coords\"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
-				ChatExpr {coordinatetostring[getplayercoordinates[]]}
+				ChatExpr {`/f `+coordinatetostring[getplayercoordinates[]]}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#refill\"$} {}
 			Any
@@ -955,30 +963,12 @@ STATE: {Default2} ~~ {
 		DO:	DoAll
 				SetState {Mode}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#check\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#(?<questcheck>check[a-z]?)\"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
-				SetState {QuestCheck}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#checku?\"$} {}
-			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO: DoAll
-				DoExpr {$myquests=0}
-				SetState {QuestCheck}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#checkg?\"$} {}
-			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO: DoAll
-				DoExpr {$gemcheck=1}
 				SetState {QuestCheck}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#echo (?<telltext>.*)\"$} {}
@@ -2142,9 +2132,19 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				SetState {Default2}
 	IF:	All
 			Expr {(Society)#getvar[capturegroup_navtext]}
-			Expr {getisspellknown[6327]==1} ~~ SpellId 6327 is not a recognized spell.
+			Expr {getisspellknown[6327]==1} ~~ Radiant Blood Recall 6327 is not a recognized spell.
 		DO:	DoAll
 				EmbedNav nav110___None_ {[none]}
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Society)#getvar[capturegroup_navtext]}
+			Any 
+				ItemCountGE 1 {Radiant Blood Stronghold Portal Gem}
+				ItemCountGE 1 {Celestial Hand Stronghold Portal Gem}
+				ItemCountGE 1 {Eldrytch Web Stronghold Portal Gem}
+		DO:	DoAll
+				DoExpr {actiontryuseitem[listgetitem[wobjectfindallbynamerx[`.*Stronghold.*`],0]]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -3349,6 +3349,13 @@ STATE: {Quest} ~~ {
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`],`clearvar[$1]`]}
 				DoExpr {cleargvar[dinodone]}
 	IF:	All
+			Expr {(Dino)#getvar[capturegroup_questtext]}
+			Expr {$activemode==dino}
+		DO: DoAll
+				SetOpt {enablecombat} {false}
+				SetOpt {enablelooting} {false}
+				EmbedNav nav72___None_ {recall}
+	IF:	All
 			Any ~~ fortress drop
 				CellE 4FF10023
 				CellE 4FF10013
@@ -3466,10 +3473,13 @@ STATE: {Unlock} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {QuestCheck} ~~ {
-	IF: All 
+	IF: Any 
+			Expr {$capturegroup_questcheck==checkg}
+			Expr {$capturegroup_questcheck==checku}
 			Expr {$myquests==0}
 		DO: DoAll
-				DoExpr {echo[`Quests need updated first`,15]}
+				DoExpr {echo[`Updating Quests`,15]}
+				DoExpr {$myquests=0}
 				DoExpr {$level=getcharintprop[25]}
 				Chat {/myquests}
 	IF: All 
@@ -3478,13 +3488,13 @@ STATE: {QuestCheck} ~~ {
 		DO: DoAll
 				DoExpr {$myquests=1}
 	IF: All 
-			Expr {testvar[myquests]}
+			Expr {$myquests==1}
 		DO: DoAll
 				DoExpr {echo[`----Available Quests----`,16]}
 	IF: All
 			Expr {getcharintprop[25]<=150}
 			Expr {$myquests==1}
-			Expr {$gemcheck==0}
+			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[Less than 150,14]}
 				DoExpr {echo[Glendon Woods Snowmen (up to 150),13]}
@@ -3492,7 +3502,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=150}
 			Expr {$myquests==1}
-			Expr {$gemcheck==0}
+			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------150----------`,14]}
 				DoExpr {getqueststatus[tormentshardpickup]==0||echo[Curator is ready,13]}
@@ -3500,7 +3510,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=250}
 			Expr {$myquests==1}
-			Expr {$gemcheck==0}
+			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------250----------`,14]}
 				DoExpr {getqueststatus[stuffytokenwait]==0||echo[Bear is ready,13]}
@@ -3509,7 +3519,7 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=300}
 			Expr {$myquests==1}
-			Expr {$gemcheck==0}
+			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------300----------`,14]}
 				DoExpr {getqueststatus[grievverbosstokenwait]==0||echo[Grievver is ready,13]}
@@ -3519,16 +3529,17 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=400}
 			Expr {$myquests==1}
-			Expr {$gemcheck==0}
+			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------400----------`,14]}
 				DoExpr {getqueststatus[killtasktethskeleton]==0||echo[Teth is ready,13]}
 				DoExpr {getqueststatus[tethbanderlingkilltask]==0||echo[Banderlings is ready,13]}
 				DoExpr {getqueststatus[killtaskkemeroicrystaltimer]==0||echo[Rage is ready,13]}
+				DoExpr {getqueststatus[taskpipersecrattailswait]==0||echo[Rats is ready,13]}
 	IF: All
 			Expr {getcharintprop[25]>=500}
 			Expr {$myquests==1}
-			Expr {$gemcheck==0}
+			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------500----------`,14]}
 				DoExpr {getqueststatus[buttersworthmainwait]==0||echo[Buttersworth is ready,13]}
@@ -3538,13 +3549,13 @@ STATE: {QuestCheck} ~~ {
 	IF: All
 			Expr {getcharintprop[25]>=750}
 			Expr {$myquests==1}
-			Expr {$gemcheck==0}
+			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------750----------`,14]}
 				DoExpr {getqueststatus[killtaskterradinotimer]==0||echo[Dino is ready,13]}
 	IF: All
-			Expr {$gemcheck==1}
 			Expr {$myquests==1}
+			Expr {$capturegroup_questcheck==checkg}
 		DO: DoAll 
 				DoExpr {echo[`---Augmentation Gems---`,14]}
 				DoExpr {getqueststatus[augmentationblankgemacquired]==0||echo[Bella is ready,9]}
@@ -3556,12 +3567,14 @@ STATE: {QuestCheck} ~~ {
 			Expr {$myquests==1}
 		DO: DoAll
 				DoExpr {echo[`----------Done----------`,14]}
+				DoExpr {clearvar[capturegroup_questcheck]}
 				SetState {Default2}
 	IF: Any
 			ChatMatch {QuestTracker: Timeout}
 			SecsInStateGE 15
 		DO: DoAll
 				DoExpr {echo[Error,15]}
+				DoExpr {clearvar[capturegroup_questcheck]}
 				SetState {Default2}
 ~~ }
 STATE: {Mode} ~~ {
@@ -3623,8 +3636,9 @@ STATE: {Mode} ~~ {
 				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`patrolleader`],`cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`,`rageminion`,`ragesentients`,`ragelord`],`clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`capturegroup_tethnum`,`capturegroup_creature`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinodone`,`ragedone`, `patrol`], `cleargvar[$1]`]}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Modes reset. Variables cleared.`}
+				DoExpr {echo[`Active Mode: Off`,15]}
 				SetState {Default2}
 	IF: All
 			Expr {(Hollow)#getvar[capturegroup_modetext]}
@@ -4239,7 +4253,7 @@ STATE: {Sort} ~~ {
 				ChatExpr {`/ms set source pack `+getvar[capturegroup_sorttext]}
 				ChatExpr {`/ms set dest pack `+getvar[capturegroup_sorttext]}
 ~~				Chat {/ms set flags OC,CT,TY,NM-}
-				DoExpr {$capturegroup_sorttext==6&&chatbox[`/ms set flags NT,WT,OC,CT,TY,NM-`]||chatbox[`/ms set flags OC,CT,TY,NM-`]}
+				DoExpr {($capturegroup_sorttext==6&&chatbox[`/ms set flags NT,WT,OC,CT,TY,NM-`])||($capturegroup_sorttext==8&&chatbox[`/ms set flags UU,OC-,NM`])||(chatbox[`/ms set flags OC,CT,TY,NM-`])}
 				Chat {/ms clear ocfilter}
 				Chat {/ms start}
 	IF:	All 
@@ -4255,12 +4269,6 @@ STATE: {Sort} ~~ {
 		DO: DoAll
 				DoExpr {clearvar[capturegroup_bitetext]}
 				DoExpr {clearvar[capturegroup_sorttext]}
-				SetState {Default2}
-~~ }
-STATE: {WandCheck} ~~ {
-	IF:	Always
-		DO:	DoAll
-				ChatExpr {wobjectgetstringprop[wobjectgetselection[],1]+` - `+wobjectgetdoubleprop[wobjectgetselection[],147]}
 				SetState {Default2}
 ~~ }
 STATE: {SkillCheck} ~~ {
@@ -4468,200 +4476,6 @@ STATE: {RareTracker} ~~ {
 		DO: None
 	IF: Always
 		DO: SetState {Default2}
-~~ }
-STATE: {ActiveDead} ~~ {
-	IF: Always ~~ set recharge and healing others to 0 so you dont miss gem hit
-		DO: DoAll
-				DoExpr {vtsetsetting[Recharge-Norm-HitP,`0`]&&vtsetsetting[Recharge-Norm-Stam,`0`]&&vtsetsetting[Recharge-Norm-Mana,`0`]}
-				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`0`]&&vtsetsetting[Recharge-NoTarg-Stam,`0`]&&vtsetsetting[Recharge-NoTarg-Mana,`0`]}
-				DoExpr {vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
-				SetOpt {HelperDistanceHitP} {0}
-				SetOpt {enablelooting} {false}
-				SetOpt {enablecombat} {false}
-				SetOpt {enablebuffing} {false}
-				SetWatchdog 5 50 {ActiveMover}
-	IF: All ~~ this step is for not dead people to use to get to the ls
-			SecsInStateGE 3
-			Any 
-				Expr {$activemode==dino}
-				Expr {$activemode==dragon}
-				Expr {$activemode==rage}
-			Expr {isportaling[]==0}
-			Not Expr {istrue[wobjectfindnearestbytemplatetype[509]]} ~~ NOT means no lifestone nearby
-		DO: DoAll
-				EmbedNav nav73___None_ {Lifestone Recall}
-	IF: All
-			SecsInStateGE 3
-			Any 
-				ExitPortal
-				Expr {isportaling[]==0}
-			Any 
-				Expr {$activemode==dino}
-				Expr {$activemode==dragon}
-				Expr {$activemode==rage}
-			Expr {istrue[wobjectfindnearestbytemplatetype[509]]} ~~ lifestone nearby
-		DO: DoAll
-				SetState {ActiveMover}
-~~ }
-STATE: {ActiveCheck} ~~ { ~~ this is to check equipment, inventory
-	IF: All
-			Expr {$activemode==rats}
-			ItemCountGE 10 {Enervating Rat Tail}
-			ItemCountGE 10 {Calamitous Rat Tail}
-			ItemCountGE 10 {Sanguinary Rat Tail}
-		DO: DoAll
-				SetOpt {lootonlyrarecorpses} {true}
-				Chat {/f Got my rat tails! Looting Rares only!}
-	IF: Always
-		DO: SetState {Default2}
-	IF: All
-			SecsInStateGE 4
-			ItemCountGE 1 {Bottled Water}
-		DO: Chat {/f Got Water!}
-	IF: All
-			ItemCountGE 1 {Bottled Water}
-			ExitPortal
-		DO: SetState {Default2}
-~~ }
-STATE: {ActiveStatus} ~~ { ~~ this is all on
-	IF: Always
-		DO: DoAll
-				SetOpt {enablelooting} {true}
-				SetOpt {lootonlyrarecorpses} {false}
-				SetOpt {enablecombat} {true}
-				SetOpt {EnableBuffing} {true}
-				SetOpt {enablenav} {true}
-				DoExpr {vtsetsetting[Recharge-Norm-HitP,`90`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
-				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
-				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
-				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`80`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
-	IF: Always
-		DO: Return
-~~ }
-STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
-	IF: All ~~ this prevents the lifestone recall looping
-			SecsInStateGE 3
-			IntoPortal
-		DO: DoAll
-				EmbedNav nav0___None_ {Empty}
-	IF: All 
-			Expr {$activemode==dragon}
-			Not CellE E7D30006 ~~ dragon drop
-			Any 
-				ExitPortal
-				Expr {isportaling[]==0}
-		DO: DoAll
-				DoExpr {actiontryuseitem[wobjectfindininventorybyname[DragonRoost Island Portal Gem]]}
-	IF: All
-			Expr {$activemode==dragon}
-			Any 
-				ExitPortal
-				Expr {isportaling[]==0}
-			CellE E7D30006  ~~ dragon drop
-		DO: DoAll
-				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`70`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
-				SetOpt {HelperDistanceHitP} {.31}
-				SetState {ActiveLeader}
-	IF: All
-			Expr {$activemode==dino}
-			Not CellE E4D60014 ~~ dino drop
-			Any 
-				ExitPortal
-				Expr {isportaling[]==0}
-		DO: DoAll
-				SetOpt {enablenav} {true}
-				EmbedNav nav72___None_ {recall}
-				SetState {ActiveMover}
-	IF: All
-			Expr {$activemode==dino}
-			Any 
-				ExitPortal
-				Expr {isportaling[]==0}
-			CellE E4D60014 ~~ dino drop
-		DO: DoAll
-				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`70`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
-				SetState {ActiveLeader}
-	IF: All 
-			Expr {$activemode==rage}
-			SecsInStateGE 3
-			Any 
-				ExitPortal
-				Expr {isportaling[]==0}
-		DO: DoAll
-				DoExpr {actiontryuseitem[wobjectfindininventorybyname[Mausoleum of Rage Portal Gem]]}
-				CallState {ActiveStatus} {Default2}
-	IF: All
-			Expr {$activemode==monouga}
-			Any 
-				ExitPortal
-				Expr {isportaling[]==0}
-		DO: DoAll
-				EmbedNav nav330_monoreturn {monoreturn}
-				SetOpt {NavPriorityBoost} {true}
-				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`70`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
-				SetState {Default2}
-	IF: Always
-		DO: SetWatchdog 5 5 {ActiveMover}
-	IF: All
-			ChatMatch {#reset}
-		DO: DoAll
-				SetState {Default2}
-~~ }
-STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
-	IF: Always ~~ clear counter
-		DO: DoAll 
-				DoExpr {testvar[counter]&&$counter==5||$counter>=1&&$counter=$counter+1||$counter=1}
-	IF: All ~~ makes sure the speaker's target is grabbed only, Target and recycles
-			Expr {(target)#getvar[capturegroup_leadertext]}
-			Expr {getvar[capturegroup_name]==getcharstringprop[1]}
-		DO: DoAll 
-				DoExpr {&patrolleader=wobjectgetname[wobjectgetselection[]]}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&patrolleader}
-				DoExpr {clearvar[capturegroup_leadertext]}
-	IF: All  ~~ main catch, this got a leader name and its not a special command
-			Expr {testvar[capturegroup_leadertext]} ~~ got leader text from command
-			Not Expr {(follow)#getvar[capturegroup_leadertext]} ~~ not follow
-			Not Expr {(target)#getvar[capturegroup_leadertext]} ~~ not target
-		DO: DoAll
-				DoExpr {setgvar[patrolleader,getvar[capturegroup_leadertext]}
-				EmbedNav nav0___None_ {empty} ~~ forces empty
-				DoExpr {clearvar[capturegroup_leadertext]}
-	IF: All ~~ main activate condition, character is not leader but its set
-			Expr {testgvar[patrolleader]} ~~ leader is set
-			Expr {&patrolleader!=getcharstringprop[1]} ~~ character is not leader
-			Any ~~ is empty or follow command
-				NavEmpty ~~ nav is empty
-				Expr {(follow)#getvar[capturegroup_leadertext]} ~~ is follow
-		DO: DoAll
-				ChatExpr {`/ub follow `+&patrolleader}
-				DoExpr {clearvar[capturegroup_leadertext]}
-	IF: Any ~~ this is the exit condition
-			ChatMatch {#reset}
-			Not NavEmpty
-			Expr {&patrolleader==getcharstringprop[1]} ~~ character is leader
-		DO: DoAll
-				DoExpr {clearvar[counter]}
-				CallState {ActiveStatus} {Default2}
-	IF: All
-			Not Expr {testgvar[patrolleader]} ~~ no leader set
-			Expr {testgvar[patrol]} ~~ is patrolling
-		DO: DoAll 
-				CallState {ActiveStatus} {PatrolFollow}
-~~ Resident conditions
-	IF: Always
-		DO: SetWatchdog 5 5 {ActiveLeader}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leader (?<leadertext>.*)\"$} {}
-			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
-		DO:	DoAll
-				SetState {ActiveLeader}
-	IF: Expr {$counter>=5}
-		DO: DoAll
-				DoExpr {clearvar[counter]}
-				SetState {Default2}
 ~~ }
 STATE: {DPS} ~~ {
 	IF: Always
@@ -4938,84 +4752,218 @@ STATE: {FindLeader} ~~ {
 				DoExpr {setvar[counter,getvar[counter]+1]}
 				SetState {FindLeader}
 ~~ }
-STATE: {PatrolFollow} ~~ {
-	IF: Always 
+STATE: {Armor} ~~ {
+	IF: Always
+		DO: DoAll 
+				DoExpr {echo[`ArmorVsSlash            `+wobjectgetdoubleprop[wobjectgetselection[],13],5]}
+				DoExpr {echo[`ArmorVsPierce           `+wobjectgetdoubleprop[wobjectgetselection[],14],5]}
+				DoExpr {echo[`ArmorVsBludgeon         `+wobjectgetdoubleprop[wobjectgetselection[],15],5]}
+				DoExpr {echo[`ArmorVsCold             `+wobjectgetdoubleprop[wobjectgetselection[],16],5]}
+				DoExpr {echo[`ArmorVsFire             `+wobjectgetdoubleprop[wobjectgetselection[],17],5]}
+				DoExpr {echo[`ArmorVsAcid             `+wobjectgetdoubleprop[wobjectgetselection[],18],5]}
+				DoExpr {echo[`ArmorVsElectric         `+wobjectgetdoubleprop[wobjectgetselection[],19],5]}
+				DoExpr {echo[`Slash Resistance        `+wobjectgetdoubleprop[wobjectgetselection[],64],5]}
+				DoExpr {echo[`Pierce Resistance       `+wobjectgetdoubleprop[wobjectgetselection[],65],5]}
+				DoExpr {echo[`Bludgeon Resistance     `+wobjectgetdoubleprop[wobjectgetselection[],66],5]}
+				DoExpr {echo[`Cold Resistance         `+wobjectgetdoubleprop[wobjectgetselection[],67],5]}
+				DoExpr {echo[`Fire Resistance         `+wobjectgetdoubleprop[wobjectgetselection[],68],5]}
+				DoExpr {echo[`Acid Resistance         `+wobjectgetdoubleprop[wobjectgetselection[],69],5]}
+				DoExpr {echo[`Electric Resistance     `+wobjectgetdoubleprop[wobjectgetselection[],70],5]}
+				SetState {Default2}
+~~ }
+STATE: {ActiveDead} ~~ {
+	IF: Always ~~ set recharge and healing others to 0 so you dont miss gem hit
 		DO: DoAll
-				Chat {/vt opt set navpriorityboost true}
-				Chat {/vt opt set enablenav true}
-				Chat {/vt opt set enablelooting true}
-				Chat {/vt opt set enablebuffing true}
-				Chat {/vt opt set enablecombat true}
-				Chat {/vt opt set EnableMeta true}
-				SetWatchdog 2 300 {PatrolLimbo}
-	IF:	All
-			Expr {testgvar[patrolleader]} ~~ have leader
-			Expr {getfellowshipstatus[]} ~~ in a fellow
-			NavEmpty
-		DO:	DoAll
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`0`]&&vtsetsetting[Recharge-Norm-Stam,`0`]&&vtsetsetting[Recharge-Norm-Mana,`0`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`0`]&&vtsetsetting[Recharge-NoTarg-Stam,`0`]&&vtsetsetting[Recharge-NoTarg-Mana,`0`]}
+				DoExpr {vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				SetOpt {HelperDistanceHitP} {0}
+				SetOpt {enablelooting} {false}
+				SetOpt {enablecombat} {false}
+				SetOpt {enablebuffing} {false}
+				SetWatchdog 5 50 {ActiveMover}
+	IF: All ~~ this step is for not dead people to use to get to the ls
+			SecsInStateGE 3
+			Any 
+				Expr {$activemode==dino}
+				Expr {$activemode==dragon}
+				Expr {$activemode==rage}
+			Expr {isportaling[]==0}
+			Not Expr {istrue[wobjectfindnearestbytemplatetype[509]]} ~~ NOT means no lifestone nearby
+		DO: DoAll
+				EmbedNav nav73___None_ {Lifestone Recall}
+	IF: All
+			SecsInStateGE 3
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+			Any 
+				Expr {$activemode==dino}
+				Expr {$activemode==dragon}
+				Expr {$activemode==rage}
+			Expr {istrue[wobjectfindnearestbytemplatetype[509]]} ~~ lifestone nearby
+		DO: DoAll
+				SetState {ActiveMover}
+~~ }
+STATE: {ActiveStatus} ~~ { ~~ this is all on
+	IF: Always
+		DO: DoAll
+				SetOpt {enablelooting} {true}
+				SetOpt {lootonlyrarecorpses} {false}
+				SetOpt {enablecombat} {true}
+				SetOpt {EnableBuffing} {true}
+				SetOpt {enablenav} {true}
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`90`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`80`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+	IF: Always
+		DO: Return
+~~ }
+STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
+	IF: Always 
+		DO: DoAll 
+				SetOpt {EnableCombat} {false}
+				SetOpt {EnableLooting} {false}
+	IF: All ~~ this prevents the lifestone recall looping
+			SecsInStateGE 3
+			IntoPortal
+		DO: DoAll
+				EmbedNav nav0___None_ {Empty}
+	IF: All 
+			Expr {$activemode==dragon}
+			Not CellE E7D30006 ~~ dragon drop
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindininventorybyname[DragonRoost Island Portal Gem]]}
+	IF: All
+			Expr {$activemode==dragon}
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+			CellE E7D30006  ~~ dragon drop
+		DO: DoAll
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`70`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				SetOpt {HelperDistanceHitP} {.31}
+				SetState {ActiveLeader}
+	IF: All
+			Expr {$activemode==dino}
+			Not CellE E4D60014 ~~ dino drop
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+		DO: DoAll
+				SetOpt {enablenav} {true}
+				EmbedNav nav72___None_ {recall}
+				SetState {ActiveMover}
+	IF: All
+			Expr {$activemode==dino}
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+			CellE E4D60014 ~~ dino drop
+		DO: DoAll
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`70`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				SetState {ActiveLeader}
+	IF: All 
+			Expr {$activemode==rage}
+			SecsInStateGE 3
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindininventorybyname[Mausoleum of Rage Portal Gem]]}
+				CallState {ActiveStatus} {Default2}
+	IF: All
+			Expr {$activemode==monouga}
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+		DO: DoAll
+				SetOpt {NavPriorityBoost} {true}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`70`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				SetOpt {EnableCombat} {true} ~~ these 3 are for deaths
+				SetOpt {EnableBuffing} {true}
+				EmbedNav nav330_monoreturn {monoreturn}
+				SetOpt {EnableNav} {true}
+				SetState {Default2}
+	IF: Always
+		DO: SetWatchdog 5 5 {ActiveMover}
+	IF: All
+			ChatMatch {#reset}
+		DO: DoAll
+				SetState {Default2}
+~~ }
+STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
+	IF: Always ~~ clear counter
+		DO: DoAll 
+				DoExpr {testvar[counter]&&$counter==5||$counter>=1&&$counter=$counter+1||$counter=1}
+	IF: All ~~ leader goes to patrol state
+			Expr {&patrolleader==getcharstringprop[1]}
+		DO: DoAll 
+				SetState {Patrol}
+	IF: All ~~ makes sure the speaker's target is grabbed only, Target and recycles
+			Expr {(target)#getvar[capturegroup_leadertext]}
+			Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+		DO: DoAll 
+				DoExpr {&patrolleader=wobjectgetname[wobjectgetselection[]]}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&patrolleader}
+				DoExpr {clearvar[capturegroup_leadertext]}
+	IF: All  ~~ main catch, this got a leader name and its not a special command
+			Expr {testvar[capturegroup_leadertext]} ~~ got leader text from command
+			Not Expr {(follow)#getvar[capturegroup_leadertext]} ~~ not follow
+			Not Expr {(target)#getvar[capturegroup_leadertext]} ~~ not target
+		DO: DoAll
+				DoExpr {setgvar[patrolleader,getvar[capturegroup_leadertext]}
+				EmbedNav nav0___None_ {empty} ~~ forces empty
+				DoExpr {clearvar[capturegroup_leadertext]}
+	IF: All ~~ main activate condition, character is not leader but its set
+			Expr {testgvar[patrolleader]} ~~ leader is set
+			Expr {&patrolleader!=getcharstringprop[1]} ~~ character is not leader
+			Any ~~ is empty or follow command
+				NavEmpty ~~ nav is empty
+				Expr {(follow)#getvar[capturegroup_leadertext]} ~~ is follow
+		DO: DoAll
 				ChatExpr {`/ub follow `+&patrolleader}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruiting\"$} {}
-			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
-			Expr {getfellowshipstatus[]==0}
-		DO:	DoAll
-				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
-				ChatExpr {`/tell `+getvar[capturegroup_name]+`, recruit`}
-				EmbedNav nav331_dinorecall {dinorecall}
-				SetState {PatrolFollow}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#reset\"$} {}
-			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
-		DO:	DoAll 
-				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
-				EmbedNav nav331_dinorecall {dinorecall}
-				SetState {PatrolFollow}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leave\"$} {}
-			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
-		DO:	DoAll
-				SetState {PatrolLimbo}
+				DoExpr {clearvar[capturegroup_leadertext]}
+	IF: Any ~~ this is the exit condition after nav is set
+			ChatMatch {#reset}
+			Not NavEmpty
+			Expr {&patrolleader==getcharstringprop[1]} ~~ character is leader
+		DO: DoAll
+				DoExpr {clearvar[counter]&&clearvar[capturegroup_leadertext]}
+				CallState {ActiveStatus} {Default2}
+	IF: All
+			Not Expr {testgvar[patrolleader]} ~~ no leader set
+			Expr {testgvar[patrol]} ~~ is patrolling
+		DO: DoAll 
+				CallState {ActiveStatus} {Default2}
+~~ Resident conditions
+	IF: Always
+		DO: SetWatchdog 5 5 {ActiveLeader}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#leader (?<leadertext>.*)\"$} {}
-			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
-				DoExpr {listcontains[&leaderlist,$capturegroup_leadertext]&&listremove[&leaderlist,$capturegroup_leadertext]||listadd[&leaderlist,$capturegroup_leadertext]}
-				Chat {/f Done.}
-				SetState {PatrolFollow}
-	IF: Death
+				SetState {ActiveLeader}
+	IF: Expr {$counter>=5}
 		DO: DoAll
-				SetState {PatrolLimbo}
+				DoExpr {clearvar[counter]}
+				SetState {Default2}
 ~~ }
-STATE: {PatrolLimbo} ~~ {
-	IF: All 
-			Expr {getfellowshipstatus[]}
-		DO: DoAll
-				Chat {/f Into the void...}
-				Chat {/ub fellow quit}
-	IF: All 
-			Not Expr {istrue[wobjectfindnearestbytemplatetype[509]]}
-		DO: DoAll
-				Chat {/ls}
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruiting\"$} {}
-			Expr {listcontains[getgvar[leaderlist],getvar[capturegroup_name]]}
-		DO:	DoAll
-				DoExpr {&patrolleader=$capturegroup_name&&clearvar[capturegroup_name]}
-				ChatExpr {`/tell `+getvar[capturegroup_name]+`, recruit`}
-				EmbedNav nav331_dinorecall {dinorecall}
-				SetState {PatrolFollow}
-	IF: All 
-			SecsInStateGE 30
-		DO: DoAll 
-				SetState {PatrolLimbo}
-~~ }
-STATE: {Patrol} ~~ {
+STATE: {Patrol} ~~ { ~~ patrol is simply for a single char to run a route
 	IF: Any ~~ no pathtext or not on leader list
 			Expr {testvar[capturegroup_pathtext]==0} ~~ if its only #patrol with nothing after
 			Not Expr {listcontains[&leaderlist,getcharstringprop[1]]}
+			Expr {&patrolleader!=getcharstringprop[1]}
 		DO: DoAll 
-				SetState {PatrolFollow}
-	IF: All ~~ settings for the speaker
+				SetState {Default2}
+	IF: All ~~ settings for the speaker for Beach
 			Expr {(Beach)#getvar[capturegroup_pathtext]}
 			Expr {$activemode==dino}
 			Any
@@ -5029,20 +4977,32 @@ STATE: {Patrol} ~~ {
 				SetOpt {navclosestoprange} {0.021} ~~ follow to 4
 				SetOpt {SummonPets} {true}
 				DoExpr {clearvar[capturegroup_pathtext]}
-	IF: All~~ the speaker can lead
+	IF: All~~ the speaker can lead for beach
 			Expr {$activemode==dino}
 			Expr {&patrol==beach}
 			Any
+				Expr {&patrolleader==getcharstringprop[1]}
 				Expr {$capturegroup_name==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				EmbedNav nav318_beach {beach}
 				CallState {ActiveStatus} {Default2}
-	IF: Always ~~ catch all
+	IF: All ~~ active mode, not patrolling
+			Expr {&patrolleader==getcharstringprop[1]}
+			Any 
+				Expr {$activemode==dragon}
+				Expr {$activemode==dino}
 		DO:	DoAll
-				SetState {PatrolFollow}
+				CallState {ActiveStatus} {Default2}
+	IF: All ~~ if not the patrol leader, leave state
+			Expr {&patrolleader!=getcharstringprop[1]}
+		DO:	DoAll
+				CallState {ActiveStatus} {Default2}
 ~~ }
+
+
+
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
 
 NAV: nav0___None_ circular ~~ {

@@ -1,10 +1,43 @@
 UTL
 1
-143
+152
+Blue Coral
+
+0;1;1
+15
+Blue Coral
+1
+Harmonic Crystal
+
+0;1;1
+21
+Harmonic Crystal
+1
+Raven Fragment
+
+0;10;1
+0
+19
+Raven Fragment
+1
+Iniquitous Fragment
+
+0;10;1
+1
+24
+Iniquitous Fragment
+1
+Twilight Fragment
+
+0;10;1
+1
+22
+Twilight Fragment
+1
 Oubliette
 
 0;10;1
-10
+1
 21
 Oubliette Portal
 1
@@ -122,7 +155,8 @@ Invoking Stone
 218103809
 Pyreal Bar
 
-0;1;1
+0;10;1
+10
 15
 Pyreal Bar
 1
@@ -167,7 +201,7 @@ Royal Runed
 Aetherium Ingot
 
 0;10;1
-20
+10
 20
 Aetherium Ingot
 1
@@ -600,9 +634,9 @@ Viridian Essence
 12
 Mouryou
 1
-Melee (42%)
+TwoHand (42%)
 
-0;1;7;12;5;0;0
+0;1;7;12;5;0;0;12;3
 3
 1
 10
@@ -615,6 +649,83 @@ Melee (42%)
 Legendary Blood Thirst
 20
 Legendary Defender
+9
+41
+159
+15
+64
+218103842
+    (HW) 480HeavyWeapon (MAX+42%)
+
+0;1;12;12;5;7;2008
+9
+44
+159
+10
+480
+160
+11
+0.42
+147
+3
+1
+17
+146
+1.25
+1.25
+    (HW) 480LightWeapon (MAX+42%)
+
+0;1;12;12;5;7;2008
+9
+45
+159
+10
+480
+160
+11
+0.42
+147
+3
+1
+17
+134
+1.25
+1.25
+    (HW) 480FinesseWeapon (MAX+42%)
+
+0;1;12;12;5;7;2008
+9
+46
+159
+10
+480
+160
+11
+0.42
+147
+3
+1
+17
+134
+1.25
+1.25
+Finesse Unarmed
+
+0;1;12;12;5;7;12
+9
+46
+159
+10
+480
+160
+11
+0.42
+147
+3
+1
+8
+1
+353
 Melee (38%+)
 
 0;1;7;12;5;0;0;9999
