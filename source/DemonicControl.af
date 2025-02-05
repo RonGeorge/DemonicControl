@@ -587,20 +587,26 @@ STATE: {Default2} ~~ {
 			SecsInStateGE 20
 		DO: SetState {RareTracker}
 ~~Start of Teth Notify
-	IF: All
-			Expr {$tethtask1==0||$tethtask2==0||$tethtask3==0}
+	IF: All 
 			Expr {$activemode==teth}
-			ChatCapture {^You have killed (?<tethnum>\d+) Teth (?<creature>[A-Za-z]+)s! Your task is complete!$} {}
-		DO: DoAll
-				DoExpr {($capturegroup_tethnum==600&&$tethtask1=1)||($capturegroup_tethnum==400&&$tethtask2=1)||($capturegroup_tethnum==300&&$tethtask3=1)}
-				DoExpr {clearvar[capturegroup_tethnum]&&clearvar[capturegroup_creature]}
-				SetState {Default2}
+			ChatCapture {^You have killed 600 Teth.*task is complete!$} {}
+			Expr {$tethgolem==0}
+		DO:	DoExpr {$tethgolem=1}
+	IF: All 
+			Expr {$activemode==teth}
+			ChatCapture {^You have killed 400 Teth.*task is complete!$} {}
+			Expr {$tethwasp==0}
+		DO:	DoExpr {$tethwasp=1}
+	IF: All 
+			Expr {$activemode==teth}
+			ChatCapture {^You have killed 300 Teth.*task is complete!$} {}
+			Expr {$tethskel==0}
+		DO:	DoExpr {$tethskel=1}
 	IF: All
 			Expr {$activemode==teth}
-			Expr {$tethtask1==1&&$tethtask2==1&&$tethtask3==1}
+			Expr {$tethgolem==1&&$tethwasp==1&&$tethskel==1}
 		DO: DoAll
-				DoExpr {echo[Teth Complete,13]}
-				SetState {Default2}
+				DoExpr {echo[`--------------`,15]&&echo[Teth Complete,17]&&echo[`--------------`,15]}
 ~~ Monouga mode
 	IF: All
 			Expr {$activemode==monouga}
@@ -3419,7 +3425,7 @@ STATE: {Quest} ~~ {
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
 			NavEmpty
-			CellE A9B40027
+			BlockE 856D0000
 			ItemCountGE 1 {Dirty Stuffed Idol}
 		DO:	DoAll 
 				DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Dirty Stuffed Idol`],wobjectfindnearestbytemplatetype[580057]]}
@@ -3428,11 +3434,13 @@ STATE: {Quest} ~~ {
 			NavEmpty
 			BlockE A9B40000
 			ItemCountGE 1 {Freshly Washed Stuffed Idol}
+			SecsInStateGE 2
 		DO:	DoAll 
 				DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Freshly Washed Stuffed Idol`],wobjectfindnearestbynameandobjectclass[37,`Kitty Evans`]]}
+				SetState {Quest}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
-			ChatMatch {Kitty Evans gives you Adventurer Token.}
+			ChatMatch {Kitty Evans gives you}
 		DO: DoAll
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
@@ -3449,6 +3457,7 @@ STATE: {Quest} ~~ {
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
 			ItemCountGE 1 {Freshly Washed Stuffed Idol}
+			Not BlockE A9B40000
 		DO: DoAll
 				EmbedNav nav310_bear {Bear3}
 				SetOpt {enablenav} {true}
@@ -3457,6 +3466,7 @@ STATE: {Quest} ~~ {
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
 			ItemCountGE 1 {Dirty Stuffed Idol}
+			Not BlockE 856D0000
 		DO: DoAll
 				EmbedNav nav308_bear {Bear2}
 				SetOpt {enablecombat} {false}
@@ -3465,6 +3475,9 @@ STATE: {Quest} ~~ {
 ~~				SetState {Default2}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
+			ItemCountLE 0 {Dirty Stuffed Idol}
+			ItemCountLE 0 {Freshly Washed Stuffed Idol}
+			Not BlockE A9B40000
 		DO: DoAll
 				EmbedNav nav307_bear {Bear1}
 				SetOpt {enablecombat} {false}
@@ -3783,6 +3796,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]}
+				DoExpr {$activemode=teth}
 				SetOpt {OpenDoors} {false}
 				SetOpt {SummonPets} {true}
 				SetOpt {enablebuffing} {true}
@@ -5092,12 +5106,13 @@ STATE: {Corpse} ~~ {
 				SetOpt {EnableCombat} {true}
 				SetOpt {EnableLooting} {false}
 				SetOpt {EnableNav} {false}
-	IF:	Any
-			Expr {getitemcountininventorybyname[$itemloot]>=1}
-			ChatMatch {^You have solved this quest too recently\!}
+	IF:	All
+			SecsInStateGE 1
+			Any
+				Expr {getitemcountininventorybyname[$itemloot]>=1}
+				ChatMatch {^You have solved this quest too recently\!}
 		DO:	DoAll
 				Chat {/ub close corpse}
-				Chat {Let's Go!}
 				SetOpt {EnableNav} {true}
 				DoExpr {clearvar[itemloot]&&clearvar[corpsename]&&clearvar[corpse]&&clearvar[corpseitems]}
 				Return
@@ -11484,6 +11499,7 @@ NAV: nav307_bear once ~~ {
 	cht -100.812866465251 41.1032122770945 0.0250208338101705 {/vt opt set enablecombat true}
 ~~ }
 NAV: nav308_bear once ~~ {
+	pau -101.722076654434 -96.6418460528056 2.08333134651184E-05 2000
 	cht -101.722076654434 -96.6418460528056 2.08333134651184E-05 {/tn}
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
