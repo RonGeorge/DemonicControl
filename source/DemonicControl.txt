@@ -374,6 +374,6 @@ Demon_Button_27,mode Dragon, #mode dragon
 Demon_Button_28,mode Rage,#mode rage
 Demon_Button_29,mode RESET, #mode reset
 Demon_Button_30,
-Demon_Button_31,
+Demon_ToggleButton_31,Target Lock,#optset targetlock true,#optset targetlock false
 Demon_ToggleButton_32,Combat,#optset enablecombat true,#optset enablecombat false
 Demon_Button_33,closest portal,#action ucp

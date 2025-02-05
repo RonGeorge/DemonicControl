@@ -1242,10 +1242,13 @@ STATE: {Nav To} ~~ {
 		DO:	SetState {Nav To Sub}
 	IF:	Always
 		DO:	DoAll
-				EmbedNav nav7___None_ {[none]}
-				Chat {/tn}
 				SetOpt {enablenav} {true}
 				SetOpt {enablecombat} {false}
+	IF:	All 
+			Not CellE 00070143
+		DO:	DoAll
+				EmbedNav nav7___None_ {[none]}
+				Chat {/tn}
 	IF:	All
 			Any
 				Expr {(Delegate)#getvar[capturegroup_navtext]}
@@ -2736,7 +2739,7 @@ STATE: {Quest} ~~ {
 				SetOpt {lootonlyrarecorpses} {false}
 				SetOpt {navclosestoprange} {0.0083}
 				SetOpt {attackdistance} {.12}
-				SetOpt {ApproachDistance} {.042} ~~ set approach to 10 for loot
+				SetOpt {ApproachDistance} {.02} ~~ set approach to 5 for loot
 				EmbedNav nav325_letters {letters}
 	IF:	All ~~ letter T
 			Expr {(Bluelady)#getvar[capturegroup_questtext]}
@@ -3178,6 +3181,15 @@ STATE: {Quest} ~~ {
 				CallState {Fortress} {Quest}
 	IF:	All
 			Expr {(Curator)#getvar[capturegroup_questtext]}
+			BlockE 59540000
+			ItemCountLE 0 {Shard of the Curator of Torment's Mask}
+		DO:	DoAll
+				DoExpr {$corpsename=`Curator of Torment`}
+				DoExpr {$itemloot=`Shard of the Curator of Torment's Mask`}
+				CallState {Corpse} {Quest}
+	IF:	All
+			Expr {(Curator)#getvar[capturegroup_questtext]}
+			ItemCountGE 1 {Shard of the Curator of Torment's Mask}
 		DO:	DoAll
 				EmbedNav nav270___curatorti_ {[none]}
 				DoExpr {clearvar[capturegroup_quest]}
@@ -3244,6 +3256,14 @@ STATE: {Quest} ~~ {
 				SetOpt {OpenDoors} {true}
 				DoExpr {clearvar[capturegroup_quest]}
 				SetState {Default2}
+	IF:	All
+			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
+			CellE 01020371
+			ItemCountLE 0 {Buttersworth Crate O' Eggs}
+		DO: DoAll 
+				DoExpr {$corpsename=`Ezog the Glutton`}
+				DoExpr {$itemloot=`Buttersworth Crate O' Eggs`}
+				CallState {Corpse} {Quest}
 	IF:	All
 			Expr {(Buttersworth)#getvar[capturegroup_questtext]}
 			CellE 01020371
@@ -3398,29 +3418,59 @@ STATE: {Quest} ~~ {
 				CallState {Fortress} {Quest}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
+			NavEmpty
+			CellE A9B40027
+			ItemCountGE 1 {Dirty Stuffed Idol}
+		DO:	DoAll 
+				DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Dirty Stuffed Idol`],wobjectfindnearestbytemplatetype[580057]]}
+	IF: All 
+			Expr {(Bear)#getvar[capturegroup_questtext]}
+			NavEmpty
+			BlockE A9B40000
 			ItemCountGE 1 {Freshly Washed Stuffed Idol}
+		DO:	DoAll 
+				DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Freshly Washed Stuffed Idol`],wobjectfindnearestbynameandobjectclass[37,`Kitty Evans`]]}
+	IF: All 
+			Expr {(Bear)#getvar[capturegroup_questtext]}
+			ChatMatch {Kitty Evans gives you Adventurer Token.}
 		DO: DoAll
-				EmbedNav nav310_bear {Bear1}
-				SetOpt {enablenav} {true}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
+			NavEmpty
+			NoMobsInDist 15
+			BlockE 01B30000
+			ItemCountLE 0 {Dirty Stuffed Idol}
+		DO: DoAll
+				DoExpr {$corpsename=`General Tator'Klavuix`}
+				DoExpr {$itemloot=`Dirty Stuffed Idol`}
+				CallState {Corpse} {Quest}
+	IF: All 
+			Expr {(Bear)#getvar[capturegroup_questtext]}
+			ItemCountGE 1 {Freshly Washed Stuffed Idol}
+		DO: DoAll
+				EmbedNav nav310_bear {Bear3}
+				SetOpt {enablenav} {true}
+~~				DoExpr {clearvar[capturegroup_questtext]}
+~~				SetState {Default2}
+	IF: All 
+			Expr {(Bear)#getvar[capturegroup_questtext]}
 			ItemCountGE 1 {Dirty Stuffed Idol}
 		DO: DoAll
-				EmbedNav nav308_bear {Bear1}
+				EmbedNav nav308_bear {Bear2}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
-				DoExpr {clearvar[capturegroup_questtext]}
-				SetState {Default2}
+~~				DoExpr {clearvar[capturegroup_questtext]}
+~~				SetState {Default2}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
 		DO: DoAll
 				EmbedNav nav307_bear {Bear1}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
-				DoExpr {clearvar[capturegroup_questtext]}
-				SetState {Default2}
+~~				DoExpr {clearvar[capturegroup_questtext]}
+~~				SetState {Default2}
 	IF: All 
 			Expr {(Dragon)#getvar[capturegroup_questtext]}
 			Not CellE E7D30006 ~~ dragon drop
@@ -3896,12 +3946,13 @@ STATE: {Mode} ~~ {
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Dino`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Dino`]}
-~~				SetOpt {Recharge-Norm-HitP} {90}
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`90`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
 				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`90`]&&vtsetsetting[Recharge-NoTarg-Mana,`90`]}
 				DoExpr {$class!=mage||vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
 				SetOpt {SummonPets} {true}
 				SetOpt {navclosestoprange} {0.041} ~~ follow to 10
 				SetOpt {attackdistance} {0.063} ~~ attack to 15
+				DoExpr {$class!=mage||vtsetsetting[attackdistance,`0.1875`]} ~~attack to 45 for mages
 				DoExpr {setvar[monster,Terradon]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
@@ -4609,22 +4660,55 @@ STATE: {Junk} ~~ {
 		DO:	DoAll
 				DoExpr {$jcounter=0}
 				DoExpr {$junk=listcreate[Altered Dark Remoran Fin,Drudge Mask,Legendary Key,Scarlet Red Letter,Braced Mana Forge Key,Rock,Fishing Pole,Sealed crate of Salvaged Sandstone,Mythic Chest Key,Durable Legendary Key,Bone Sword]}
+				DoExpr {$junktemplates=listcreate[52701,52703,43950,27258,36189]}
 	IF: All
+			Expr {testvar[jcounter]}
+			Not Expr {testvar[jtcounter]}
+			Not Expr {$jcounter>=listcount[$junk]}
 			Expr {wobjectfindininventorybyname[listgetitem[$junk,getvar[jcounter]]]!=0}
 		DO: DoAll
 				ChatExpr {`/ub give `+listgetitem[$junk,$jcounter]+` to garbage barrel`}
-	IF:	Any
-			All 
-				ChatMatch {^.+ItemGiver finished+.$}
-				SecsInStateGE 1
-			Expr {wobjectfindininventorybyname[listgetitem[$junk,getvar[jcounter]]]==0}
+	IF:	All 
+			Expr {testvar[jcounter]}
+			Not Expr {testvar[jtcounter]}
+			Expr {$jcounter<listcount[$junk]}
+			Any
+				All 
+					ChatMatch {^.+ItemGiver finished+.$}
+					SecsInStateGE 1
+				Expr {wobjectfindininventorybyname[listgetitem[$junk,getvar[jcounter]]]==0}
 		DO:	DoAll
 				DoExpr {setvar[jcounter,getvar[jcounter]+1]}
 				SetState {Junk}
-	IF:	Any
+	IF:	All 
 			Expr {$jcounter>=listcount[$junk]}
+			Not Expr {testvar[jtcounter]}
 		DO:	DoAll
-				DoExpr {clearvar[jcounter]&&clearvar[junk]}
+				DoExpr {$jtcounter=0}
+				SetState {Junk}
+	IF: All 
+			Expr {testvar[jtcounter]}
+			Expr {$jtcounter<listcount[$junktemplates]}
+			Expr {wobjectfindininventorybytemplatetype[listgetitem[$junktemplates,getvar[jtcounter]]]!=0}
+		DO:	DoAll
+				DoExpr {actiontrygiveitem[wobjectfindininventorybytemplatetype[listgetitem[$junktemplates,getvar[jtcounter]]],wobjectfindnearestbytemplatetype[34726]]}
+				SetState {Junk}
+	IF:	All 
+			Expr {testvar[jtcounter]}
+			Expr {$jtcounter<listcount[$junktemplates]}
+			Any 
+				All 
+					ChatMatch {^.+You give+.$}
+					SecsInStateGE 1
+				Expr {wobjectfindininventorybytemplatetype[listgetitem[$junktemplates,getvar[jtcounter]]]==0}
+		DO:	DoAll
+				DoExpr {setvar[jtcounter,getvar[jtcounter]+1]}
+				SetState {Junk}
+	IF:	All
+			Expr {$jcounter>=listcount[$junk]}
+			Expr {$jtcounter>=listcount[$junktemplates]}
+		DO:	DoAll
+				DoExpr {clearvar[jcounter]&&clearvar[junk]&&clearvar[junktemplates]&&clearvar[jtcounter]}
 				DoExpr {echo[Junk has been thrown,13]}
 				SetState {Default2}
 ~~ }
@@ -5000,7 +5084,31 @@ STATE: {Patrol} ~~ { ~~ patrol is simply for a single char to run a route
 		DO:	DoAll
 				CallState {ActiveStatus} {Default2}
 ~~ }
-
+STATE: {Corpse} ~~ {
+	IF: Always
+		DO:	DoExpr {echo[`Corpsing`,19]}
+	IF:	Always
+		DO:	DoAll
+				SetOpt {EnableCombat} {true}
+				SetOpt {EnableLooting} {false}
+				SetOpt {EnableNav} {false}
+	IF:	Any
+			Expr {getitemcountininventorybyname[$itemloot]>=1}
+			ChatMatch {^You have solved this quest too recently\!}
+		DO:	DoAll
+				Chat {/ub close corpse}
+				Chat {Let's Go!}
+				SetOpt {EnableNav} {true}
+				DoExpr {clearvar[itemloot]&&clearvar[corpsename]&&clearvar[corpse]&&clearvar[corpseitems]}
+				Return
+	IF: All
+			Expr {$corpse=wobjectfindnearestbynameandobjectclass[27,$corpsename]}
+			Expr {wobjectgetopencontainer[]||actiontryuseitem[$corpse]}
+			Expr {$corpseitems=listfilter[wobjectfindallbycontainer[wobjectgetopencontainer[]],`wobjectgetstringprop[$1,1]==$itemloot`]}
+			Expr {actiontryuseitem[listgetitem[$corpseitems,0]]}
+			Never
+		DO: None
+~~ }
 
 
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
@@ -11403,7 +11511,6 @@ NAV: nav308_bear once ~~ {
 	pnt 5.35086603959401 -13.9857332865397 -0.00039583332836628
 	pnt 5.29106206893921 -13.9889865239461 -0.00185416676104069
 	pnt 5.22348054250081 -13.9981763203939 -0.00185416676104069
-	cht 5.22185223897298 -13.9990853627523 -0.00185416676104069 {/mt give Dirty Stuffed Idol to Washing Machine}
 ~~ }
 NAV: nav310_bear once ~~ {
 	cht -101.657398668925 -96.5912923177083 2.08333134651184E-05 {/tn}
@@ -11774,10 +11881,23 @@ NAV: nav324_cactuspartb once ~~ {
 	tlk -101.70553188324 -51.6412470420202 2.08333134651184E-05 -101.710107088089 -51.636850420634 2.08333131013205E-05 37 {Lirael}
 ~~ }
 NAV: nav325_letters once ~~ {
-	pnt -99.6101664861043 76.5095818837484 -0.0499791701634725
-	pnt -99.6451941172282 76.509019724528 -0.0499791701634725
-	pnt -99.6426243464152 76.4852540334066 -0.0499791701634725
-	pnt -99.602243232727 76.4404416402181 -0.0499791701634725
+	pnt -99.6084959665934 76.5092870076497 -0.0499791701634725
+	pnt -99.6350904464722 76.5097857157389 -0.0499791701634725
+	pnt -99.6439100901286 76.5099617004394 -0.0499791701634725
+	pnt -99.6460103352865 76.5031651814779 -0.0499791701634725
+	pnt -99.6455987930298 76.4949096679688 -0.0499791701634725
+	pnt -99.6416163126628 76.4833922068278 -0.0499791701634725
+	pnt -99.6327674865723 76.4761662801107 -0.0499791701634725
+	pnt -99.6210643132528 76.4659590403239 -0.0499791701634725
+	pnt -99.6089757919312 76.4546550750732 -0.0499791701634725
+	pnt -99.6037939707438 76.4489765167236 -0.0499791701634725
+	pnt -99.5986655553182 76.4441679636637 -0.0499791701634725
+	pnt -99.6033672332764 76.4390698750814 -0.0499791701634725
+	pnt -99.6113956451416 76.4306276957194 -0.0499791701634725
+	pnt -99.6179744084676 76.4278458913167 -0.0499791701634725
+	pnt -99.6288199106852 76.4261870066325 -0.0499791701634725
+	pnt -99.6365595499674 76.4259937286377 -0.0499791701634725
+	pnt -99.6573820749919 76.4250438690186 -0.0499791701634725
 ~~ }
 NAV: nav326_lettert once ~~ {
 	pnt -99.4747433344523 76.4282015482585 -0.0499791701634725
