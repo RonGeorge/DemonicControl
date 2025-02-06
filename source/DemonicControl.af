@@ -607,12 +607,19 @@ STATE: {Default2} ~~ {
 			Expr {$tethgolem==1&&$tethwasp==1&&$tethskel==1}
 		DO: DoAll
 				DoExpr {echo[`--------------`,15]&&echo[Teth Complete,17]&&echo[`--------------`,15]}
-~~ Monouga mode
+~~ Monouga moded
 	IF: All
 			Expr {$activemode==monouga}
 			ItemCountGE 7 {Monouga Rib}
 		DO: DoAll
 				DoExpr {echo[Full on Ribs,13]}
+	IF: All
+			SecsInStateGE 20
+			Expr {getfellowshipstatus[]==0}
+			Expr {$activemode==monouga}
+		DO: DoAll
+				Chat {/crp #invite}
+				SetState {ActiveMover}
 	IF: All
 			Expr {$activemode==monouga}
 			ExitPortal
@@ -621,6 +628,7 @@ STATE: {Default2} ~~ {
 				CellE 4FF10040
 				CellE 4EF10008
 		DO: DoAll
+				Chat {/f Restart}
 				SetState {ActiveMover}
 ~~ Rage mode
 	IF: All
@@ -655,11 +663,12 @@ STATE: {Default2} ~~ {
 			Expr {testgvar[ragedone]&&listcount[getgvar[ragedone]]>=3}
 		DO: DoAll 
 				ChatExpr {`/tell `+getcharstringprop[1]+`, Everyone is done with Rageeeeeeee.`}
-~~ End of Rage Notify
 ~~Start of Dino Notify
 	IF: All 
 			ChatMatch {\[Fellowship\] ().* (say|says), \"Restart\"$}
-			Expr {$activemode==dino}
+			Any 
+				Expr {$activemode==monouga}
+				Expr {$activemode==dino}
 		DO:	DoAll 
 				SetState {ActiveMover}
 	IF: All
@@ -865,12 +874,16 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#recruit\"$} {}
 			Expr {getfellowshipstatus[]==0}
-			Any
-				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				Expr {getvar[capturegroup_saythink]==say}
-				Expr {getvar[capturegroup_saythink]==think}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 		DO:	DoAll
 				ChatExpr {`/recruitme `+getvar[capturegroup_name]}
+				SetState {Default2}
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#invite\"$} {}
+			Expr {getfellowshipstatus[]}
+			Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+		DO:	DoAll
+				ChatExpr {`/recruit `+getvar[capturegroup_name]}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#critlist\"$} {}
@@ -3429,6 +3442,7 @@ STATE: {Quest} ~~ {
 			ItemCountGE 1 {Dirty Stuffed Idol}
 		DO:	DoAll 
 				DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Dirty Stuffed Idol`],wobjectfindnearestbytemplatetype[580057]]}
+				SetState {Quest}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
 			NavEmpty
@@ -3461,8 +3475,6 @@ STATE: {Quest} ~~ {
 		DO: DoAll
 				EmbedNav nav310_bear {Bear3}
 				SetOpt {enablenav} {true}
-~~				DoExpr {clearvar[capturegroup_questtext]}
-~~				SetState {Default2}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
 			ItemCountGE 1 {Dirty Stuffed Idol}
@@ -3471,8 +3483,6 @@ STATE: {Quest} ~~ {
 				EmbedNav nav308_bear {Bear2}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
-~~				DoExpr {clearvar[capturegroup_questtext]}
-~~				SetState {Default2}
 	IF: All 
 			Expr {(Bear)#getvar[capturegroup_questtext]}
 			ItemCountLE 0 {Dirty Stuffed Idol}
@@ -3482,8 +3492,6 @@ STATE: {Quest} ~~ {
 				EmbedNav nav307_bear {Bear1}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
-~~				DoExpr {clearvar[capturegroup_questtext]}
-~~				SetState {Default2}
 	IF: All 
 			Expr {(Dragon)#getvar[capturegroup_questtext]}
 			Not CellE E7D30006 ~~ dragon drop
@@ -3649,7 +3657,8 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=rats}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rats`}
-				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]}
+				ChatExpr {`/vt loot load RaresOnlyRatTails.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
@@ -3701,6 +3710,7 @@ STATE: {Mode} ~~ {
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`,`rageminion`,`ragesentients`,`ragelord`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`capturegroup_tethnum`,`capturegroup_creature`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinodone`,`ragedone`, `patrol`], `cleargvar[$1]`]}
+				DoExpr {listmap[listcreate[`tethgolem`,`tethskel`, `tethwasp`], `cleargvar[$1]`]}
 				DoExpr {echo[`Active Mode: Off`,15]}
 				SetState {Default2}
 	IF: All
@@ -4882,10 +4892,7 @@ STATE: {ActiveDead} ~~ {
 				SetWatchdog 5 50 {ActiveMover}
 	IF: All ~~ this step is for not dead people to use to get to the ls
 			SecsInStateGE 3
-			Any 
-				Expr {$activemode==dino}
-				Expr {$activemode==dragon}
-				Expr {$activemode==rage}
+			Expr {testvar[activemode]}
 			Expr {isportaling[]==0}
 			Not Expr {istrue[wobjectfindnearestbytemplatetype[509]]} ~~ NOT means no lifestone nearby
 		DO: DoAll
@@ -4895,10 +4902,7 @@ STATE: {ActiveDead} ~~ {
 			Any 
 				ExitPortal
 				Expr {isportaling[]==0}
-			Any 
-				Expr {$activemode==dino}
-				Expr {$activemode==dragon}
-				Expr {$activemode==rage}
+			Expr {testvar[activemode]}
 			Expr {istrue[wobjectfindnearestbytemplatetype[509]]} ~~ lifestone nearby
 		DO: DoAll
 				SetState {ActiveMover}
@@ -4986,7 +4990,7 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 				SetOpt {EnableBuffing} {true}
 				EmbedNav nav330_monoreturn {monoreturn}
 				SetOpt {EnableNav} {true}
-				SetState {Default2}
+				CallState {ActiveStatus} {Default2}
 	IF: Always
 		DO: SetWatchdog 5 5 {ActiveMover}
 	IF: All
@@ -5004,7 +5008,10 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 				SetState {Patrol}
 	IF: All ~~ makes sure the speaker's target is grabbed only, Target and recycles
 			Expr {(target)#getvar[capturegroup_leadertext]}
-			Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+			Any
+				Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll 
 				DoExpr {&patrolleader=wobjectgetname[wobjectgetselection[]]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Group Leader is `+&patrolleader}
@@ -11553,7 +11560,7 @@ NAV: nav310_bear once ~~ {
 	pnt 33.7270878473918 42.6370407104492 0.275020853678385
 	pnt 33.7123675982157 42.679061571757 0.275020853678385
 	pnt 33.7037404696147 42.6875806808472 0.275020853678385
-	cht 33.7037404696147 42.6875806808472 0.275020853678385 {/mt give Freshly Washed Stuffed Idol to Kitty Evans}
+	pnt 33.7037404696147 42.6875806808472 0.275020853678385
 ~~ }
 NAV: nav311_pongA once ~~ {
 	pnt -38.6030031681061 91.6108851750692 -0.00185416676104069
