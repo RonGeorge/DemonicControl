@@ -1,6 +1,6 @@
 UTL
 1
-152
+157
 Blue Coral
 
 0;1;1
@@ -837,7 +837,7 @@ Bane|Tink
 83
 Sollerets|Gauntlets|Greaves|Tassets|Pauldrons|Vambraces|Breastplate|Girth|Helm
 1
-(A) Defender's +dr
+(A) Defender's
 
 0;1;7;12;0;3
 3
@@ -850,6 +850,71 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 9
 25
 371
+(A) Defender's
+
+0;1;7;12;0;3
+3
+2
+9
+16
+265
+361
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Missile|Legendary Two|Legendary Heal|Legendary Summ|Impen
+9
+25
+379
+(A) Hardened
+
+0;1;7;12;0;3
+3
+2
+9
+23
+265
+361
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Missile|Legendary Two|Legendary Heal|Legendary Summ|Impen
+9
+25
+371
+(A) Hardened
+
+0;1;7;12;0;3
+3
+2
+9
+23
+265
+361
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Missile|Legendary Two|Legendary Heal|Legendary Summ|Impen
+9
+25
+379
+(A) Lightning Proof
+
+0;1;7;12;0;3
+3
+2
+9
+29
+265
+361
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Missile|Legendary Two|Legendary Heal|Legendary Summ|Impen
+9
+25
+371
+(A) Lightning Proof
+
+0;1;7;12;0;3
+3
+2
+9
+29
+265
+361
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Missile|Legendary Two|Legendary Heal|Legendary Summ|Impen
+9
+25
+379
 (A) Covenant (Damage Resist)
 
 0;1;7;9;1;3;12;9
@@ -896,26 +961,20 @@ Minor|Major|Epic
 7
 (A) Armor (Damage Resist)
 
-0;1;7;3;13
+0;1;7;3
 3
 2
 9
 29
 371
-10
-9999
-36
 (A) Armor (Vitality)
 
-0;1;7;3;13
+0;1;7;3
 3
 2
 9
 29
 379
-10
-9999
-36
 (C) (Defender Clothes)
 
 0;1;7;3;12
