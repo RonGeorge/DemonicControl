@@ -2052,7 +2052,6 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 			Expr {(Neftet)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5541]==1} ~~ SpellId 5541 is "Lost City of Neftet Recall".
 		DO:	DoAll
-				Chat {/tn}
 				EmbedNav nav95___None_ {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
@@ -2060,6 +2059,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 			Expr {(Neftet)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5541]==0} ~~ SpellId 5541 is "Lost City of Neftet Recall".
 		DO:	DoAll
+				Chat {/tn}
 				EmbedNav nav96___None_ {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}

@@ -4,7 +4,7 @@ setlocal
 REM Define file paths, URLs, and target directory
 SET "current_dir=%~dp0"
 SET "met_file=%~dp0DemonicDino.met"
-SET "met_url=https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/other-metas/DemonicDino.met"
+SET "met_url=https://raw.githubusercontent.com/RonGeorge/DemonicControl/refs/heads/main/other-metas/DemonicDino.met"
 SET "target_dir=C:\Games\VirindiPlugins\VirindiTank"
 
 REM Create target directory if it doesn't exist
