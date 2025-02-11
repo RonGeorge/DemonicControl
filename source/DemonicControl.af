@@ -37,7 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
-STATE: {*** DemonicControl 219***} ~~ {
+STATE: {*** DemonicControl 219 ***} ~~ {
 	IF:	Expr {getvar[view]==true}
 		DO:	DoAll
 				DoExpr {setvar[view, false]}
@@ -53,6 +53,7 @@ STATE: {*** DemonicControl 219***} ~~ {
 			Expr {getcharskill_traininglevel[45]==3}
 			Expr {getcharskill_traininglevel[44]==3}
 			Expr {getcharskill_traininglevel[46]==3}
+			Expr {getcharskill_traininglevel[41]==3}
 		DO: DoAll
 				DoExpr {setvar[class, melee]}
 	IF:	Always
@@ -63,7 +64,49 @@ STATE: {*** DemonicControl 219***} ~~ {
 	IF:	Always
 		DO:	SetState {SpellCheck}
 ~~ }
+STATE: {Default} ~~ {
+	IF: Always
+		DO: DoAll
+				Chat {/ub opt set VTank.PatchExpressionEngine true}
+				DoExpr {clearallvars[]}
+				Chat {/vt echo Variables Cleared}
+	IF:	Always ~~ remoteview and chaos control settings
+		DO:	DoAll
+				DoExpr {setvar[view, false]} ~~ mini remote
+				Chat {/ch setprofile DemonicControl.txt}
+				Chat {/ch setchatcommand /crp}
+				Chat {/ch settab 4}
+	IF: Always
+		DO: DoAll
+				DoExpr {testgvar[charlist]||setgvar[charlist,listcreate[getcharstringprop[1]]]}
+				DoExpr {listcontains[getgvar[charlist],getcharstringprop[1]]||listadd[getgvar[charlist],getcharstringprop[1]]}
+				DoExpr {testgvar[leaderlist]||setgvar[leaderlist,listcreate[Ron VI,Ron V,Ron IV,Ronusmc,Demonic,Ron II,Ron,Gargoyle,Hellhound]]}
+	IF:	Always
+		DO:	DoAll
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]]}
+				DoExpr {testgvar[lootprofile]&&echo[`Lootprofile found.`,13]||&lootprofile=Demonic11}
+				DoExpr {testgvar[fastlootprofile]&&echo[`Fastlootprofile found.`,13]||&fastlootprofile=RaresOnly}
+				DoExpr {testgvar[fellowname]&&echo[`Fellow name found.`,13]||&fellowname=Demonic}
+				DoExpr {testgvar[persistentjoin]&&echo[`Persistent setting found.`,13]||&&persistentjoin=false}
+	IF:	Always
+		DO:	DoAll
+				Chat {/ub opt set QuestTracker.AutoRequest false}
+	IF: Always
+		DO: DoAll 
+				DoExpr {setvar[DemonicOptions, 1]}
+				Chat {/vt echo Config Loaded}
+				SetState {*** DemonicControl 219 ***}
+~~ }
 STATE: {Action} ~~ {
+	IF: All 
+			Expr {(Armor)#getvar[capturegroup_actiontext]}
+			Any
+				Expr {$capturegroup_name==getcharstringprop[1]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+		DO: DoAll 
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Armor}
 	IF: All 
 			Expr {(Range)#getvar[capturegroup_actiontext]}
 			Any
@@ -72,11 +115,13 @@ STATE: {Action} ~~ {
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll 
 				ChatExpr {`Range is `+coordinatedistanceflat[getplayercoordinates[], wobjectgetphysicscoordinates[wobjectgetselection[]]]}
+				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF: All 
 			Expr {(MoneyCount)#getvar[capturegroup_actiontext]}
 		DO: DoAll 
 				DoExpr {echo[``+getitemcountininventorybyname[`Trade Note (250,000)`]+` in MMDs`,25]}
+				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF: All 
 			Expr {(FindLeader)#getvar[capturegroup_actiontext]}
@@ -188,9 +233,27 @@ STATE: {Action} ~~ {
 				SetState {Default2}
 	IF:	All
 			Expr {(npc)#getvar[capturegroup_actiontext]}
+			Expr {wobjectfindnearestbyobjectclass[37]}
+			Expr {getvar[action_npc_name]==0}
+		DO:	DoAll
+				DoExpr {setvar[action_npc_name,wobjectgetstringprop[wobjectfindnearestbyobjectclass[37],1]]}
+				SetState {Action}
+	IF:	All
+			Expr {(npc)#getvar[capturegroup_actiontext]}
+			Expr {testvar[action_npc_name]}
 		DO:	DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[37]]}
-				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Action}
+	IF:	All
+			Expr {testvar[action_npc_name]}
+			Expr {(npc)#getvar[capturegroup_actiontext]}
+			Any
+				ChatCapture {^(?<tellname>.*?) tells you, \"(?<npctext>.*)\"$} {}
+				ChatCapture {^(?<tellname>.*?) gives you (?<npctext>.*)$} {}
+				ChatCapture {^(?<tellname>.*?) cast (?<npctext>.*)$} {}
+			Expr {getvar[capturegroup_tellname]==getvar[action_npc_name]}
+		DO: DoAll 
+				DoExpr {clearvar[capturegroup_actiontext]&&clearvar[capturegroup_tellname]&&clearvar[action_npc_name]}
 				SetState {Default2}
 	IF:	All
 			Expr {(ucp)#getvar[capturegroup_actiontext]}
@@ -260,6 +323,8 @@ STATE: {Action} ~~ {
 		DO:	DoExpr {setvar[summonsecondary, 1]}
 	IF:	All
 			Expr {getvar[summonprimary]==1}
+			Not Expr {wobjectfindnearestbyobjectclass[14]!=0&&(coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[14]],getplayercoordinates[]])<=5}
+			Expr {getbusystate[]==0}
 		DO:	DoAll
 				DoExpr {actiontryequipanywand[]}
 				SetOpt {idlepeacemode} {false}
@@ -267,31 +332,23 @@ STATE: {Action} ~~ {
 				DoExpr {actiontrycastbyid[1637]} ~~ SpellId 157 is "Summon Primary Portal I".
 				DoExpr {actiontrycastbyid[1637]} ~~ SpellId 157 is "Summon Primary Portal I".
 				DoExpr {actiontrycastbyid[1637]} ~~ SpellId 157 is "Summon Primary Portal I".
-				DoExpr {clearvar[summonprimary]}
-				DoExpr {clearvar[capturegroup_actiontext]}
-	IF:	All
-			Expr {getvar[summonprimary]==1}
-			SecsInStateGE 2
-		DO:	DoAll
-				SetOpt {idlepeacemode} {true}
-				DoExpr {clearvar[summonprimary]}
-				DoExpr {clearvar[capturegroup_actiontext]}
-				SetState {Default2}
+				SetState {Action}
 	IF:	All
 			Expr {getvar[summonsecondary]==1}
+			Not Expr {wobjectfindnearestbyobjectclass[14]!=0&&(coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[14]],getplayercoordinates[]])<=5}
+			Expr {getbusystate[]==0}
 		DO:	DoAll
 				DoExpr {actiontryequipanywand[]}
 				SetOpt {idlepeacemode} {false}
 				DoExpr {actiontrycastbyid[2650]} ~~ SpellId 2648 is "Summon Secondary Portal I".
 				DoExpr {actiontrycastbyid[2650]} ~~ SpellId 2648 is "Summon Secondary Portal I".
 				DoExpr {actiontrycastbyid[2650]} ~~ SpellId 2648 is "Summon Secondary Portal I".
-				DoExpr {clearvar[summonsecondary]}
-				DoExpr {clearvar[capturegroup_actiontext]}
-	IF:	All
-			Expr {getvar[summonsecondary]==1}
-			SecsInStateGE 2
+				SetState {Action}
+	IF:	All 
+			Expr {getvar[summonsecondary]==1||getvar[summonprimary]==1}
+			Expr {wobjectfindnearestbyobjectclass[14]!=0&&(coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[14]],getplayercoordinates[]])<=5}
 		DO:	DoAll
-				SetOpt {idlepeacemode} {true}
+				DoExpr {clearvar[summonprimary]}
 				DoExpr {clearvar[summonsecondary]}
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
@@ -411,6 +468,12 @@ STATE: {Action} ~~ {
 				SetOpt {lootonlyrarecorpses} {false}
 				SetState {Default2}
 	IF:	All
+			Expr {(loot off)#getvar[capturegroup_actiontext]}
+		DO:	DoAll
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetOpt {enablelooting} {false}
+				SetState {Default2}
+	IF:	All
 			Expr {(nav only)#getvar[capturegroup_actiontext]}
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_actiontext]}
@@ -441,6 +504,14 @@ STATE: {Action} ~~ {
 				SetState {Default2}
 	IF:	All
 			Expr {(ReadContracts)#getvar[capturegroup_actiontext]}
+			Expr {getitemcountininventorybynamerx[Contract]>=1}
+			SecsInStateGE 1
+		DO:	DoAll
+				DoExpr {actiontryuseitem[wobjectfindininventorybynamerx[(Contract)]]}
+				SetState {Action}
+	IF:	All
+			Expr {(ReadContracts)#getvar[capturegroup_actiontext]}
+			Expr {getitemcountininventorybynamerx[Contract]==0}
 		DO:	DoAll
 				DoExpr {actiontryuseitem[wobjectfindininventorybynamerx[(Contract)]]}
 				DoExpr {clearvar[capturegroup_actiontext]}
@@ -484,12 +555,12 @@ STATE: {Action} ~~ {
 			Expr {(Unlock)#getvar[capturegroup_actiontext]}
 			Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==1}
 		DO:	DoAll
-				Chat {/lfg Nothing to do here!}
+				Chat {All good!}
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF: All 
 			Expr {(Unlock)#getvar[capturegroup_actiontext]}
-			SecsInStateGE 4
+			SecsInStateGE 3
 			Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==0}
 		DO:	DoAll
 				DoExpr {actiontryequipanywand[]}
@@ -499,10 +570,18 @@ STATE: {Action} ~~ {
 				DoExpr {actiontrycastbyidontarget[4420,wobjectfindnearestdoor[]]}
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
-	IF:	Any
+	IF:	All
 			Not Expr {getvar[capturegroup_actiontext]#`Medkits|AutoCraft|disband|buff|rares only|Backpack Open|npc|ucp|fpo|select|afk|stay|recomp|follow|Face East|Face West|Face North|Face South|Face Southeast|Face Southwest|Face Northeast|Face Northwest|fellow|ucv|All On|All Off|loot all|nav only|tap jump|sum\d+(a|b)`}
+			Expr {$summonsecondary==0&&$summonprimary==0}
 		DO:	DoAll
-				DoExpr {clearvar[capturegroup_actiontext]}
+~~				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Default2}
+~~ }
+STATE: {Jump} ~~ {
+	IF:	Always
+		DO:	DoAll
+				ChatExpr {\/vt jump +getvar[capturegroup_jumptext]}
+				DoExpr {clearvar[capturegroup_jumptext]}
 				SetState {Default2}
 ~~ }
 STATE: {Chase} ~~ {
@@ -534,44 +613,41 @@ STATE: {Craft} ~~ {
 				ChatExpr {\/mt click yes}
 				SetState {Default2}
 ~~ }
-STATE: {Default} ~~ {
-	IF: Always
-		DO: DoAll
-				Chat {/ub opt set VTank.PatchExpressionEngine true}
-				DoExpr {clearallvars[]}
-				Chat {/vt echo Variables Cleared}
-	IF:	Always ~~ remoteview and chaos control settings
+STATE: {Command} ~~ {
+	IF:	All 
+			ChatCapture {^(?:\[(?<channel>.+?)] )?(?<name>.+?) (?<saythink>says?|thinks?|tells? (?:.+?)?), "#(?<command>[A-Za-z]+)(?: (?<arg1>[A-Za-z]+)(?: (?<arg2>[A-Za-z]+))?)?"$} {}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
-				DoExpr {setvar[view, false]} ~~ mini remote
-				Chat {/ch setprofile DemonicControl.txt}
-				Chat {/ch setchatcommand /crp}
-				Chat {/ch settab 4}
-	IF: Always
-		DO: DoAll
-				DoExpr {testgvar[charlist]||setgvar[charlist,listcreate[getcharstringprop[1]]]}
-				DoExpr {listcontains[getgvar[charlist],getcharstringprop[1]]||listadd[getgvar[charlist],getcharstringprop[1]]}
-				DoExpr {testgvar[leaderlist]||setgvar[leaderlist,listcreate[Ron VI,Ron V,Ron IV,Ronusmc,Demonic,Ron II,Ron,Gargoyle,Hellhound]]}
-	IF:	Always
-		DO:	DoAll
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]]}
-				DoExpr {testgvar[lootprofile]&&echo[`Lootprofile found.`,13]||&lootprofile=Demonic11}
-				DoExpr {testgvar[fastlootprofile]&&echo[`Fastlootprofile found.`,13]||&fastlootprofile=RaresOnly}
-				DoExpr {testgvar[fellowname]&&echo[`Fellow name found.`,13]||&fellowname=Demonic}
-	IF:	Always
-		DO:	DoAll
-				Chat {/ub opt set QuestTracker.AutoRequest false}
-	IF: Always
-		DO: DoAll 
-				DoExpr {setvar[DemonicOptions, 1]}
-				Chat {/vt echo Config Loaded}
-				DoExpr {setvar[capturegroup_actiontext, none]}
-				SetState {*** DemonicControl 219***}
+				DoExpr {$speaker=iif[$capturegroup_name==getcharstringprop[1]||$capturegroup_saythink==`think`||$capturegroup_saythink==`say`,getcharstringprop[1],$capturegroup_name]}
+				ChatExpr {$speaker}
+				SetState {Command}
+	~~ IF: All
+			~~ ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#test\"$} {}
+			~~ Any
+				~~ Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				~~ Expr {getvar[capturegroup_saythink]==say}
+				~~ Expr {getvar[capturegroup_saythink]==think}
+		~~ DO: DoAll
+				~~ Chat {why lol}
+				~~ SetState {Command}
+
+
+
 ~~ }
 STATE: {Default2} ~~ {
+	IF:	All
+			Expr {($Found==0||($Found==1&&listcount[listfilter[wobjectfindallbyobjectclass[5],`wobjectgetintprop[$1,25]==780`]]==0&&$Found=0))&&listcount[listfilter[wobjectfindallbyobjectclass[5],`wobjectgetintprop[$1,25]==780`]]!=0&&$Found=1&&echo[`Got him.`,17]&&0}
+		DO:	DoAll
+				None
 	IF: All 
 			Expr {testvar[activemode]}
 		DO: DoAll 
+				DoExpr {echo[`--------------`,15]}
 				DoExpr {echo[`Active Mode: `+$activemode,20]}
+				DoExpr {echo[`--------------`,15]}
 	IF: All 
 			Death
 			Expr {testvar[activemode]}
@@ -615,12 +691,11 @@ STATE: {Default2} ~~ {
 		DO: DoAll
 				DoExpr {echo[Full on Ribs,13]}
 	IF: All
-			SecsInStateGE 20
-			Expr {getfellowshipstatus[]==0}
 			Expr {$activemode==monouga}
+			ChatMatch {You have killed 250 Monouga Barbarians!}
+			ChatMatch {You have killed 25 Monouga Controllers!}
 		DO: DoAll
-				Chat {/crp #invite}
-				SetState {ActiveMover}
+				ChatExpr {`/tell `+getcharstringprop[1]+`, Barbarians complete.`}
 	IF: All
 			Expr {$activemode==monouga}
 			ExitPortal
@@ -830,11 +905,7 @@ STATE: {Default2} ~~ {
 				ChatExpr {`/lfg #drop `+wobjectgetstringprop[wobjectgetselection[],1]}
 				DoExpr {clearvar[capturegroup_name]}
 				SetState {Default2}
-	IF: All
-			ChatMatch {You have killed 250 Monouga Barbarians!}
-			ChatMatch {You have killed 25 Monouga Controllers!}
-		DO: DoAll
-				ChatExpr {`/tell `+getcharstringprop[1]+`, Barbarians complete.`}
+
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#watchlist (?<watchlisttext>.*)\"$} {}
 			Any
@@ -1102,6 +1173,12 @@ STATE: {Default2} ~~ {
 				DoExpr {echo[`What's new in DemonicControl?`,13]}
 				DoExpr {echo[`#check, #patrol beach, #demonset config, #watchlist, #leader`,13]}
 				DoExpr {setvar[credit,1]}
+	IF: All 
+			Expr {testgvar[persistentjoin]}
+			SecsInStateGE 10
+			Expr {getfellowshipstatus[]==0}
+		DO: DoAll 
+				ChatExpr {`/ub bc /recruit `+getcharstringprop[1]}
 	IF: Always
 		DO: DoAll
 				DoExpr {ifthen[getcharquadprop[6]==1000000000,`echo[Your luminance is full,15]`]}
@@ -1145,15 +1222,9 @@ STATE: {Go To} ~~ {
 				DoExpr {setvar[goto, true]}
 				SetState {Default2}
 ~~ }
-STATE: {Jump} ~~ {
-	IF:	Always
-		DO:	DoAll
-				ChatExpr {\/vt jump +getvar[capturegroup_jumptext]}
-				DoExpr {clearvar[capturegroup_jumptext]}
-				SetState {Default2}
-~~ }
 STATE: {Nav To} ~~ {
 	IF:	Any
+			Expr {(Millicent)#getvar[capturegroup_navtext]}
 			Expr {(RareVendor)#getvar[capturegroup_navtext]}
 			Expr {(Shreth)#getvar[capturegroup_navtext]}
 			Expr {(Title)#getvar[capturegroup_navtext]}
@@ -1683,6 +1754,13 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				EmbedNav nav323_rarevendor {rarevendor}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
+	IF: All
+			Expr {(Millicent)#getvar[capturegroup_navtext]}
+		DO: DoAll
+				Chat {/tn}
+				EmbedNav nav332_millicent {Millicent}
+				SetOpt {enablenav} {true}
+				SetState {Default2}
 	IF: All
 			Expr {(Shreth)#getvar[capturegroup_navtext]}
 		DO: DoAll
@@ -2916,7 +2994,8 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 		DO:	DoAll
-				EmbedNav nav143___None_ {[none]}
+				Chat {/tn}
+				EmbedNav nav238___sub_ {[none]}
 				SetOpt {enablecombat} {false}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
@@ -3524,27 +3603,6 @@ STATE: {Quest} ~~ {
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 ~~ }
-STATE: {Unlock} ~~ {
-	IF: Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==0}
-		DO:	DoAll
-				DoExpr {actiontryuseitem[wobjectfindnearestdoor[]]}
-				DoExpr {actiontryuseitem[wobjectfindnearestdoor[]]}
-				DoExpr {actiontryuseitem[wobjectfindnearestdoor[]]}
-	IF: Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==1}
-		DO:	DoAll
-				Chat {/lfg Nothing to do here!}
-				SetState {Default2}
-	IF:	All 
-			SecsInStateGE 4
-			Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==0}
-		DO:	DoAll
-				DoExpr {actiontryequipanywand[]}
-				SetOpt {idlepeacemode} {false}
-				DoExpr {actiontrycastbyidontarget[4420,wobjectfindnearestdoor[]]}
-				DoExpr {actiontrycastbyidontarget[4420,wobjectfindnearestdoor[]]}
-				DoExpr {actiontrycastbyidontarget[4420,wobjectfindnearestdoor[]]}
-				SetState {Default2}
-~~ }
 STATE: {QuestCheck} ~~ {
 	IF: Any 
 			Expr {$capturegroup_questcheck==checkg}
@@ -3615,6 +3673,7 @@ STATE: {QuestCheck} ~~ {
 			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------500----------`,14]}
+				DoExpr {getqueststatus[fivehundredsummonwait]==0||echo[500Summons is ready,13]}
 				DoExpr {getqueststatus[buttersworthmainwait]==0||echo[Buttersworth is ready,13]}
 				DoExpr {getqueststatus[monougaribtokenwait]==0||echo[Monouga Rib is ready,13]}
 				DoExpr {getqueststatus[killtaskmonougabarbariantimer]==0||echo[Monouga is ready,13]}
@@ -3707,13 +3766,16 @@ STATE: {Mode} ~~ {
 				EmbedNav nav0___None_ {Empty}
 				SetOpt {OpenDoors} {false}
 				SetOpt {LootFellowCorpses} {true}
+				SetOpt {lootonlyrarecorpses} {false}
 				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`patrolleader`],`cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`,`rageminion`,`ragesentients`,`ragelord`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`capturegroup_tethnum`,`capturegroup_creature`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinodone`,`ragedone`, `patrol`], `cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`tethgolem`,`tethskel`, `tethwasp`], `cleargvar[$1]`]}
+				DoExpr {echo[`--------------`,15]}
 				DoExpr {echo[`Active Mode: Off`,15]}
+				DoExpr {echo[`--------------`,15]}
 				SetState {Default2}
 	IF: All
 			Expr {(Hollow)#getvar[capturegroup_modetext]}
@@ -4092,13 +4154,13 @@ STATE: {Fortress} ~~ {
 ~~ }
 STATE: {RefillSummons} ~~ {
 	IF: Always
-		DO: DoExpr {setvar[EssenceRefillList,listfilter[wobjectfindallinventorybyobjectclass[8],`wobjectgetname[$1]#Lirael&&wobjectgetintprop[$1,92]<50&&wobjectgetintprop[$1,91]==50`]]&&listcount[$EssenceRefillList]>0&&(actiontryapplyitem[wobjectfindininventorybytemplatetype[49485],$EssenceRefillList{{0}}] || 1)}
+		DO: DoExpr {setvar[EssenceRefillList,listfilter[wobjectfindallinventorybyobjectclass[8],`wobjectgetname[$1]#Essence&&wobjectgetintprop[$1,92]<50&&wobjectgetintprop[$1,91]==50`]]&&listcount[$EssenceRefillList]>0&&(actiontryapplyitem[wobjectfindininventorybytemplatetype[49485],$EssenceRefillList{{0}}] || 1)}
 	IF: Expr {listcount[$EssenceRefillList]==0}
 		DO: DoAll
 				Chat {*joy*}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Done filling summons`}
 				SetState {Default2}
-	IF: SecsInStateGE 3
+	IF: SecsInStateGE 2
 		DO: DoAll
 				DoExpr {clearvar[EssenceRefillList]}
 				SetState {RefillSummons}
@@ -4151,6 +4213,7 @@ STATE: {SpellCheck} ~~ {
 	IF: All 
 			Expr {listcount[getvar[spellsMissing]]==0}
 		DO: DoAll
+				DoExpr {clearvar[`0`]&&clearvar[`1`]}
 				DoExpr {clearvar[spellsToCheck]}
 				DoExpr {clearvar[spellsMissing]}
 				DoExpr {echo[Spell Check complete,13]}
@@ -4571,6 +4634,14 @@ STATE: {DPS} ~~ {
 ~~ }
 STATE: {DemonSet} ~~ {
 	IF:	All
+			Expr {(persistent)#getvar[capturegroup_settingtext]}
+			Expr {testvar[capturegroup_settingvartext]}
+		DO:	DoAll
+				DoExpr {($capturegroup_settingtext==true&&&persistentjoin=true)||($capturegroup_settingtext==false&&&persistentjoin=false)}
+				ChatExpr {`persistent join = `+&persistentjoin}
+				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
+				SetState {Default2}
+	IF:	All
 			Expr {(fastloot)#getvar[capturegroup_settingtext]}
 			Expr {testvar[capturegroup_settingvartext]}
 		DO:	DoAll
@@ -4601,6 +4672,8 @@ STATE: {DemonSet} ~~ {
 				DoExpr {echo[`     fellowname = `+&fellowname,13]}
 				DoExpr {echo[`     lootprofile = `+&lootprofile,13]}
 				DoExpr {echo[`     fastloot = `+&fastlootprofile,13]}
+				DoExpr {echo[`     persistent join = `+&persistentjoin,13]}
+				DoExpr {echo[`------------`,13]}
 				DoExpr {echo[`Do not add .utl to loot profiles when setting them, just the name.`,5]}
 				DoExpr {echo[`example: >#demonset lootprofile DragonLoot11`,5]}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
@@ -4790,60 +4863,6 @@ STATE: {ParagonApply} ~~ {
 				DoExpr {clearvar[paragonlist]&&clearvar[weaponname]&&clearvar[gemlevel]}
 				SetState {Default2}
 ~~ }
-STATE: {Tokens} ~~ {
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Aetheric Vision]+getcharintprop[338])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Aetheric Vision}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Glory]+getcharintprop[335])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Glory}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Temperance]+getcharintprop[336])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Glory}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Valor]+getcharintprop[333])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Valor}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Protection]+getcharintprop[334])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Protection}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Purity]+getcharintprop[342])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Purity}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of the Craftsman]+getcharintprop[343])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of the Craftsman}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Mana Flow]+getcharintprop[339])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Mana Flow}
-	IF: All
-			Expr {(getitemcountininventorybyname[Token of the Aura of Mana Infusion]+getcharintprop[340])<5}
-		DO: DoAll
-				Chat {/mt usel Token of the Aura of Mana Infusion}
-	IF: All
-			Expr {getcharintprop[338]==5}
-			Expr {getcharintprop[335]==5}
-			Expr {getcharintprop[336]==5}
-			Expr {getcharintprop[333]==5}
-			Expr {getcharintprop[334]==5}
-			Expr {getcharintprop[342]==5}
-			Expr {getcharintprop[343]==5}
-			Expr {getcharintprop[339]==5}
-			Expr {getcharintprop[340]==5}
-		DO: DoAll
-				SetState {Default2}
-	IF: All
-			SecsInStateGE 3
-		DO: DoAll 
-				SetState {Tokens}
-~~ }
 STATE: {FindLeader} ~~ {
 	IF:	All 
 			Expr {wobjectfindnearestbynameandobjectclass[24,`^`+listgetitem[&watchlist,$counter]+`$`]!=0}
@@ -4865,20 +4884,20 @@ STATE: {FindLeader} ~~ {
 STATE: {Armor} ~~ {
 	IF: Always
 		DO: DoAll 
-				DoExpr {echo[`ArmorVsSlash            `+wobjectgetdoubleprop[wobjectgetselection[],13],5]}
-				DoExpr {echo[`ArmorVsPierce           `+wobjectgetdoubleprop[wobjectgetselection[],14],5]}
-				DoExpr {echo[`ArmorVsBludgeon         `+wobjectgetdoubleprop[wobjectgetselection[],15],5]}
-				DoExpr {echo[`ArmorVsCold             `+wobjectgetdoubleprop[wobjectgetselection[],16],5]}
-				DoExpr {echo[`ArmorVsFire             `+wobjectgetdoubleprop[wobjectgetselection[],17],5]}
-				DoExpr {echo[`ArmorVsAcid             `+wobjectgetdoubleprop[wobjectgetselection[],18],5]}
-				DoExpr {echo[`ArmorVsElectric         `+wobjectgetdoubleprop[wobjectgetselection[],19],5]}
-				DoExpr {echo[`Slash Resistance        `+wobjectgetdoubleprop[wobjectgetselection[],64],5]}
-				DoExpr {echo[`Pierce Resistance       `+wobjectgetdoubleprop[wobjectgetselection[],65],5]}
-				DoExpr {echo[`Bludgeon Resistance     `+wobjectgetdoubleprop[wobjectgetselection[],66],5]}
-				DoExpr {echo[`Cold Resistance         `+wobjectgetdoubleprop[wobjectgetselection[],67],5]}
-				DoExpr {echo[`Fire Resistance         `+wobjectgetdoubleprop[wobjectgetselection[],68],5]}
-				DoExpr {echo[`Acid Resistance         `+wobjectgetdoubleprop[wobjectgetselection[],69],5]}
-				DoExpr {echo[`Electric Resistance     `+wobjectgetdoubleprop[wobjectgetselection[],70],5]}
+				DoExpr {echo[`ArmorVsSlash  `+wobjectgetdoubleprop[wobjectgetselection[],13],5]}
+				DoExpr {echo[`ArmorVsPierce  `+wobjectgetdoubleprop[wobjectgetselection[],14],5]}
+				DoExpr {echo[`ArmorVsBludgeon  `+wobjectgetdoubleprop[wobjectgetselection[],15],5]}
+				DoExpr {echo[`ArmorVsCold  `+wobjectgetdoubleprop[wobjectgetselection[],16],5]}
+				DoExpr {echo[`ArmorVsFire  `+wobjectgetdoubleprop[wobjectgetselection[],17],5]}
+				DoExpr {echo[`ArmorVsAcid  `+wobjectgetdoubleprop[wobjectgetselection[],18],5]}
+				DoExpr {echo[`ArmorVsElectric  `+wobjectgetdoubleprop[wobjectgetselection[],19],5]}
+				DoExpr {echo[`Slash Resistance  `+wobjectgetdoubleprop[wobjectgetselection[],64],5]}
+				DoExpr {echo[`Pierce Resistance  `+wobjectgetdoubleprop[wobjectgetselection[],65],5]}
+				DoExpr {echo[`Bludgeon Resistance  `+wobjectgetdoubleprop[wobjectgetselection[],66],5]}
+				DoExpr {echo[`Cold Resistance  `+wobjectgetdoubleprop[wobjectgetselection[],67],5]}
+				DoExpr {echo[`Fire Resistance  `+wobjectgetdoubleprop[wobjectgetselection[],68],5]}
+				DoExpr {echo[`Acid Resistance  `+wobjectgetdoubleprop[wobjectgetselection[],69],5]}
+				DoExpr {echo[`Electric Resistance  `+wobjectgetdoubleprop[wobjectgetselection[],70],5]}
 				SetState {Default2}
 ~~ }
 STATE: {ActiveDead} ~~ {
@@ -11977,4 +11996,41 @@ NAV: nav331_dinorecall once ~~ {
 	pnt 80.8735352516174 69.6439655621846 0.0313928961753845
 	pnt 80.8729196548462 69.7055137952169 0.0229981104532878
 	pnt 80.8298398335775 69.7913145701091 0.0146921962499619
+~~ }
+NAV: nav332_millicent once ~~ {
+	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
+	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
+	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
+	pnt -101.653368886312 -96.5122077147166 2.08333134651184E-05
+	pnt -101.653536160787 -96.4933196544647 2.08333134651184E-05
+	pnt -101.65263671875 -96.4712129116058 2.08333134651184E-05
+	pnt -101.648242441813 -96.4641933202743 2.08333134651184E-05
+	pnt -101.631523513794 -96.4603348175685 2.08333134651184E-05
+	pnt -101.621230252584 -96.4579962094625 2.08333134651184E-05
+	pnt -101.610826237996 -96.4566512982051 2.08333134651184E-05
+	pnt -101.607866954803 -96.4624365170797 2.08333134651184E-05
+	pnt -101.604680728912 -96.4770609219869 2.08333134651184E-05
+	ptl -101.604992675781 -96.478316171964 2.08333134651184E-05 -101.590664164225 -96.475 -0.000262499845121056 14 {Portal to Rithwic}
+	pnt 59.2967135429382 10.8414030710856 0.0916874965031942
+	pnt 59.261475054423 10.8378676096598 0.0916874965031942
+	pnt 59.2046226183573 10.8207474390666 0.0916874965031942
+	pnt 59.1555119832357 10.8080145517985 0.0916874965031942
+	pnt 59.1090982913971 10.8055261611938 0.0966074387232463
+	pnt 59.0445168495178 10.8040087381999 0.104209367434184
+	pnt 58.9643973668416 10.8016360600789 0.107547680536906
+	pnt 58.8889939943949 10.7994068145752 0.10560564994812
+	pnt 58.8182253519694 10.7965316136678 0.10002289613088
+	pnt 58.7694747924805 10.7979414621989 0.0939290761947632
+	pnt 58.7330299377441 10.7941941579183 0.0916874965031942
+	pnt 58.7067244211833 10.7684628168742 0.0916874965031942
+	pnt 58.6903554916382 10.7017501831055 0.0916874965031942
+	pnt 58.6243853886922 10.636369005839 0.0905515829722087
+	pnt 58.5505165735881 10.5819188117981 0.0972748279571533
+	pnt 58.4902298927307 10.4903213183085 0.0950399875640869
+	pnt 58.4772248268127 10.4498707771301 0.0916874965031942
+	pnt 58.4588931401571 10.3987562815348 0.0916874965031942
+	pnt 58.3985140800476 10.291298977534 0.0916874965031942
+	pnt 58.3632132530212 10.257107369105 0.0916874965031942
+	pnt 58.3234236081441 10.2533175627391 0.0916874965031942
+	pnt 58.3147610823313 10.2624738852183 0.0916874965031942
 ~~ }

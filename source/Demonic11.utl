@@ -1,11 +1,25 @@
 UTL
 1
-157
+160
 Blue Coral
 
 0;1;1
 15
 Blue Coral
+1
+Hearts
+
+0;10;1
+5
+26
+Aetherium Golem Heart
+1
+Mana Crystal
+
+0;10;1
+10
+26
+Ascended Mana Crystal
 1
 Harmonic Crystal
 
@@ -306,12 +320,14 @@ Diamond Powder
 1
     (T) Mote/Sliver/Nugget
 
-0;1;1;7
+0;1;1;7;9999
 34
 Mote|Pyreal Sliver|Nugget|Bar
 1
 3
 8
+6
+true
     (T) Aetherium-infused Gear
 
 0;1;1
@@ -992,7 +1008,7 @@ Minor|Major|Epic
 3
 3
 9
-29
+25
 370
 (C) (Clothing) DamageResist
 
@@ -1000,7 +1016,7 @@ Minor|Major|Epic
 3
 3
 9
-29
+25
 371
 (C) (Clothing) Vitality
 
@@ -1008,9 +1024,9 @@ Minor|Major|Epic
 3
 3
 9
-29
+25
 379
-(J) M-Legendary +d29
+(J) M-Legendary +d25
 
 0;1;7;9;3
 3
@@ -1020,8 +1036,20 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 Tink
 2
 9
-29
+25
 370
+(J) M-Legendary +v25
+
+0;1;7;9;3
+3
+4
+508
+Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legendary Will|Legendary Acid|Legendary Bludg|Legendary Flame|Legendary Frost|Legendary Pierc|Legendary Slash|Legendary Storm|Legendary Invuln|Legendary Magic|Legendary Armor|Legendary Life|Legendary War|Legendary Voi|Legendary Heavy|Legendary Light|Legendary Finesse|Legendary Dirty|Legendary Shield|Legendary Reck|Legendary Dual|Legendary Sneak|Legendary Missile|Legendary Two|Legendary Dece|Legendary Heal|Legendary Summ
+Tink
+2
+9
+25
+379
 (J) Colo Ring
 
 0;1;7;1
