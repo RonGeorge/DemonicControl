@@ -3672,7 +3672,7 @@ STATE: {QuestCheck} ~~ {
 			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[`----------500----------`,14]}
-				DoExpr {getqueststatus[fivehundredsummonwait]==0||echo[500Summons is ready,13]}
+				DoExpr {getqueststatus[fivehundredsummonwait]==0||echo[`500Summons is ready`,13]}
 				DoExpr {getqueststatus[buttersworthmainwait]==0||echo[Buttersworth is ready,13]}
 				DoExpr {getqueststatus[monougaribtokenwait]==0||echo[Monouga Rib is ready,13]}
 				DoExpr {getqueststatus[killtaskmonougabarbariantimer]==0||echo[Monouga is ready,13]}

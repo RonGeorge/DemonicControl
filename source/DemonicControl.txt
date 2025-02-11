@@ -316,7 +316,7 @@ Subway_Button_49,NOTSET,#command
 Subway_Button_50,NOTSET,#command
 Portals_Button_01,Ron,#command
 Portals_Button_02,Teth,#action sum7a
-Portals_Button_03,-,#action sum7b
+Portals_Button_03,Banders,#action sum7b
 Portals_Button_04,RonUSMC,#command
 Portals_Button_05,Teth,#action sum4a
 Portals_Button_06,Teth Incursion,#action sum4b
