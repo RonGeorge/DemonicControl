@@ -87,7 +87,7 @@ STATE: {Default} ~~ {
 				DoExpr {testgvar[lootprofile]&&echo[`Lootprofile found.`,13]||&lootprofile=Demonic11}
 				DoExpr {testgvar[fastlootprofile]&&echo[`Fastlootprofile found.`,13]||&fastlootprofile=RaresOnly}
 				DoExpr {testgvar[fellowname]&&echo[`Fellow name found.`,13]||&fellowname=Demonic}
-				DoExpr {testgvar[persistentjoin]&&echo[`Persistent setting found.`,13]||&&persistentjoin=false}
+				DoExpr {testgvar[persistentjoin]&&echo[`Persistent setting found.`,13]||&persistentjoin=0}
 	IF:	Always
 		DO:	DoAll
 				Chat {/ub opt set QuestTracker.AutoRequest false}
@@ -850,7 +850,7 @@ STATE: {Default2} ~~ {
 		DO: DoAll
 				SetState {Patrol}
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset (?<settingtext>.*?)( (?<settingvartext>.*))?\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#demonset( (?<settingtext>.*?))?( (?<settingvartext>.*))?\"$} {}
 			Any
 				All 
 					Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
@@ -1068,6 +1068,7 @@ STATE: {Default2} ~~ {
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
+				ChatExpr {getvar[capturegroup_telltext]}
 				SetState {Default2}
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#navto (?<navtext>.*)\"$} {}
@@ -1170,11 +1171,9 @@ STATE: {Default2} ~~ {
 			SecsInStateGE 5
 			Expr {testvar[credit]==0}
 		DO:	DoAll
-				DoExpr {echo[`What's new in DemonicControl?`,13]}
-				DoExpr {echo[`#check, #patrol beach, #demonset config, #watchlist, #leader`,13]}
 				DoExpr {setvar[credit,1]}
 	IF: All 
-			Expr {testgvar[persistentjoin]}
+			Expr {&persistentjoin==true}
 			SecsInStateGE 10
 			Expr {getfellowshipstatus[]==0}
 		DO: DoAll 
@@ -4633,6 +4632,12 @@ STATE: {DPS} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {DemonSet} ~~ {
+	IF:	All
+			Expr {testvar[capturegroup_settingtext]==0}
+			Expr {testvar[capturegroup_settingvartext]==0}
+		DO:	DoAll
+				DoExpr {echo[`#demonset stands for Demonic Settings. Use "#demonset config" to see all of your current settings.`,13]}
+				SetState {Default2}
 	IF:	All
 			Expr {(persistent)#getvar[capturegroup_settingtext]}
 			Expr {testvar[capturegroup_settingvartext]}
