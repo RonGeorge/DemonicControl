@@ -99,6 +99,10 @@ STATE: {Default} ~~ {
 ~~ }
 STATE: {Action} ~~ {
 	IF: All 
+			Expr {(Millicent)#getvar[capturegroup_actiontext]}
+		DO: DoAll 
+				SetState {Millicent}
+	IF: All 
 			Expr {(Armor)#getvar[capturegroup_actiontext]}
 			Any
 				Expr {$capturegroup_name==getcharstringprop[1]}
@@ -4826,7 +4830,8 @@ STATE: {Millicent} ~~ {
 	IF: All 
 			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]!=0}
 		DO:	DoAll
-				DoExpr {actiontrygiveitem[wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]],wobjectfindnearestbytemplatetype[34726]]}
+				DoExpr {actiontrygiveitem[wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]],wobjectfindnearestbyobjectclass[37]]}
+				SetState {Millicent}
 	IF: Any 
 			ChatMatch {^.+You must wait+.$}
 			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]==0}
@@ -4834,9 +4839,10 @@ STATE: {Millicent} ~~ {
 				DoExpr {listpop[$millicentitems,0]}
 				SetState {Millicent}
 	IF: Any 
-			Expr {testvar[millicentitems]&&listcount[millicentitems]==0}
+			Expr {testvar[millicentitems]&&listcount[$millicentitems]==0}
 		DO:	DoAll
 				DoExpr {clearvar[millicentitems]}
+				DoExpr {echo[Done,16]}
 				SetState {Default2}
 ~~ }
 STATE: {VendorExchange} ~~ {
