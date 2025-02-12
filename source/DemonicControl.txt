@@ -349,7 +349,7 @@ Demon_Button_02,Follow,#action follow
 Demon_Button_03,#quest bluelady,#quest bluelady
 Demon_Button_04,All On,#action all on
 Demon_Button_05,#navto curator,#navto curator
-Demon_Button_06,Navigation Only,#action nav only
+Demon_Button_06,Rares and Quest Loot,/ub bc /vt loot load RaresAndQuestItems.utl
 Demon_Button_07,#quest Curator,#quest curator
 Demon_Button_08,#recruit,#recruit
 Demon_Button_09,#quest Queen,#quest queen

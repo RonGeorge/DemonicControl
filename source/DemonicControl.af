@@ -251,6 +251,7 @@ STATE: {Action} ~~ {
 				ChatCapture {^(?<tellname>.*?) tells you, \"(?<npctext>.*)\"$} {}
 				ChatCapture {^(?<tellname>.*?) gives you (?<npctext>.*)$} {}
 				ChatCapture {^(?<tellname>.*?) cast (?<npctext>.*)$} {}
+				IntoPortal
 			Expr {getvar[capturegroup_tellname]==getvar[action_npc_name]}
 		DO: DoAll 
 				DoExpr {clearvar[capturegroup_actiontext]&&clearvar[capturegroup_tellname]&&clearvar[action_npc_name]}
@@ -3718,7 +3719,7 @@ STATE: {Mode} ~~ {
 				DoExpr {$activemode=rats}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rats`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]}
-				ChatExpr {`/vt loot load RaresOnlyRatTails.utl`}
+				ChatExpr {`/vt loot load RaresAndQuestItems.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
@@ -3817,6 +3818,7 @@ STATE: {Mode} ~~ {
 				DoExpr {$activemode=monouga}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Monouga`]}
+				ChatExpr {`/vt loot load RaresAndQuestItems.utl`}
 				SetOpt {Recharge-Norm-HitP} {70}
 				SetOpt {Recharge-Norm-Stam} {40}
 				SetOpt {Recharge-Norm-Mana} {20}
@@ -4814,6 +4816,27 @@ STATE: {Junk} ~~ {
 		DO:	DoAll
 				DoExpr {clearvar[jcounter]&&clearvar[junk]&&clearvar[junktemplates]&&clearvar[jtcounter]}
 				DoExpr {echo[Junk has been thrown,13]}
+				SetState {Default2}
+~~ }
+STATE: {Millicent} ~~ {
+	IF: All 
+			Expr {testvar[millicentitems]==0}
+		DO:	DoAll
+				DoExpr {$millicentitems=listcreate[43950,26052,27880,9510]}
+	IF: All 
+			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]!=0}
+		DO:	DoAll
+				DoExpr {actiontrygiveitem[wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]],wobjectfindnearestbytemplatetype[34726]]}
+	IF: Any 
+			ChatMatch {^.+You must wait+.$}
+			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]==0}
+		DO:	DoAll
+				DoExpr {listpop[$millicentitems,0]}
+				SetState {Millicent}
+	IF: Any 
+			Expr {testvar[millicentitems]&&listcount[millicentitems]==0}
+		DO:	DoAll
+				DoExpr {clearvar[millicentitems]}
 				SetState {Default2}
 ~~ }
 STATE: {VendorExchange} ~~ {
