@@ -620,24 +620,17 @@ STATE: {Craft} ~~ {
 ~~ }
 STATE: {Command} ~~ {
 	IF:	All 
-			ChatCapture {^(?:\[(?<channel>.+?)] )?(?<name>.+?) (?<saythink>says?|thinks?|tells? (?:.+?)?), "#(?<command>[A-Za-z]+)(?: (?<arg1>[A-Za-z]+)(?: (?<arg2>[A-Za-z]+))?)?"$} {}
+			ChatCapture {(?:^(?:\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#(?<command>[.*]+)(?: (?<arg1>[.*]+)(?: (?<arg2>[.*]+))?)?"$} {}
 			Any
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				DoExpr {$speaker=iif[$capturegroup_name==getcharstringprop[1]||$capturegroup_saythink==`think`||$capturegroup_saythink==`say`,getcharstringprop[1],$capturegroup_name]}
+				DoExpr {clearvar[capturegroup_0]&&clearvar[capturecolor]}
 				ChatExpr {$speaker}
 				SetState {Command}
-	~~ IF: All
-			~~ ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#test\"$} {}
-			~~ Any
-				~~ Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				~~ Expr {getvar[capturegroup_saythink]==say}
-				~~ Expr {getvar[capturegroup_saythink]==think}
-		~~ DO: DoAll
-				~~ Chat {why lol}
-				~~ SetState {Command}
+
 
 
 
@@ -668,6 +661,14 @@ STATE: {Default2} ~~ {
 			Expr {testvar[raretracker]}
 			SecsInStateGE 20
 		DO: SetState {RareTracker}
+	IF: All 
+			Expr {$activemode==rats}
+			ItemCountGE 10 {Calamitous Rat Tail}
+			ItemCountGE 10 {Sanguinary Rat Tail}
+			ItemCountGE 10 {Enervating Rat Tail}
+		DO: DoAll 
+				SetOpt {EnableLooting} {false}
+				Chat {/f Got my tails!}
 ~~Start of Teth Notify
 	IF: All 
 			Expr {$activemode==teth}
@@ -688,7 +689,7 @@ STATE: {Default2} ~~ {
 			Expr {$activemode==teth}
 			Expr {$tethgolem==1&&$tethwasp==1&&$tethskel==1}
 		DO: DoAll
-				DoExpr {echo[`--------------`,15]&&echo[Teth Complete,17]&&echo[`--------------`,15]}
+				DoExpr {echo[`--------------`,13]&&echo[`Teth Complete`,13]&&echo[`--------------`,13]}
 ~~ Monouga moded
 	IF: All
 			Expr {$activemode==monouga}
@@ -3728,10 +3729,10 @@ STATE: {Mode} ~~ {
 				SetOpt {idlepeacemode} {false}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
 				DoExpr {vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
-				DoExpr {vtsetsetting[Recharge-Norm-HitP,`90`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`75`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
 				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
 				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
-				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`80`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {setvar[monster,Sanguinary Rat]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
@@ -3770,6 +3771,8 @@ STATE: {Mode} ~~ {
 				EmbedNav nav0___None_ {Empty}
 				SetOpt {OpenDoors} {false}
 				SetOpt {LootFellowCorpses} {true}
+				SetOpt {EnableBuffing} {false}
+				SetOpt {EnableCombat} {false}
 				SetOpt {lootonlyrarecorpses} {false}
 				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`patrolleader`],`cleargvar[$1]`]}
@@ -4116,6 +4119,9 @@ STATE: {PeaceState} ~~ {
 		DO: SetState {PeaceState}
 ~~ }
 STATE: {Fortress} ~~ {
+	IF: Always ~~ if they hit the gem immediately, this will cover the timeout from it
+		DO:	DoAll 
+				SetWatchdog 20 5 {Fortress}
 	IF: All
 			CellE 4FF1001B ~~fortress drop
 		DO: DoAll
@@ -4826,14 +4832,15 @@ STATE: {Millicent} ~~ {
 	IF: All 
 			Expr {testvar[millicentitems]==0}
 		DO:	DoAll
-				DoExpr {$millicentitems=listcreate[43950,26052,27880,9510]}
+				DoExpr {$millicentitems=listcreate[43950,26052,27880,9510,51954]}
 	IF: All 
 			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]!=0}
+			SecsInStateGE 1
 		DO:	DoAll
 				DoExpr {actiontrygiveitem[wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]],wobjectfindnearestbyobjectclass[37]]}
 				SetState {Millicent}
 	IF: Any 
-			ChatMatch {^.+You must wait+.$}
+			ChatMatch {You must wait}
 			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]==0}
 		DO:	DoAll
 				DoExpr {listpop[$millicentitems,0]}
@@ -4842,7 +4849,7 @@ STATE: {Millicent} ~~ {
 			Expr {testvar[millicentitems]&&listcount[$millicentitems]==0}
 		DO:	DoAll
 				DoExpr {clearvar[millicentitems]}
-				DoExpr {echo[Done,16]}
+				DoExpr {echo[Done,5]}
 				SetState {Default2}
 ~~ }
 STATE: {VendorExchange} ~~ {

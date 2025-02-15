@@ -374,6 +374,6 @@ Demon_Button_27,mode Dragon, #mode dragon
 Demon_Button_28,mode Rage,#mode rage
 Demon_Button_29,mode RESET, #mode reset
 Demon_Button_30,Load Demonic Dino,/ub bc /vt meta load DemonicDino
-Demon_ToggleButton_31,Target Lock,#optset targetlock true,#optset targetlock false
-Demon_ToggleButton_32,Combat,#optset enablecombat true,#optset enablecombat false
+Demon_ToggleButton_31,Junk and ap,#ap,#action junk
+Demon_ToggleButton_32,Millicent,#navto millicent,#action millicent
 Demon_Button_33,closest portal,#action ucp

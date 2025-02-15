@@ -1,6 +1,6 @@
 UTL
 1
-160
+161
 Blue Coral
 
 0;1;1
@@ -20,6 +20,13 @@ Mana Crystal
 10
 26
 Ascended Mana Crystal
+1
+Drained Mana Crystal
+
+0;10;1
+10
+25
+Drained Mana Crystal
 1
 Harmonic Crystal
 
