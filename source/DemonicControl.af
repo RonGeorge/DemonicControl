@@ -37,7 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
-STATE: {*** DemonicControl 219 ***} ~~ {
+STATE: {*** DemonicControl 220 ***} ~~ {
 	IF:	Expr {getvar[view]==true}
 		DO:	DoAll
 				DoExpr {setvar[view, false]}
@@ -61,6 +61,9 @@ STATE: {*** DemonicControl 219 ***} ~~ {
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]]}
 				DoExpr {testgvar[watchlist]&&echo[`Watchlist found.`,13]||setgvar[watchlist,listcreate[]]}
+				DoExpr {echo[`--------------`,13]}
+				DoExpr {echo[`Welcome to DemonicControl v2.20`,5]}
+				DoExpr {echo[`--------------`,13]}
 	IF:	Always
 		DO:	SetState {SpellCheck}
 ~~ }
@@ -95,7 +98,7 @@ STATE: {Default} ~~ {
 		DO: DoAll 
 				DoExpr {setvar[DemonicOptions, 1]}
 				Chat {/vt echo Config Loaded}
-				SetState {*** DemonicControl 219 ***}
+				SetState {*** DemonicControl 220 ***}
 ~~ }
 STATE: {Action} ~~ {
 	IF: All 
@@ -3842,8 +3845,8 @@ STATE: {QuestCheck} ~~ {
 			Expr {$capturegroup_questcheck!=checkg}
 		DO: DoAll
 				DoExpr {echo[Less than 150,14]}
-				DoExpr {echo[Glendon Woods Snowmen (up to 150),13]}
-				DoExpr {echo[Al Araqs Skeletons (75+ with adept gear),13]}
+				DoExpr {echo[`Glendon Woods Snowmen (up to 150)`,13]}
+				DoExpr {echo[`Al Araqs Skeletons (75+ with adept gear)`,13]}
 	IF: All
 			Expr {getcharintprop[25]>=150}
 			Expr {$myquests==1}

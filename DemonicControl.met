@@ -65,7 +65,7 @@ x
 ba
 2810
 <?xml version="1.0"?><view width="168" height="217" title="Demonic Control"><control type="layout"><control type="button" name="All On" left="6" top="6" width="75" height="15" text="All On" setstate="Default2" actionexpr="chatbox[\#action all on]" /><control type="button" name="All Off" left="87" top="6" width="75" height="15" text="All Off" setstate="Default2" actionexpr="chatbox[\#action all off]" /><control type="button" name="Follow" left="6" top="27" width="75" height="15" text="Follow" setstate="Default2" actionexpr="chatbox[\#action follow]" /><control type="button" name="Stay" left="87" top="27" width="75" height="15" text="Stay" setstate="Default2" actionexpr="chatbox[\#action stay]" /><control type="button" name="Nav Only" left="87" top="48" width="75" height="15" text="Nav Only" setstate="Default2" actionexpr="chatbox[\#action nav only]" /><control type="button" name="Forcebuff" left="6" top="48" width="75" height="15" text="Forcebuff" setstate="Default2" actionexpr="chatbox[\#action buff]" /><control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="Default2" actionexpr="chatbox[\#optset enablecombat true]" /><control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="Default2" actionexpr="chatbox[\#optset enablecombat false]" /><control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Default2" actionexpr="chatbox[\#optset enablenav false]" /><control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="Default2" actionexpr="chatbox[\#optset enablenav true]" /><control type="button" name="Rares Only" left="87" top="111" width="75" height="15" text="Rares Only" setstate="Default2" actionexpr="chatbox[\#action rares only]" /><control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Default2" actionexpr="chatbox[\#action loot all]" /><control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing true]" /><control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing false]" /><control type="button" name="Portal" left="6" top="174" width="75" height="15" text="Portal" setstate="Default2" actionexpr="chatbox[\#action ucp]" /><control type="button" name="NPC" left="87" top="174" width="75" height="15" text="NPC" setstate="Default2" actionexpr="chatbox[\#action npc]" /><control type="button" name="Vendor" left="6" top="195" width="75" height="15" text="Vendor" setstate="Default2" actionexpr="chatbox[\#action ucv]" /></control></view>s
-*** DemonicControl 219 ***
+*** DemonicControl 220 ***
 i
 1
 i
@@ -80,7 +80,7 @@ uTank2 NAV 1.2
 1
 0
 s
-*** DemonicControl 219 ***
+*** DemonicControl 220 ***
 i
 3
 i
@@ -139,7 +139,7 @@ e
 s
 setvar[class, mage]
 s
-*** DemonicControl 219 ***
+*** DemonicControl 220 ***
 i
 3
 i
@@ -224,7 +224,7 @@ e
 s
 setvar[class, melee]
 s
-*** DemonicControl 219 ***
+*** DemonicControl 220 ***
 i
 1
 i
@@ -237,7 +237,7 @@ K
 V
 n
 n
-3
+6
 i
 8
 TABLE
@@ -277,8 +277,47 @@ s
 e
 s
 testgvar[watchlist]&&echo[`Watchlist found.`,13]||setgvar[watchlist,listcreate[]]
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
 s
-*** DemonicControl 219 ***
+e
+s
+echo[`--------------`,13]
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+echo[`Welcome to DemonicControl v2.20`,5]
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+echo[`--------------`,13]
+s
+*** DemonicControl 220 ***
 i
 1
 i
@@ -288,7 +327,7 @@ i
 s
 SpellCheck
 s
-*** DemonicControl 219 ***
+*** DemonicControl 220 ***
 i
 1
 i
@@ -551,7 +590,7 @@ s
 i
 1
 s
-*** DemonicControl 219 ***
+*** DemonicControl 220 ***
 s
 Default
 i
@@ -73595,7 +73634,7 @@ n
 s
 e
 s
-echo[Glendon Woods Snowmen (up to 150),13]
+echo[`Glendon Woods Snowmen (up to 150)`,13]
 i
 7
 TABLE
@@ -73608,7 +73647,7 @@ n
 s
 e
 s
-echo[Al Araqs Skeletons (75+ with adept gear),13]
+echo[`Al Araqs Skeletons (75+ with adept gear)`,13]
 s
 QuestCheck
 i
