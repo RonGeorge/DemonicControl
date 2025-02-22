@@ -314,7 +314,7 @@ tabvisible: false
 tabsize: 750, 450
 tabposition: 390, 50
 cols: 5
-rows: 10
+rows: 9
 Button_01: 1
 Button_02: 1
 Button_03: 1
