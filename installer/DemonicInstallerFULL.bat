@@ -1,6 +1,7 @@
 @echo off
 setlocal
 
+REM version 1.1
 REM Define file paths, URLs, and target directories
 SET "current_dir=%~dp0"
 SET "zip_file=%~dp0DemonicControl.zip"
@@ -8,6 +9,8 @@ SET "zip_url=https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/Dem
 SET "file1=%~dp0DemonicControl.met"
 SET "file2=%~dp0DemonicControl.txt"
 SET "file3=%~dp0DemonicControl.Layout"
+SET "file4=%~dp0Demonic11.utl"
+SET "file5=%~dp0RaresOnly.utl"
 SET "target_dir1=C:\Games\VirindiPlugins\VirindiTank"
 SET "target_dir2=C:\Games\Decal Plugins\chaoshelper"
 
@@ -40,6 +43,14 @@ if not exist "%file3%" (
     echo ERROR: File DemonicControl.Layout not found after extraction.
     goto :error
 )
+if not exist "%file4%" (
+    echo ERROR: File Demonic11.utl not found after extraction.
+    goto :error
+)
+if not exist "%file5%" (
+    echo ERROR: File RaresOnly.utl not found after extraction.
+    goto :error
+)
 
 REM Move file1, file2, and file3 to their respective directories
 echo Moving "%file1%" to "%target_dir1%"...
@@ -60,6 +71,21 @@ echo Moving "%file3%" to "%target_dir2%"...
 move /Y "%file3%" "%target_dir2%"
 if errorlevel 1 (
     echo ERROR: Failed to move DemonicControl.Layout.
+    goto :error
+)
+
+REM Move the new files to the target directory
+echo Moving "%file4%" to "%target_dir1%"...
+move /Y "%file4%" "%target_dir1%"
+if errorlevel 1 (
+    echo ERROR: Failed to move Demonic11.utl.
+    goto :error
+)
+
+echo Moving "%file5%" to "%target_dir1%"...
+move /Y "%file5%" "%target_dir1%"
+if errorlevel 1 (
+    echo ERROR: Failed to move RaresOnly.utl.
     goto :error
 )
 

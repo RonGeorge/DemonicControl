@@ -732,7 +732,7 @@ Finesse Unarmed
 353
 Bow (42%)
 
-0;1;7;12;5;0;0;1
+0;1;7;12;5;0;0;1;3
 3
 9
 10
@@ -748,6 +748,9 @@ Legendary Defender
 17
 Bow|Crossbow
 1
+9
+42
+204
 Wand (56%)
 
 0;1;7;5;0;0
@@ -1251,14 +1254,14 @@ Covenant Shield|Olthoi Shield
 9
 570
 28
-37
+27
 Bane
-Minor|Major|Epic|Legendary
+Minor|Major|Epic
 7
 38
 Impenetrability
 Minor|Major|Epic
-1
+2
 Celdon Veins (VirindiBlues)
 
 0;1;7;17;1
