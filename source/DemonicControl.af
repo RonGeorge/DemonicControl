@@ -76,8 +76,9 @@ STATE: {Default} ~~ {
 	IF:	Always ~~ remoteview and chaos control settings
 		DO:	DoAll
 				DoExpr {setvar[view, false]} ~~ mini remote
+				DoExpr {testgvar[channel]&&echo[`Channel found.`,13]||&channel=crp}
 				Chat {/ch setprofile DemonicControl.txt}
-				Chat {/ch setchatcommand /crp}
+				ChatExpr {`/ch setchatcommand /`+&channel}
 				Chat {/ch settab 4}
 	IF: Always
 		DO: DoAll
@@ -102,8 +103,14 @@ STATE: {Default} ~~ {
 ~~ }
 STATE: {Action} ~~ {
 	IF: All 
+			Expr {(InvokerCheck)#getvar[capturegroup_actiontext]}
+		DO: DoAll 
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {InvokerCheck}
+	IF: All 
 			Expr {(Millicent)#getvar[capturegroup_actiontext]}
 		DO: DoAll 
+				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Millicent}
 	IF: All 
 			Expr {(Armor)#getvar[capturegroup_actiontext]}
@@ -2883,11 +2890,27 @@ STATE: {Quest} ~~ {
 				CellE 4FF1001B
 			ItemCountGE 5 {Aetherium Golem Heart}
 		DO:	DoAll
-				EmbedNav nav356_golemturnin {golem}
+				EmbedNav nav356_golemturnin {golemturnin}
 				SetOpt {EnableNav} {true}
 	IF:	All
 			Expr {(Golem)#getvar[capturegroup_questtext]}
-			Not CellE 4FF1001B
+			CellE 4FF10014
+			NavEmpty
+			SecsInStateGE 1
+			ItemCountGE 5 {Aetherium Golem Hearts}
+		DO:	DoAll
+				Chat {/mt givep Aetherium golem heart to Baotakiite}
+				SetState {Quest}
+	IF:	All
+			Expr {(Golem)#getvar[capturegroup_questtext]}
+			CellE 4FF10014
+			ChatMatch {Baotakiite gives you Adventurer Token}
+		DO:	DoAll
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Golem)#getvar[capturegroup_questtext]}
+			Not BlockE 4FF10000
 		DO:	DoAll
 				CallState {Fortress} {Quest}
 	IF:	All
@@ -3027,13 +3050,20 @@ STATE: {Quest} ~~ {
 				SetOpt {enablenav} {true}
 				EmbedNav nav335_varetha {toVareth}
 				DoExpr {$mukkirprogress=1}
+	IF:	All ~~  check for fellow
+			Expr {(Bluelady)#getvar[capturegroup_questtext]}
+			Expr {getfellowshipstatus[]==0}
+		DO: DoAll
+				Chat {Get in a fellow first}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
 
 	IF:	All ~~ the entrance
 			ItemCountGE 0 {Magic Lamp}
 			Expr {(Bluelady)#getvar[capturegroup_questtext]}
 			CellE 8B640024
 		DO: DoAll
-				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[37]]}
+				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[37,`Desert Cactus`]]}
 	IF:	All ~~ the exit
 			ItemCountGE 1 {Magic Lamp}
 			Expr {(Bluelady)#getvar[capturegroup_questtext]}
@@ -3965,7 +3995,7 @@ STATE: {Quest} ~~ {
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	IF:	All
-			Not Expr {(Mukkir Slayer\|Tou-Tou Killtasks\|Doll\|Graveyard Killtasks\|Rynthid Killtasks\|Hoshino Killtasks\|Frozen Valley Killtasks\|Neftet Killtasks\|Teth\|Hollow\|Monouga\|Curator\|Buttersworth\|Singularity\|Queen\|Bluelady\|Dino\|Dragon\|Bear)#getvar[capturegroup_questtext]}
+			Not Expr {(Golem\|Mukkir Slayer\|Tou-Tou Killtasks\|Doll\|Graveyard Killtasks\|Rynthid Killtasks\|Hoshino Killtasks\|Frozen Valley Killtasks\|Neftet Killtasks\|Teth\|Hollow\|Monouga\|Curator\|Buttersworth\|Singularity\|Queen\|Bluelady\|Dino\|Dragon\|Bear)#getvar[capturegroup_questtext]}
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
@@ -5031,6 +5061,15 @@ STATE: {DemonSet} ~~ {
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
 				SetState {Default2}
 	IF:	All
+			Expr {(channel)#getvar[capturegroup_settingtext]}
+			Expr {testvar[capturegroup_settingvartext]}
+		DO:	DoAll
+				DoExpr {&channel=$capturegroup_settingvartext}
+				ChatExpr {`channel = `+&channel}
+				DoExpr {&channel==crp|&channel==f|&channel==lfg|echo[`Something went wrong. Try again.`,15]}
+				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
+				SetState {Default2}
+	IF:	All
 			Expr {(fastloot)#getvar[capturegroup_settingtext]}
 			Expr {testvar[capturegroup_settingvartext]}
 		DO:	DoAll
@@ -5061,6 +5100,7 @@ STATE: {DemonSet} ~~ {
 				DoExpr {echo[`     fellowname = `+&fellowname,13]}
 				DoExpr {echo[`     lootprofile = `+&lootprofile,13]}
 				DoExpr {echo[`     fastloot = `+&fastlootprofile,13]}
+				DoExpr {echo[`     channel = /`+&channel,13]}
 				DoExpr {echo[`     persistent join = `+&persistentjoin,13]}
 				DoExpr {echo[`------------`,13]}
 				DoExpr {echo[`Do not add .utl to loot profiles when setting them, just the name.`,5]}
@@ -5537,7 +5577,34 @@ STATE: {Corpse} ~~ {
 			Never
 		DO: None
 ~~ }
-
+STATE: {InvokerCheck} ~~ {
+	IF: Always
+		DO: Chat {Invoker Stone Flag Test}
+	IF: Any
+			Expr {testquestflag[InvokingStoneAyan90]==0}
+			Expr {testquestflag[InvokingStoneColier90]==0}
+			Expr {testquestflag[InvokingStoneAsheronIsland90]==0}
+			Expr {testquestflag[InvokingStoneTouTou90]==0}
+		DO: DoAll 
+				Chat {You need West}
+	IF: Any 
+			Expr {testquestflag[InvokingStoneIsleofTears90]==0}
+			Expr {testquestflag[InvokingStoneFestival90]==0}
+			Expr {testquestflag[InvokingStoneMountEsper90]==0}
+			Expr {testquestflag[InvokingStoneArwic90]==0}
+		DO: DoAll 
+				Chat {You need East}
+	IF: Any 
+			Expr {testquestflag[InvokingStoneMayoi90]==0}
+			Expr {testquestflag[InvokingStoneOsteth90]==0}
+			Expr {testquestflag[InvokingStoneCandethKeep90]==0}
+			Expr {testquestflag[InvokingStoneSilyun90]==0}
+		DO: DoAll 
+				Chat {You need North}
+	IF: Always 
+		DO: DoAll
+				SetState {Default2}
+~~ }
 
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
 
