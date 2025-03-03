@@ -256,6 +256,7 @@ STATE: {Action} ~~ {
 				ChatCapture {^(?<tellname>.*?) gives you (?<npctext>.*)$} {}
 				ChatCapture {^(?<tellname>.*?) cast (?<npctext>.*)$} {}
 				IntoPortal
+				ExitPortal
 			Expr {getvar[capturegroup_tellname]==getvar[action_npc_name]}
 		DO: DoAll 
 				DoExpr {clearvar[capturegroup_actiontext]&&clearvar[capturegroup_tellname]&&clearvar[action_npc_name]}
@@ -2897,7 +2898,7 @@ STATE: {Quest} ~~ {
 			CellE 4FF10014
 			NavEmpty
 			SecsInStateGE 1
-			ItemCountGE 5 {Aetherium Golem Hearts}
+			ItemCountGE 5 {Aetherium Golem Heart}
 		DO:	DoAll
 				Chat {/mt givep Aetherium golem heart to Baotakiite}
 				SetState {Quest}
@@ -4117,12 +4118,12 @@ STATE: {Mode} ~~ {
 		DO: DoAll
 				DoExpr {listmap[listcreate[`capturegroup_equiptext`, `monster`, `counter`, `equipexit`], `clearvar[$1]`]}
 	IF: All
-			Expr {(Rats)#getvar[capturegroup_modetext]}
+			Expr {(Mukkir)#getvar[capturegroup_modetext]}
 		DO:	DoAll
-				DoExpr {$activemode=rats}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rats`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]}
-				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
+				DoExpr {$activemode=mukkir}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Mukkir`}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Mukkir`]}
+				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
@@ -4132,6 +4133,27 @@ STATE: {Mode} ~~ {
 				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {setvar[monster,Sanguinary Rat]}
+				DoExpr {clearvar[capturegroup_modetext]}
+				SetState {EquipState}
+
+
+	IF: All
+			Expr {(Rats)#getvar[capturegroup_modetext]}
+		DO:	DoAll
+				DoExpr {$activemode=rats}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rats`}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]}
+				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
+				SetOpt {SummonPets} {true}
+				SetOpt {idlepeacemode} {false}
+				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
+				DoExpr {$class!=mage||vtsetsetting[attackdistance,`0.12`]} ~~attack to 28.8
+				DoExpr {$class!=melee||vtsetsetting[attackdistance,`0.04166`]} ~~attack to 28.8
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`75`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {setvar[monster,Controller Mukkir]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
 	IF: All
@@ -4420,7 +4442,7 @@ STATE: {Mode} ~~ {
 				DoExpr {listmap[listcreate[`ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				SetState {Default2}
 	IF: All
-			Expr {(dragon)#getvar[capturegroup_modetext]}
+			Expr {(Dragon)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				DoExpr {$activemode=dragon}
 				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&patrolleader=getcharstringprop[1]`]}
@@ -13087,14 +13109,15 @@ NAV: nav340_forttomukkir once ~~ {
 	pnt -38.4443974177043 91.0597316741943 0.350020853678385
 	pnt -38.4762451489766 91.0643017292023 0.350020853678385
 	ptl -99.7648532867432 91.0963930765788 2.08333134651184E-05 -38.4843458334605 91.0633804162343 0.349737524986267 14 {Saurohaven}
-	pnt 80.7140774726868 69.6123491605123 0.0333541631698608
-	pnt 80.7440447489421 69.6624577522278 0.0323160211245219
-	pnt 80.7774250030518 69.6995001792908 0.0292291522026062
-	pnt 80.8040143330892 69.7284947395325 0.0268129388491313
-	pnt 80.8366722424825 69.7616774876912 0.0221014658610026
-	pnt 80.8632482210795 69.7861258824666 0.0126773158709208
-	pnt 80.8909894943237 69.8116464614868 2.08332203328609E-05
-	ptl -99.7648532867432 91.0963930765788 2.08333134651184E-05 80.9004037221273 69.8219722747803 -0.000262499845121056 14 {Mukkir Citadel}
+	pnt 80.692835966746 69.5910380681356 0.0333541631698608
+	pnt 80.7023599942525 69.6252711296082 0.0333541631698608
+	pnt 80.7131210962931 69.6605045318604 0.0324787894884745
+	pnt 80.7243012110392 69.7073930422465 0.0285714129606883
+	pnt 80.7226828893026 69.7765293757121 0.0205992738405863
+	pnt 80.7163109779358 69.8674687703451 0.00282825181881587
+	pnt 80.7095942815145 69.9670777638753 -0.000395833452542623
+	pnt 80.7036941369375 70.0018189748128 -0.00185416663686434
+	ptl 80.7310817400614 69.7724219004313 0.0209918816884359 80.7014645894369 70.0199750264486 -0.00213749962858856 14 {Mukkir Citadel}
 	pnt -99.7659056345622 91.1013408660889 2.08333134651184E-05
 	pnt -99.7636623382568 91.0807285308838 2.08333134651184E-05
 	tlk -99.7648532867432 91.0963930765788 2.08333134651184E-05 -99.7602958043416 91.0721791585286 2.08333131013205E-05 37 {Mukkir Destroyer}

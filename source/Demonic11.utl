@@ -1,6 +1,6 @@
 UTL
 1
-161
+163
 Blue Coral
 
 0;1;1
@@ -64,50 +64,88 @@ Oubliette Portal
 1
 Yellow Stone E
 
-0;10;1;12;12
+0;10;1;7;12;12
 30
 19
 Invoking Stone
 1
+3
+8
 18
 27015
 218103809
 18
-26509
+26636
 218103850
-Orange Stone E
+Red Stone E
 
-0;10;1;12;12
+0;10;1;7;12;12
 30
 19
 Invoking Stone
 1
+3
+8
 18
-27013
+27016
 218103809
 18
-26636
+26529
 218103850
 Blue Stone E
 
-0;10;1;12;12
+0;10;1;7;12;12
 30
 19
 Invoking Stone
 1
+3
+8
+18
+27017
+218103809
+18
+26530
+218103850
+Pink Stone E
+
+0;10;1;7;12;12
+30
+19
+Invoking Stone
+1
+3
+8
+18
+27014
+218103809
+18
+26509
+218103850
+Blue Stone W
+
+0;10;1;7;12;12
+30
+19
+Invoking Stone
+1
+3
+8
 18
 27017
 218103809
 18
 26529
 218103850
-Green Stone E
+Green Stone W
 
-0;10;1;12;3
+0;10;1;7;12;3
 30
 19
 Invoking Stone
 1
+3
+8
 18
 27018
 218103809
@@ -116,64 +154,94 @@ Invoking Stone
 218103850
 Yellow Stone W
 
-0;10;1;12
+0;10;1;7;12;12
 30
 19
 Invoking Stone
 1
+3
+8
 18
 27015
 218103809
-Blue Stone W
-
-0;10;1;12
-30
-19
-Invoking Stone
-1
 18
-27017
-218103809
-Green Stone
+26509
+218103850
+Orange Stone W
 
-0;10;1;12
+0;10;1;7;12;12
 30
 19
 Invoking Stone
 1
-18
-27018
-218103809
-Orange Stone
-
-0;10;1;12
-30
-19
-Invoking Stone
-1
+3
+8
 18
 27013
 218103809
-Red Stone
+18
+26636
+218103850
+Red Stone N
 
-0;10;1;12
+0;10;1;7;12;12
 30
 19
 Invoking Stone
 1
+3
+8
 18
 27016
 218103809
-Pink Stone
+18
+26530
+218103850
+Pink Stone N
 
-0;10;1;12
+0;10;1;7;12;12
 30
 19
 Invoking Stone
 1
+3
+8
 18
 27014
 218103809
+18
+26636
+218103850
+Green Stone N
+
+0;10;1;7;12;12
+30
+19
+Invoking Stone
+1
+3
+8
+18
+27018
+218103809
+18
+26529
+218103850
+Orange Stone N
+
+0;10;1;7;12;12
+30
+19
+Invoking Stone
+1
+3
+8
+18
+27013
+218103809
+18
+26509
+218103850
 Pyreal Bar
 
 0;10;1
