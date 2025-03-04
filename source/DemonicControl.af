@@ -37,7 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
-STATE: {*** DemonicControl 220 ***} ~~ {
+STATE: {*** DemonicControl 221 ***} ~~ {
 	IF:	Expr {getvar[view]==true}
 		DO:	DoAll
 				DoExpr {setvar[view, false]}
@@ -99,7 +99,7 @@ STATE: {Default} ~~ {
 		DO: DoAll 
 				DoExpr {setvar[DemonicOptions, 1]}
 				Chat {/vt echo Config Loaded}
-				SetState {*** DemonicControl 220 ***}
+				SetState {*** DemonicControl 221 ***}
 ~~ }
 STATE: {Action} ~~ {
 	IF: All 
@@ -1288,24 +1288,25 @@ STATE: {Nav To} ~~ {
 			Expr {(Peppermint Factory)#getvar[capturegroup_navtext]}
 			Expr {(Tainted Grotto)#getvar[capturegroup_navtext]} ~~ for the new armor
 			Expr {(Path of the Blind)#getvar[capturegroup_navtext]}
-			Expr {(Deserted Barracks)#getvar[capturegroup_navtext]} ~~ Dogs
+			Expr {(Dogs)#getvar[capturegroup_navtext]} ~~ Dogs
 			Expr {(Grievver Fortress)#getvar[capturegroup_navtext]}
 			Expr {(Dungeon Fern)#getvar[capturegroup_navtext]} ~~ Bear
-			Expr {(Dungeon Mei)#getvar[capturegroup_navtext]} ~~ Shreths
+			Expr {(Dungeon Mei\|Shreth)#getvar[capturegroup_navtext]} ~~ Shreths
 		DO:	SetState {NavToWhisper}
 	IF:	Any
+			Expr {(Banderlings)#getvar[capturegroup_navtext]}
 			Expr {(Varetha)#getvar[capturegroup_navtext]}
 			Expr {(Golem)#getvar[capturegroup_navtext]}
 			Expr {(Millicent)#getvar[capturegroup_navtext]}
 			Expr {(RareVendor)#getvar[capturegroup_navtext]}
-			Expr {(Shreth)#getvar[capturegroup_navtext]}
+~~			Expr {(Shreth)#getvar[capturegroup_navtext]}
 			Expr {(Title)#getvar[capturegroup_navtext]}
 			Expr {(Holding\|Aerbax's Holding)#getvar[capturegroup_navtext]}
 			Expr {(Lum)#getvar[capturegroup_navtext]}
 			Expr {(Daiymo)#getvar[capturegroup_navtext]}
 			Expr {(BlueLady)#getvar[capturegroup_navtext]}
-			Expr {(Grievvers)#getvar[capturegroup_navtext]}
-			Expr {(Dogs)#getvar[capturegroup_navtext]}
+~~			Expr {(Grievvers)#getvar[capturegroup_navtext]}
+~~			Expr {(Dogs)#getvar[capturegroup_navtext]}
 			Expr {(Stipend)#getvar[capturegroup_navtext]}
 			Expr {(Buttersworth)#getvar[capturegroup_navtext]}
 			Expr {(Tailoring Kits)#getvar[capturegroup_navtext]}
@@ -1369,7 +1370,7 @@ STATE: {Nav To} ~~ {
 			Expr {(Abayar's Laboratory)#getvar[capturegroup_navtext]}
 			Expr {(Humming Crystal Portal)#getvar[capturegroup_navtext]}
 			Expr {(Wilderness Citadel)#getvar[capturegroup_navtext]}
-			Expr {(Ridge Citadel)#getvar[capturegroup_navtext]}
+~~			Expr {(Ridge Citadel)#getvar[capturegroup_navtext]}
 			Expr {(Mountain Citadel)#getvar[capturegroup_navtext]}
 			Expr {(Desert Citadel)#getvar[capturegroup_navtext]}
 			Expr {(Jungle Shadows)#getvar[capturegroup_navtext]}
@@ -1814,6 +1815,20 @@ STATE: {Nav To} ~~ {
 ~~ }
 STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 	IF: All 
+			Expr {(Mountain Citadel)#getvar[capturegroup_navtext]}
+		DO: DoAll
+				SetOpt {EnableNav} {true}
+				SetOpt {EnableCombat} {false}
+				EmbedNav nav372_MountainCitadel {MountainCitadel}
+				SetState {Default2}
+	IF: All 
+			Expr {(Banderlings)#getvar[capturegroup_navtext]}
+		DO: DoAll
+				SetOpt {EnableNav} {true}
+				SetOpt {EnableCombat} {false}
+				EmbedNav nav371_BanderlingHut {BanderHut}
+				SetState {Default2}
+	IF: All 
 			Expr {(Varetha)#getvar[capturegroup_navtext]}
 		DO: DoAll
 				SetOpt {EnableNav} {true}
@@ -1922,13 +1937,6 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 			Expr {(BlueLady)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				EmbedNav nav293_bluelady {BlueLady}
-				DoExpr {clearvar[capturegroup_navtext]}
-				SetState {Default2}
-	IF:	Any
-			Expr {(Grievvers)#getvar[capturegroup_navtext]}
-		DO:	DoAll
-				Chat {/haven}
-				EmbedNav nav289_grievvers {grievvers}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
@@ -2377,17 +2385,8 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				SetState {Default2}
 	IF:	All
 			Expr {(Holding\|Aerbax's Holding)#getvar[capturegroup_navtext]}
-			Expr {getisspellknown[6150]==1} ~~ SpellId 6150 is "Rynthid Recall".
 		DO:	DoAll
-				EmbedNav nav315_holding {[Holding]}
-				DoExpr {clearvar[capturegroup_navtext]}
-				SetState {Default2}
-	IF:	All
-			Expr {(Holding\|Aerbax's Holding)#getvar[capturegroup_navtext]}
-			Expr {getisspellknown[6150]==0} ~~ SpellId 6150 is "Rynthid Recall".
-		DO:	DoAll
-				Chat {/sub}
-				EmbedNav nav316_holdingnospell {[none]}
+				EmbedNav nav370_Holding {[Holding]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2602,22 +2601,6 @@ STATE: {Nav To Sub} ~~ {
 			ExitPortal
 		DO:	DoAll
 				EmbedNav nav228___sub_ {[none]}
-				DoExpr {clearvar[capturegroup_navtext]}
-				SetState {Default2}				
-	IF:	All
-			Expr {(Ridge Citadel)#getvar[capturegroup_navtext]}
-			CellE 01C9022D
-			ExitPortal
-		DO:	DoAll
-				EmbedNav nav229___sub_ {[none]}
-				DoExpr {clearvar[capturegroup_navtext]}
-				SetState {Default2}				
-	IF:	All
-			Expr {(Mountain Citadel)#getvar[capturegroup_navtext]}
-			CellE 01C9022D
-			ExitPortal
-		DO:	DoAll
-				EmbedNav nav230___sub_ {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}				
 	IF:	All
@@ -2886,20 +2869,39 @@ STATE: {Nav To Sub Basement} ~~ {
 				SetState {Default2}	
 ~~ }
 STATE: {NavToWhisper} ~~ {
+	IF:	All
+			Expr {getisspellknown[3930]==1}
+			Not BlockE 00810000
+			Expr {isportaling[]==0}
+		DO: DoAll 
+				DoExpr {actiontrycastbyid[1637]}
+	IF:	All
+			Expr {getisspellknown[3930]==0}
+			Not BlockE 00810000
+			Expr {$factionorb=listfilter[wobjectfindallinventory[],`wobjectgettemplatetype[$1]==33484`]&&listcount[$factionorb]>0&&(wobjectgetintprop[$factionorb{{0}},10]||actiontryuseitem[$factionorb{{0}}])}
+~~			Expr {actiontryapplyitem[wobjectfindininventorybytemplatetype[33484],wobjectgetplayer[]]}
+			Expr {setcombatstate[Magic]&&chatbox[\/ub use Whispering Blade Chapterhouse Recall Orb on +getcharstringprop[1]]}
+		DO:	None
 	IF: Always
 		DO: DoAll 
 				SetWatchdog 2 10 {NavToWhisper}
 	IF:	All
-			Not CellE 01AC010C
+			Not BlockE 00810000
+			Expr {getisspellknown[3930]==0}
+			Expr {wobjectfindininventorybytemplatetype[33484]==0}
 		DO:	DoAll
 				Chat {/haven}
 	IF:	All
 			CellE 01AC010C
+			Expr {getisspellknown[3930]==0}
+			Expr {wobjectfindininventorybytemplatetype[33484]==0}
 		DO:	DoAll
 				EmbedNav nav357_haventowhisper {[haventowhisper]}
 	IF:	All
 			CellE 01AC0115
 			NavEmpty
+			Expr {getisspellknown[3930]==0}
+			Expr {wobjectfindininventorybytemplatetype[33484]==0}
 		DO:	DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[37,`Whispering Blade Chapterhouse`]]}
 	IF:	All
@@ -2932,7 +2934,7 @@ STATE: {NavToWhisper} ~~ {
 				CellE 0081014B
 				CellE 0081014E
 			NavEmpty
-			Expr {(Dungeon Mei)#getvar[capturegroup_navtext]}
+			Expr {(Dungeon Mei\|Shreth)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				EmbedNav nav363_whispertoMei {[Mei]}
 				DoExpr {clearvar[capturegroup_navtext]}
@@ -2972,7 +2974,7 @@ STATE: {NavToWhisper} ~~ {
 				CellE 0081014B
 				CellE 0081014E
 			NavEmpty
-			Expr {(Deserted Barracks)#getvar[capturegroup_navtext]}
+			Expr {(Dogs)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				EmbedNav nav358_whispertoDeserted {[Deserted]}
 				DoExpr {clearvar[capturegroup_navtext]}
@@ -2982,7 +2984,7 @@ STATE: {NavToWhisper} ~~ {
 				CellE 0081014B
 				CellE 0081014E
 			NavEmpty
-			Expr {(Grievver Fortress)#getvar[capturegroup_navtext]}
+			Expr {(Grievvers)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				EmbedNav nav361_whispertoGrievver {[Grievvers]}
 				DoExpr {clearvar[capturegroup_navtext]}
@@ -3863,16 +3865,6 @@ STATE: {Quest} ~~ {
 		DO: DoAll
 				Chat {/ub close corpse}
 				EmbedNav nav292_queen {[QueenPartThree]}
-				SetOpt {enablenav} {true}
-				DoExpr {clearvar[capturegroup_questtext]}
-				SetState {Default2}
-	IF:	All
-			Expr {(Banderlings)#getvar[capturegroup_questtext]}
-		DO: DoAll
-				Chat {/sub}
-				SetOpt {navclosestoprange} {0.00833} ~~set follow to 2 for corners
-				EmbedNav nav294_banderlings {[Banderlings]}
-				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
@@ -5213,7 +5205,7 @@ STATE: {DemonSet} ~~ {
 		DO:	DoAll
 				DoExpr {&channel=$capturegroup_settingvartext}
 				ChatExpr {`channel = `+&channel}
-				DoExpr {&channel==crp|&channel==f|&channel==lfg|echo[`Something went wrong. Try again.`,15]}
+				DoExpr {&channel==crp||&channel==f||&channel==lfg||echo[`Something went wrong. Try again. Don't use a / in your new channel, just the letters.`,15]}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
 				SetState {Default2}
 	IF:	All
@@ -13179,48 +13171,12 @@ NAV: nav338_recalltofarmer once ~~ {
 	pnt 33.7102437655131 42.6851612726847 0.275020853678385
 ~~ }
 NAV: nav339_farmertobanderling once ~~ {
-	pnt 33.7622552235921 42.639083480835 0.275020853678385
-	pnt 33.80505250295 42.5950436909993 0.275020853678385
-	pnt 33.9031051635742 42.5346484184265 0.275020853678385
-	pnt 33.9555573145549 42.5009258588155 0.274557717641195
-	pnt 34.0689919312795 42.4263779322306 0.269813537597656
-	pnt 34.1914289474487 42.3043028672536 0.28405974706014
-	pnt 34.3116560141246 42.1953738530477 0.295815912882487
-	pnt 34.5254080136617 42.024361928304 0.239791568120321
-	pnt 34.7209962209066 41.9496575673421 0.220186869303385
-	pnt 34.9937053998311 41.7725874265035 0.257305065790812
-	pnt 35.1705576578776 41.6147306442261 0.275020853678385
-	pnt 35.4064883550008 41.3908986091614 0.275020853678385
-	pnt 35.5368174235026 41.2432212193807 0.275020853678385
-	pnt 35.6903823892276 41.0545116424561 0.275020853678385
-	pnt 35.7448406298955 40.9009478569031 0.275020853678385
-	pnt 35.7506075779597 40.6844476540883 0.275020853678385
-	pnt 35.9804842631022 40.4702584862709 0.208214298884074
-	pnt 36.2429415384928 40.2786598205566 0.156554047266642
-	pnt 36.4946674585342 40.0755703926086 0.19487034479777
-	pnt 36.5796273152033 40.0327943483988 0.239576148986816
-	pnt 36.711347357432 39.9794082005819 0.285245418548584
-	pnt 36.8885852177938 39.7690552949905 0.314785035451253
-	pnt 36.9933633804321 39.645472462972 0.358379968007406
-	pnt 37.11462987264 39.4827117284139 0.408288033803304
-	pnt 37.2713151633739 39.2620311419169 0.432351589202881
-	pnt 37.423451423645 39.0461955547333 0.418582852681478
-	pnt 37.5895431200663 38.8119650522868 0.332977135976156
-	pnt 37.7289253234863 38.6144272486369 0.318532180786133
-	pnt 37.8260278701782 38.5097617785136 0.254658381144206
-	pnt 37.966054725647 38.351598962148 0.204340489705404
-	pnt 38.1737587372462 38.1139622489611 0.179047234853109
-	pnt 38.3982628504435 37.8517011006673 0.241120481491089
-	pnt 38.6790414174398 37.5431211789449 0.353513940175374
-	pnt 38.827752494812 37.3402762810389 0.341687520345052
-	pnt 38.9687880039215 37.1300371170044 0.35334800084432
-	pnt 39.0768499533335 36.9704719225566 0.359889888763428
-	pnt 39.1614965438843 36.8345152219137 0.312522983551025
-	pnt 39.2179667154948 36.7033690929413 0.286260159810384
-	pnt 39.4131144841512 36.3861862182617 0.195591084162394
-	pnt 39.5657071431478 36.1923274358114 0.15573631922404
-	pnt 39.6027603785197 36.1438091913859 0.149560769399007
-	ptl -101.137931743264 77.1692770957947 2.08333134651184E-05 39.6137500127157 36.1333333333333 0.147445842623711 14 {Banderling Ruin}
+	rcl -71.7826677322388 1.42852772076925 0.916687456766764 {Primary Portal Recall}
+	pnt -72.0275037447611 1.43467458089193 0.916687456766764
+	pnt -71.9255754470825 1.43747797012329 0.916687456766764
+	pnt -71.8604092915853 1.43846756617228 0.916687456766764
+	pnt -71.7854088465373 1.43088787396749 0.916687456766764
+	ptl -71.7826677322388 1.42852772076925 0.916687456766764 -71.7731521606445 1.41294582684835 0.916404128074646 14 {Banderling Ruin}
 	pnt -101.107466908296 77.1284313758214 0.0250208338101705
 	pnt -101.124133761724 77.1236899137497 0.0250208338101705
 	pnt -101.145524196823 77.123277481397 0.0125208338101705
@@ -13855,4 +13811,26 @@ NAV: nav369_rynthid once ~~ {
 	pnt -100.433056322734 58.849785675512 -0.0249791661898295
 	pnt -100.44822807312 58.8473433805009 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.454654184977 58.8352193335692 -0.025262501090765 14 {Rynthid Encampment}
+~~ }
+NAV: nav370_Holding once ~~ {
+	rcl -71.978936735789 1.40209205945333 0.916687456766764 {Primary Portal Recall}
+	pnt -71.978936735789 1.40209205945333 0.916687456766764
+	pnt -71.9624724388123 1.37139786879222 0.916687456766764
+	pnt -71.9642784754435 1.33257884184519 0.916687456766764
+	pnt -71.9647215525309 1.32556258042653 0.916687456766764
+	ptl -71.9647215525309 1.32556258042653 0.916687456766764 -71.965566666921 1.31294583479563 0.916404128074646 14 {Aerbax's Holding}
+~~ }
+NAV: nav371_BanderlingHut once ~~ {
+	rcl -71.978936735789 1.40209205945333 0.916687456766764 {Primary Portal Recall}
+	pnt -71.9980944951375 1.42905139923096 0.916687456766764
+	pnt -71.9426686286926 1.41356937090556 0.916687456766764
+	pnt -71.9112515767415 1.40104141235352 0.916687456766764
+	ptl -71.9112515767415 1.40104141235352 0.916687456766764 -71.898529179891 1.39713582992554 0.916404128074646 14 {Surface Portal}
+~~ }
+NAV: nav372_MountainCitadel once ~~ {
+	rcl -71.978936735789 1.40209205945333 0.916687456766764 {Primary Portal Recall}
+	pnt -72.0008196194967 1.41150859196981 0.916687456766764
+	pnt -71.9586405118307 1.37794568538666 0.916687456766764
+	pnt -71.9268874168396 1.34802315235138 0.916687456766764
+	ptl -71.9268874168396 1.34802315235138 0.916687456766764 -71.9162791570028 1.34338250160217 0.916404128074646 14 {Mountain Citadel Portal}
 ~~ }
