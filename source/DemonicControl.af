@@ -38,9 +38,8 @@
 ~~ }																					
 
 STATE: {*** DemonicControl 221 ***} ~~ {
-	IF:	Expr {getvar[view]==true}
+	IF:	Expr {getgvar[remote]==true}
 		DO:	DoAll
-				DoExpr {setvar[view, false]}
 				CreateView {Remote} {<?xml version="1.0"?><view width="168" height="217" title="Demonic Control"><control type="layout"><control type="button" name="All On" left="6" top="6" width="75" height="15" text="All On" setstate="Default2" actionexpr="chatbox[\#action all on]" /><control type="button" name="All Off" left="87" top="6" width="75" height="15" text="All Off" setstate="Default2" actionexpr="chatbox[\#action all off]" /><control type="button" name="Follow" left="6" top="27" width="75" height="15" text="Follow" setstate="Default2" actionexpr="chatbox[\#action follow]" /><control type="button" name="Stay" left="87" top="27" width="75" height="15" text="Stay" setstate="Default2" actionexpr="chatbox[\#action stay]" /><control type="button" name="Nav Only" left="87" top="48" width="75" height="15" text="Nav Only" setstate="Default2" actionexpr="chatbox[\#action nav only]" /><control type="button" name="Forcebuff" left="6" top="48" width="75" height="15" text="Forcebuff" setstate="Default2" actionexpr="chatbox[\#action buff]" /><control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="Default2" actionexpr="chatbox[\#optset enablecombat true]" /><control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="Default2" actionexpr="chatbox[\#optset enablecombat false]" /><control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Default2" actionexpr="chatbox[\#optset enablenav false]" /><control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="Default2" actionexpr="chatbox[\#optset enablenav true]" /><control type="button" name="Rares Only" left="87" top="111" width="75" height="15" text="Rares Only" setstate="Default2" actionexpr="chatbox[\#action rares only]" /><control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Default2" actionexpr="chatbox[\#action loot all]" /><control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing true]" /><control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing false]" /><control type="button" name="Portal" left="6" top="174" width="75" height="15" text="Portal" setstate="Default2" actionexpr="chatbox[\#action ucp]" /><control type="button" name="NPC" left="87" top="174" width="75" height="15" text="NPC" setstate="Default2" actionexpr="chatbox[\#action npc]" /><control type="button" name="Vendor" left="6" top="195" width="75" height="15" text="Vendor" setstate="Default2" actionexpr="chatbox[\#action ucv]" /></control></view>}
 	IF:	Always
 		DO:	EmbedNav nav0___None_ {[none]}
@@ -75,7 +74,7 @@ STATE: {Default} ~~ {
 				Chat {/vt echo Variables Cleared}
 	IF:	Always ~~ remoteview and chaos control settings
 		DO:	DoAll
-				DoExpr {setvar[view, false]} ~~ mini remote
+				DoExpr {testgvar[remote]||&remote=false} ~~ mini remote
 				DoExpr {testgvar[channel]&&echo[`Channel found.`,13]||&channel=crp}
 				Chat {/ch setprofile DemonicControl.txt}
 				ChatExpr {`/ch setchatcommand /`+&channel}
@@ -2216,6 +2215,11 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
+			Expr {(Graveyard)#getvar[capturegroup_navtext]}
+			Expr {getisspellknown[4128]==0} ~~ SpellId 4128 is "Call of the Mhoire Forge".
+		DO:	DoAll
+				SetState {NavToWhisper}
+	IF:	All
 			Expr {(Colosseum)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4213]==1} ~~ SpellId 4213 is "Colosseum Recall".
 		DO:	DoAll
@@ -2874,7 +2878,7 @@ STATE: {NavToWhisper} ~~ {
 			Not BlockE 00810000
 			Expr {isportaling[]==0}
 		DO: DoAll 
-				DoExpr {actiontrycastbyid[1637]}
+				DoExpr {actiontrycastbyid[3930]}
 	IF:	All
 			Expr {getisspellknown[3930]==0}
 			Not BlockE 00810000
@@ -2884,7 +2888,7 @@ STATE: {NavToWhisper} ~~ {
 		DO:	None
 	IF: Always
 		DO: DoAll 
-				SetWatchdog 2 10 {NavToWhisper}
+				SetWatchdog 2 20 {NavToWhisper}
 	IF:	All
 			Not BlockE 00810000
 			Expr {getisspellknown[3930]==0}
@@ -5190,6 +5194,15 @@ STATE: {DemonSet} ~~ {
 			Expr {testvar[capturegroup_settingvartext]==0}
 		DO:	DoAll
 				DoExpr {echo[`#demonset stands for Demonic Settings. Use "#demonset config" to see all of your current settings.`,13]}
+				SetState {Default2}
+	IF:	All
+			Expr {(remote)#getvar[capturegroup_settingtext]}
+			Expr {testvar[capturegroup_settingvartext]}
+		DO:	DoAll
+				DoExpr {&remote=$capturegroup_settingvartext}
+				DoExpr {&remote==true||&remote==false||(echo[`Something went wrong. True or False only.`,15]&&cleargvar[remote])}
+				ChatExpr {`remote view = `+&remote}
+				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(persistent)#getvar[capturegroup_settingtext]}

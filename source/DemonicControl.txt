@@ -345,30 +345,30 @@ Portals_Button_28,-,#command
 Portals_Button_29,-,#command
 Portals_Button_30,closest portal,#action ucp
 Demon_Button_01,#navto bluelady,#navto bluelady
-Demon_Button_02,Follow,#action follow
-Demon_Button_03,#quest bluelady,#quest bluelady
-Demon_Button_04,All On,#action all on
-Demon_Button_05,#navto curator,#navto curator
-Demon_Button_06,Rares and Quest Loot,/ub bc /vt loot load RaresAndQuestItems.utl
-Demon_Button_07,#quest Curator,#quest curator
+Demon_Button_02,#quest bluelady,#quest bluelady
+Demon_Button_03,#navto curator,#navto curator
+Demon_Button_04,#quest curator,#quest curator
+Demon_Button_05,
+Demon_Button_06,
+Demon_Button_07,
 Demon_Button_08,#recruit,#recruit
 Demon_Button_09,#quest Queen,#quest queen
 Demon_Button_10,Fellow Quit,/ub bc /ub fellow quit
 Demon_Button_11,#quest Monouga,#quest monouga
 Demon_Button_12,Find Group,#findgroup
-Demon_Button_13,#quest dino,#quest dino
-Demon_Button_14,Create Fellow,/tell [player],#action fellow
-Demon_Button_15,#quest Bear, #quest Bear
-Demon_Button_16,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
+Demon_Button_13,-,#command
+Demon_Button_14,#quest Bear, #quest Bear
+Demon_Button_15,#quest dino,#quest dino
+Demon_Button_16,mode Dino, #mode dino
 Demon_Button_17,#quest Dragon,#quest Dragon
 Demon_Button_18,Reload Loot Profiles,/ub bc /vt loot load Demonic11.utl
-Demon_Button_19,Load Society,/ub bc /vt meta load Society
+Demon_Button_19,Rares Only Loot Profile,/ub bc /vt loot load RaresOnly.utl
 Demon_Button_20,Reload Metas,/ub bc /vt meta load DemonicControl
 Demon_Button_21,#checkg,#checkg
 Demon_Button_22,#checku,#checku
 Demon_Button_23,#check,#check
-Demon_Button_24,mode Teth,#mode teth
-Demon_Button_25,mode Dino, #mode dino
+Demon_Button_24,mode Mukkir,#mode Mukkir
+Demon_Button_25,mode Teth,#mode teth
 Demon_Button_26,mode Monouga, #mode monouga
 Demon_Button_27,mode Dragon, #mode dragon
 Demon_Button_28,mode Rage,#mode rage
