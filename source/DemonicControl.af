@@ -5200,7 +5200,7 @@ STATE: {DemonSet} ~~ {
 			Expr {testvar[capturegroup_settingvartext]}
 		DO:	DoAll
 				DoExpr {&remote=$capturegroup_settingvartext}
-				DoExpr {&remote==true||&remote==false||(echo[`Something went wrong. True or False only.`,15]&&cleargvar[remote])}
+				DoExpr {&remote==1||&remote==0||(echo[`Something went wrong. True or False only.`,15]&&cleargvar[remote])}
 				ChatExpr {`remote view = `+&remote}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
 				SetState {Default2}
@@ -5253,6 +5253,7 @@ STATE: {DemonSet} ~~ {
 				DoExpr {echo[`     lootprofile = `+&lootprofile,13]}
 				DoExpr {echo[`     fastloot = `+&fastlootprofile,13]}
 				DoExpr {echo[`     channel = /`+&channel,13]}
+				DoExpr {echo[`     remote view = `+&remote,13]}
 				DoExpr {echo[`     persistent join = `+&persistentjoin,13]}
 				DoExpr {echo[`------------`,13]}
 				DoExpr {echo[`Do not add .utl to loot profiles when setting them, just the name.`,5]}
