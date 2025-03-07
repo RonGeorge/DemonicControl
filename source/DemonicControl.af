@@ -747,7 +747,7 @@ STATE: {Default2} ~~ {
 ~~ Monouga moded
 	IF: All
 			Expr {$activemode==monouga}
-			ItemCountGE 7 {Monouga Rib}
+			ItemCountGE 6 {Monouga Rib}
 		DO: DoAll
 				DoExpr {echo[Full on Ribs,13]}
 	IF: All
@@ -1813,6 +1813,31 @@ STATE: {Nav To} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
+	IF:	All
+			Any 
+				Expr {(Buttersworth)#getvar[capturegroup_navtext]}
+				Expr {(Golem)#getvar[capturegroup_navtext]}
+			Not BlockE 4FF10000
+			Not BlockE 01020000
+		DO:	DoAll
+				CallState {Fortress} {Nav to 2}
+	IF:	All
+			Expr {(Golem)#getvar[capturegroup_navtext]}
+			Any ~~ fortress drop
+				CellE 4FF10023
+				CellE 4FF10013
+				CellE 4FF1001B
+		DO:	DoAll
+				EmbedNav nav374_golem {Golems}
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
+	IF:	All 
+			Expr {(Buttersworth)#getvar[capturegroup_navtext]}
+			BlockE 4FF10000
+		DO:	DoAll
+				EmbedNav nav373_fortButters {Buttersworth}
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
 	IF: All 
 			Expr {(Mountain Citadel)#getvar[capturegroup_navtext]}
 		DO: DoAll
@@ -1834,14 +1859,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				SetOpt {EnableCombat} {false}
 				EmbedNav nav335_varetha {Varetha}
 				SetState {Default2}
-	IF: All 
-			Expr {(Golem)#getvar[capturegroup_navtext]}
-		DO: DoAll
-				Chat {/fachub}
-				SetOpt {EnableNav} {true}
-				SetOpt {OpenDoors} {true}
-				EmbedNav nav333_golems {Golems}
-				SetState {Default2}
+
 	IF: All 
 			Expr {(RareVendor)#getvar[capturegroup_navtext]}
 			CellE 01AC011B
@@ -1952,13 +1970,7 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				EmbedNav nav287_monroe {Stipend}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
-	IF:	Any
-			Expr {(Buttersworth)#getvar[capturegroup_navtext]}
-		DO:	DoAll
-				Chat {/sub}
-				EmbedNav nav282_buttersworth {Buttersworth}
-				DoExpr {clearvar[capturegroup_navtext]}
-				SetState {Default2}
+
 	IF:	Any
 			Expr {(Tailoring Kits)#getvar[capturegroup_navtext]}
 		DO:	DoAll
@@ -2878,6 +2890,8 @@ STATE: {NavToWhisper} ~~ {
 			Not BlockE 00810000
 			Expr {isportaling[]==0}
 		DO: DoAll 
+				DoExpr {actiontrycastbyid[3930]}
+				DoExpr {actiontrycastbyid[3930]}
 				DoExpr {actiontrycastbyid[3930]}
 	IF:	All
 			Expr {getisspellknown[3930]==0}
@@ -5200,7 +5214,7 @@ STATE: {DemonSet} ~~ {
 			Expr {testvar[capturegroup_settingvartext]}
 		DO:	DoAll
 				DoExpr {&remote=$capturegroup_settingvartext}
-				DoExpr {&remote==1||&remote==0||(echo[`Something went wrong. True or False only.`,15]&&cleargvar[remote])}
+				DoExpr {&remote==1||&remote==0||(echo[`Something went wrong. Use 1 for True and 0 for False.`,15]&&cleargvar[remote])}
 				ChatExpr {`remote view = `+&remote}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
 				SetState {Default2}
@@ -5731,6 +5745,9 @@ STATE: {Corpse} ~~ {
 		DO: None
 ~~ }
 STATE: {InvokerCheck} ~~ {
+	IF: All 
+			Expr {$myquests==0}
+		DO: CallState {MyQuests} {InvokerCheck}
 	IF: Always
 		DO: Chat {Invoker Stone Flag Test}
 	IF: Any
@@ -5740,6 +5757,13 @@ STATE: {InvokerCheck} ~~ {
 			Expr {testquestflag[InvokingStoneTouTou90]==0}
 		DO: DoAll 
 				Chat {You need West}
+	IF: All
+			Expr {testquestflag[InvokingStoneAyan90]}
+			Expr {testquestflag[InvokingStoneColier90]}
+			Expr {testquestflag[InvokingStoneAsheronIsland90]}
+			Expr {testquestflag[InvokingStoneTouTou90]}
+		DO: DoAll 
+				Chat {West is complete}
 	IF: Any 
 			Expr {testquestflag[InvokingStoneIsleofTears90]==0}
 			Expr {testquestflag[InvokingStoneFestival90]==0}
@@ -5748,17 +5772,43 @@ STATE: {InvokerCheck} ~~ {
 		DO: DoAll 
 				Chat {You need East}
 	IF: Any 
+			Expr {testquestflag[InvokingStoneIsleofTears90]}
+			Expr {testquestflag[InvokingStoneFestival90]}
+			Expr {testquestflag[InvokingStoneMountEsper90]}
+			Expr {testquestflag[InvokingStoneArwic90]}
+		DO: DoAll 
+				Chat {East is complete}
+	IF: Any 
 			Expr {testquestflag[InvokingStoneMayoi90]==0}
 			Expr {testquestflag[InvokingStoneOsteth90]==0}
 			Expr {testquestflag[InvokingStoneCandethKeep90]==0}
 			Expr {testquestflag[InvokingStoneSilyun90]==0}
 		DO: DoAll 
 				Chat {You need North}
+	IF: Any 
+			Expr {testquestflag[InvokingStoneMayoi90]}
+			Expr {testquestflag[InvokingStoneOsteth90]}
+			Expr {testquestflag[InvokingStoneCandethKeep90]}
+			Expr {testquestflag[InvokingStoneSilyun90]}
+		DO: DoAll 
+				Chat {North is complete}
 	IF: Always 
 		DO: DoAll
+				DoExpr {testquestflag[InvokingStoneTurnIn]&&chatbox[Arwic flag done]||chatbox[Missing Arwic Emissary]}
+				DoExpr {clearvar[myquests]}
 				SetState {Default2}
 ~~ }
-
+STATE: {MyQuests} ~~ {
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[`Updating Quests`,15]}
+				Chat {/myquests}
+	IF: All 
+			ChatMatch {Quest data updated}
+		DO: DoAll
+				DoExpr {$myquests=1}
+				Return
+~~ }
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~
 
 NAV: nav0___None_ circular ~~ {
@@ -13847,4 +13897,17 @@ NAV: nav372_MountainCitadel once ~~ {
 	pnt -71.9586405118307 1.37794568538666 0.916687456766764
 	pnt -71.9268874168396 1.34802315235138 0.916687456766764
 	ptl -71.9268874168396 1.34802315235138 0.916687456766764 -71.9162791570028 1.34338250160217 0.916404128074646 14 {Mountain Citadel Portal}
+~~ }
+NAV: nav373_fortButters once ~~ {
+	pnt -38.3740397453308 91.0994065284729 0.350020853678385
+	pnt -38.2766377449036 91.2363794644674 0.350020853678385
+	pnt -38.2554257074992 91.271210193634 0.350020853678385
+	ptl -38.2554257074992 91.271210193634 0.350020853678385 -38.2511583328247 91.2805416742961 0.349737524986267 14 {Murk Warrens}
+~~ }
+NAV: nav374_golem once ~~ {
+	pnt -38.4263484319051 91.1323589324951 0.350020853678385
+	pnt -38.4431974728902 91.1916791915894 0.350020853678385
+	pnt -38.4564935684204 91.2464954376221 0.350020853678385
+	pnt -38.4631101608276 91.2887466748555 0.350020853678385
+	ptl -38.4631101608276 91.2887466748555 0.350020853678385 -38.4720083236694 91.303216679891 0.349737524986267 14 {Site of Power}
 ~~ }
