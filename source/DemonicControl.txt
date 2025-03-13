@@ -355,9 +355,9 @@ Demon_Button_08,#quest Queen,#quest queen
 Demon_Button_09,#quest Monouga,#quest monouga
 Demon_Button_10,#quest dino,#quest dino
 Demon_Button_11,#quest Dragon,#quest Dragon
-Demon_Button_12,
+Demon_Button_12,#quest FortBSD,#quest fortbsd
 Demon_Button_13,
-Demon_Button_14,
+Demon_Button_14,#navto Lum,#navto lum
 Demon_Button_15,Fellow Quit,/ub bc /ub fellow quit
 Demon_Button_16,#recruit,#recruit
 Demon_Button_17,Find Group,#findgroup
@@ -372,8 +372,10 @@ Demon_Button_25,mode Teth,#mode teth
 Demon_Button_26,mode Monouga, #mode monouga
 Demon_Button_27,mode Dragon, #mode dragon
 Demon_Button_28,mode Rage,#mode rage
-Demon_Button_29,mode RESET, #mode reset
-Demon_Button_30,mode Dino, #mode dino
-Demon_ToggleButton_31,Junk and ap,#ap,#action junk
-Demon_ToggleButton_32,Millicent,#navto millicent,#action millicent
-Demon_Button_33,closest portal,#action ucp
+Demon_Button_29,mode Dino, #mode dino
+Demon_Button_30,
+Demon_Button_31,mode RESET, #mode reset
+Demon_Button_32,#action Junk,#action junk
+Demon_Button_33,Millicent,#navto millicent
+Demon_Button_34,Action Mill,#action millicent
+Demon_Button_35,#ap,#ap

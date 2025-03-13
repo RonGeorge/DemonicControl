@@ -102,6 +102,13 @@ STATE: {Default} ~~ {
 ~~ }
 STATE: {Action} ~~ {
 	IF: All 
+			Expr {(nanners)#getvar[capturegroup_actiontext]}
+		DO: DoAll 
+				DoExpr {$nannercount=getitemcountininventorybyname[Bunch of Nanners]}
+				ChatExpr {`I have `+$nannercount+` Nanners.`}
+				DoExpr {clearvar[capturegroup_actiontext]}
+				SetState {Default2}
+	IF: All 
 			Expr {(vtp)#getvar[capturegroup_actiontext]}
 		DO: DoAll 
 				Chat {/vt propertydump}
@@ -645,7 +652,6 @@ STATE: {Command} ~~ {
 			Expr {testvar[capturegroup_command]}
 		DO: DoAll 
 				DoExpr {clearvar[capturegroup_command]&&clearvar[capturegroup_arg1]&&clearvar[capturegroup_arg2]&&clearvar[capturegroup_saythink]&&clearvar[speaker]&&clearvar[capturegroup_name]&&clearvar[capturegroup_0]&&clearvar[capturecolor]}
-
 	IF:	All 
 			ChatCapture {^(?:\[[A-z]+\] )?(?:You|.*\<Tell:IIDString:[^:]+:(?<name>[^\<]+)\>[^<]+<\\(?:Tell|Tell:IIDString:[^:]+:[^>]+)>)\s+(?:says?|say),\s+"#(?<command>[^\s"]+)(?:\s+(?<arg1>[^\s"]+)(?:\s+(?<arg2>[^\s"]+))?)?"$} {}
 			Any
@@ -657,14 +663,10 @@ STATE: {Command} ~~ {
 				DoExpr {clearvar[capturegroup_0]&&clearvar[capturecolor]}
 				ChatExpr {$speaker}
 				Chat {Yes}
-
-
-
 ~~ speaker is important
 
 
 ~~ speaker isnt important
-
 	IF:	Expr {getvar[capturegroup_command]==spellcheck}
 		DO:	SetState {SpellCheck}
 	IF:	Expr {getvar[capturegroup_command]==reveal}
@@ -687,27 +689,14 @@ STATE: {Command} ~~ {
 		DO:	SetState {ActiveLeader}
 	IF:	Expr {$capturegroup_command==drop}
 		DO:	SetState {Action}
-
-
-
 	IF: All
 			Expr {testvar[capturegroup_command]}
 		DO: DoAll 
 				DoExpr {clearvar[capturegroup_command]&&clearvar[capturegroup_arg1]&&clearvar[capturegroup_arg2]&&clearvar[capturegroup_saythink]&&clearvar[speaker]&&clearvar[capturegroup_name]&&clearvar[capturegroup_0]&&clearvar[capturecolor]}
 				Chat {No!}
 				SetState {Command}
-
-
-
 ~~ }
 STATE: {Default2} ~~ {
-	IF: All 
-			ChatMatch {#mukk}
-		DO: EmbedNav nav334_tomukkirtemple {grael}
-	IF:	All
-			Expr {($Found==0||($Found==1&&listcount[listfilter[wobjectfindallbyobjectclass[5],`wobjectgetintprop[$1,25]==780`]]==0&&$Found=0))&&listcount[listfilter[wobjectfindallbyobjectclass[5],`wobjectgetintprop[$1,25]==780`]]!=0&&$Found=1&&echo[`Got him.`,17]&&0}
-		DO:	DoAll
-				None
 	IF: All 
 			Expr {testvar[activemode]}
 		DO: DoAll 
@@ -720,6 +709,13 @@ STATE: {Default2} ~~ {
 		DO: DoAll
 				SetState {ActiveDead}
 ~~ Inventory Checks
+	IF: All
+			Expr {$activemode==bsd}
+			SecsInStateGE 4
+			Any 
+				ItemCountGE 1 {Vandal Tusk}
+				ItemCountGE 1 {Demolisher Tusk}
+		DO: Chat {/f Got my Tusk!}
 	IF: All
 			Expr {$activemode==bluelady}
 			SecsInStateGE 4
@@ -758,7 +754,7 @@ STATE: {Default2} ~~ {
 			Expr {$tethgolem==1&&$tethwasp==1&&$tethskel==1}
 		DO: DoAll
 				DoExpr {echo[`--------------`,13]&&echo[`Teth Complete`,13]&&echo[`--------------`,13]}
-~~ Monouga moded
+~~ Monouga mode
 	IF: All
 			Expr {$activemode==monouga}
 			ItemCountGE 6 {Monouga Rib}
@@ -859,18 +855,19 @@ STATE: {Default2} ~~ {
 ~~ End of Dino Notify
 ~~ Being death watching
 	IF: All
-			Expr {$activemode==dino}
 			ChatCapture {^Your fellow (?<deadname>.*) has died\!$} {}
 			Any 
 				Expr {listcontains[getgvar[charlist],getvar[capturegroup_deadname]]}
 				Expr {listcontains[getgvar[watchlist],getvar[capturegroup_deadname]]}
+			Any 
+				Expr {$activemode==dino}
+				Expr {$activemode==bsd}
 		DO: DoAll
 				SetOpt {enablelooting} {false}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
-				EmbedNav nav72___None_ {Portal Recall}
 				DoExpr {clearvar[capturegroup_deadname]}
-				SetState {ActiveMover}
+				SetState {ActiveDead}
 	IF: All
 			Any 
 				Expr {$activemode==dragon}
@@ -916,9 +913,7 @@ STATE: {Default2} ~~ {
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#patrol(?:\s(?<pathtext>.*))?\"$} {}
 			Any
-				All 
-					Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-					Expr {getvar[capturegroup_name]==getcharstringprop[1]}
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
@@ -3058,7 +3053,9 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Any 
 				Expr {(Megamaw)#getvar[capturegroup_questtext]}
-				Expr {(Mukkir)#getvar[capturegroup_questtext]}
+				All
+					Not BlockE 02F20000
+					Expr {(Mukkir)#getvar[capturegroup_questtext]}
 				Expr {(Golem)#getvar[capturegroup_questtext]}
 				Expr {(FortressBSD\|FortBSD)#getvar[capturegroup_questtext]}
 			Not BlockE 4FF10000
@@ -3308,6 +3305,9 @@ STATE: {Quest} ~~ {
 				ChatExpr {`/t `+getcharstringprop[1]+`, Do #quest mukkir slayer again at the dungeon entrance.`}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
+
+
+
 	IF:	All ~~ quest pickup
 			Expr {(Mukkir Slayer)#getvar[capturegroup_questtext]}
 			Not CellE 31470018
@@ -4300,6 +4300,7 @@ STATE: {QuestCheck} ~~ {
 				DoExpr {echo[`----------150----------`,14]}
 				DoExpr {getqueststatus[tormentshardpickup]==0||echo[Curator is ready,13]}
 				DoExpr {getqueststatus[paradoxcarapacepickup]==0||echo[Queen is ready,13]}
+				DoExpr {getqueststatus[stipendtimer_0812]==0||echo[Stipend is ready,16]}
 	IF: All
 			Expr {getcharintprop[25]>=250}
 			Expr {$myquests==1}
@@ -4329,6 +4330,7 @@ STATE: {QuestCheck} ~~ {
 				DoExpr {getqueststatus[tethbanderlingkilltask]==0||echo[Banderlings is ready,13]}
 				DoExpr {getqueststatus[killtaskkemeroicrystaltimer]==0||echo[Rage is ready,13]}
 				DoExpr {getqueststatus[taskpipersecrattailswait]==0||echo[Rats is ready,13]}
+				DoExpr {getqueststatus[demolishertuskwait]==0||echo[TethBSD is ready,13]}
 	IF: All
 			Expr {getcharintprop[25]>=500}
 			Expr {$myquests==1}
@@ -4349,6 +4351,7 @@ STATE: {QuestCheck} ~~ {
 				DoExpr {echo[`----------750----------`,14]}
 				DoExpr {getqueststatus[killtaskterradinotimer]==0||echo[Dino is ready,13]}
 				DoExpr {getqueststatus[slayermukkirwait]==0||echo[Mukkir is ready,13]}
+				DoExpr {getqueststatus[vandaltuskwait]==0||echo[FortBSD is ready,13]}
 	IF: All
 			Expr {$myquests==1}
 			Expr {$capturegroup_questcheck==checkg}
@@ -4386,14 +4389,15 @@ STATE: {Mode} ~~ {
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
+				SetOpt {NavPriorityBoost} {true}
 				SetOpt {navclosestoprange} {0.0062} ~~ follow to 1.5
 				DoExpr {vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
 				DoExpr {vtsetsetting[Recharge-Norm-HitP,`85`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
 				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
 				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
-				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.27125`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])}
-				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.062`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])}
+				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.14583`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])}
+				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.0625`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 10
 				DoExpr {setvar[monster,Vandal Tusker]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
@@ -4406,13 +4410,14 @@ STATE: {Mode} ~~ {
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
+				SetOpt {LootPriorityBoost} {false}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
 				DoExpr {vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
 				DoExpr {vtsetsetting[Recharge-Norm-HitP,`75`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
 				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
 				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
-				DoExpr {setvar[monster,Sanguinary Rat]}
+				DoExpr {setvar[monster,Supreme Mukkir]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
 
@@ -4474,7 +4479,7 @@ STATE: {Mode} ~~ {
 				SetOpt {EnableBuffing} {false}
 				SetOpt {EnableCombat} {false}
 				SetOpt {lootonlyrarecorpses} {false}
-				DoExpr {listmap[listcreate[`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`mukkirprogress`,`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`patrolleader`],`cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`,`rageminion`,`ragesentients`,`ragelord`],`clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`capturegroup_tethnum`,`capturegroup_creature`],`clearvar[$1]`]}
@@ -5499,8 +5504,8 @@ STATE: {Junk} ~~ {
 	IF: Not Expr {testvar[jcounter]}
 		DO:	DoAll
 				DoExpr {$jcounter=0}
-				DoExpr {$junk=listcreate[Lucky Gold Letter,Altered Dark Remoran Fin,Drudge Mask,Legendary Key,Scarlet Red Letter,Braced Mana Forge Key,Rock,Fishing Pole,Sealed crate of Salvaged Sandstone,Mythic Chest Key,Durable Legendary Key,Bone Sword]}
-				DoExpr {$junktemplates=listcreate[52701,52703,43950,27258,36189]}
+				DoExpr {$junk=listcreate[Ball of Gunk,Lucky Gold Letter,Altered Dark Remoran Fin,Drudge Mask,Legendary Key,Scarlet Red Letter,Braced Mana Forge Key,Rock,Fishing Pole,Sealed crate of Salvaged Sandstone,Mythic Chest Key,Durable Legendary Key,Bone Sword]}
+				DoExpr {$junktemplates=listcreate[37274,52701,52703,43950,27258,36189,500173,500175,500343]}
 	IF: All
 			Expr {testvar[jcounter]}
 			Not Expr {testvar[jtcounter]}
@@ -5560,7 +5565,7 @@ STATE: {Millicent} ~~ {
 	IF: All 
 			Expr {testvar[millicentitems]==0}
 		DO:	DoAll
-				DoExpr {$millicentitems=listcreate[43950,26052,27880,9510,51954,540004,540000,540005]}
+				DoExpr {$millicentitems=listcreate[34448,43950,26052,27880,9510,51954,540004,540000,540005]}
 	IF: All 
 			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]!=0}
 			SecsInStateGE 1
@@ -5701,15 +5706,18 @@ STATE: {ActiveDead} ~~ {
 STATE: {ActiveStatus} ~~ { ~~ this is all on
 	IF: Always
 		DO: DoAll
-				SetOpt {enablelooting} {true}
+				SetOpt {AutoFellowManagement} {false}
+				SetOpt {SummonPets} {true}
+				SetOpt {LootFellowCorpses} {true}
 				SetOpt {lootonlyrarecorpses} {false}
-				SetOpt {enablecombat} {true}
+				SetOpt {EnableLooting} {true}
+				SetOpt {EnableCombat} {true}
 				SetOpt {EnableBuffing} {true}
-				SetOpt {enablenav} {true}
+				SetOpt {EnableNav} {true}
 				DoExpr {vtsetsetting[Recharge-Norm-HitP,`90`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
 				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
 				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
-				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`80`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 	IF: Always
 		DO: Return
 ~~ }
@@ -5752,6 +5760,22 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 				EmbedNav nav72___None_ {recall}
 				SetState {ActiveMover}
 	IF: All
+			Expr {$activemode==bsd}
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+		DO: DoAll
+				SetOpt {enablenav} {true}
+				EmbedNav nav72___None_ {recall}
+	IF: All
+			Expr {$activemode==bsd}
+			Expr {isportaling[]==0}
+			Any
+				BlockE 01040000
+				BlockE 01050000
+		DO: DoAll
+				SetState {ActiveLeader}
+	IF: All
 			Expr {$activemode==dino}
 			Any 
 				ExitPortal
@@ -5792,6 +5816,8 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 	IF: Always ~~ set counter
 		DO:	DoExpr {testvar[counter]&&$counter==5||$counter>=1&&$counter=$counter+1||$counter=1}
+	IF: Always ~~ this clears out all navs
+		DO: EmbedNav nav0___None_ {none}
 	IF:	Expr {&patrolleader==getcharstringprop[1]} ~~ leader goes to patrol state
 		DO:	SetState {Patrol}
 	IF: All ~~ makes sure the speaker's target is grabbed only, Target and recycles
@@ -5818,6 +5844,7 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 				NavEmpty ~~ nav is empty
 				Expr {(follow)#getvar[capturegroup_leadertext]} ~~ is follow
 		DO: DoAll
+				SetOpt {NavPriorityBoost} {true}
 				ChatExpr {`/ub follow `+&patrolleader}
 	IF: Any ~~ this is the exit condition after nav is set
 			ChatMatch {#reset}
@@ -5836,24 +5863,28 @@ STATE: {ActiveLeader} ~~ { ~~ this is to turn them on and follow the leader
 ~~ }
 STATE: {Patrol} ~~ { ~~ patrol is simply for a single set of characters to run a route
 	IF: All ~~ settings for the leader for BSD
-			Expr {(BSD)#getvar[capturegroup_pathtext]}
-			Expr {$activemode==bsd}
+			Any 
+				Expr {(BSD)#getvar[capturegroup_pathtext]}
+				Expr {&patrol==bsd}
 			Any
+				Expr {&patrolleader==getcharstringprop[1]}
 				Expr {$capturegroup_name==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
 		DO:	DoAll
 				DoExpr {&patrol=bsd}
 				DoExpr {&patrolleader=getcharstringprop[1]}
-				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.27125`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])}
-				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.062`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])}
+				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.14583`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])}
+				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.0625`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 10
 				SetOpt {SummonPets} {true}
 				SetOpt {LootPriorityBoost} {false}
 				SetOpt {NavPriorityBoost} {false}
 	IF: All ~~ settings for the 750 bsd
-			Expr {(BSD)#getvar[capturegroup_pathtext]}
-			Expr {$activemode==bsd}
+			Any 
+				Expr {&patrol==bsd}
+				Expr {(BSD)#getvar[capturegroup_pathtext]}
 			Any
+				Expr {&patrolleader==getcharstringprop[1]}
 				Expr {$capturegroup_name==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
 				Expr {getvar[capturegroup_saythink]==think}
@@ -5864,8 +5895,9 @@ STATE: {Patrol} ~~ { ~~ patrol is simply for a single set of characters to run a
 				CallState {ActiveStatus} {Default2}
 
 	IF: All ~~ settings for the 400 bsd
-			Expr {(BSD)#getvar[capturegroup_pathtext]}
-			Expr {$activemode==bsd}
+			Any 
+				Expr {(BSD)#getvar[capturegroup_pathtext]}
+				Expr {&patrol==bsd}
 			Any
 				Expr {$capturegroup_name==getcharstringprop[1]}
 				Expr {getvar[capturegroup_saythink]==say}
@@ -5895,11 +5927,8 @@ STATE: {Patrol} ~~ { ~~ patrol is simply for a single set of characters to run a
 	IF: All ~~ if not the patrol leader, leave state and find leader
 			Expr {&patrolleader!=getcharstringprop[1]}
 		DO:	DoAll
+				EmbedNav nav0___None_ {none}
 				SetState {ActiveLeader}
-	~~ IF: All ~~ if not the patrol leader, leave state and find leader
-			~~ Expr {&patrolleader==getcharstringprop[1]}
-		~~ DO:	DoAll
-				~~ CallState {ActiveStatus} {Default2}
 ~~ }
 STATE: {Corpse} ~~ {
 	IF: Always
@@ -5923,7 +5952,7 @@ STATE: {Corpse} ~~ {
 			Expr {$corpse=wobjectfindnearestbynameandobjectclass[27,$corpsename]}
 			Expr {wobjectgetopencontainer[]||actiontryuseitem[$corpse]}
 			Expr {$corpseitems=listfilter[wobjectfindallbycontainer[wobjectgetopencontainer[]],`wobjectgetstringprop[$1,1]==$itemloot`]}
-			Expr {actiontryuseitem[listgetitem[$corpseitems,0]]}
+			Expr {actiontryuseitem[listgetitem[$corpseitems,0]]||actiontryuseitem[$itemloot]}
 			Never
 		DO: None
 ~~ }
@@ -9050,179 +9079,6 @@ NAV: nav141___None_ once ~~ {
 ~~ }
 NAV: nav142__empty_nav circular ~~ {
 ~~ }
-NAV: nav143___None_ once ~~ {
-	rcl -42.9602275212606 80.6951689561208 0.0500208298365275 {Recall Aphus Lassel}
-	pnt 95.4571264902751 2.27767407099406 0.24168750445048
-	pnt 95.4584107081095 2.30084617932638 0.24168750445048
-	ptl -42.9602275212606 80.6951689561208 0.0500208298365275 95.4555708567301 2.31398749351501 0.242491692304611 14 {Portal to Town Network}
-	pnt -101.654736264547 -96.6807654062907 2.08333134651184E-05
-	pnt -101.632432301839 -96.6676935831706 2.08333134651184E-05
-	pnt -101.617049980164 -96.6469727198283 2.08333134651184E-05
-	pnt -101.614961433411 -96.6255102157593 2.08333134651184E-05
-	pnt -101.627540334066 -96.6074669202169 2.08333134651184E-05
-	pnt -101.642660268148 -96.6033995469411 2.08333134651184E-05
-	pnt -101.658634408315 -96.5954334259033 2.08333134651184E-05
-	pnt -101.660778045654 -96.5721283276876 2.08333134651184E-05
-	pnt -101.661163902283 -96.550724029541 2.08333134651184E-05
-	pnt -101.659065818787 -96.5256367683411 2.08333134651184E-05
-	pnt -101.656633663177 -96.4965538978577 2.08333134651184E-05
-	pnt -101.650840441386 -96.4710395971934 2.08333134651184E-05
-	pnt -101.641498120626 -96.4476554234823 2.08333134651184E-05
-	pnt -101.633851496379 -96.4285157044729 2.08333134651184E-05
-	pnt -101.625377209981 -96.4073046127955 2.08333134651184E-05
-	pnt -101.61677014033 -96.38576130867 2.08333134651184E-05
-	pnt -101.615418020884 -96.3739518562953 2.08333134651184E-05
-	ptl -42.9602275212606 80.6951689561208 0.0500208298365275 -101.616920820872 -96.3639541665713 -0.000262499845121056 14 {Stonehold Portal}
-	pnt -21.8066311836243 68.6726305325826 0.325020853678385
-	pnt -21.7699918746948 68.6997018178304 0.325020853678385
-	pnt -21.7391612052917 68.7224812825521 0.325020853678385
-	pnt -21.7164933840434 68.7384645462036 0.325020853678385
-	pnt -21.6909822463989 68.7477298736572 0.325020853678385
-	pnt -21.6672701517741 68.7502593994141 0.325020853678385
-	pnt -21.6173166910807 68.7524108250936 0.325020853678385
-	pnt -21.5790190378825 68.7540603001912 0.325020853678385
-	pnt -21.5451616923014 68.7555185317993 0.325020853678385
-	pnt -21.5118593851725 68.7569528579712 0.325020853678385
-	pnt -21.4774470011393 68.7584349950155 0.325020853678385
-	pnt -21.4446997324626 68.7598454157511 0.325020853678385
-	pnt -21.4213634490967 68.7656434377034 0.325020853678385
-	pnt -21.3880653381348 68.7822777430217 0.325020853678385
-	pnt -21.3572519938151 68.7976706504822 0.325020853678385
-	pnt -21.3294207255046 68.8115739504496 0.318161074320475
-	pnt -21.3035774230957 68.8244841575623 0.313031101226807
-	pnt -21.2802190144857 68.8361529986064 0.31108283996582
-	pnt -21.2508967081706 68.8508011182149 0.3085036277771
-	pnt -21.224556350708 68.863872051239 0.309510167439779
-	pnt -21.1977189381917 68.8771861076355 0.310619672139486
-	pnt -21.1641934712728 68.8934942881266 0.314420413970947
-	pnt -21.1357549051444 68.9071206092835 0.319061374664307
-	pnt -21.1077406247457 68.9206859270732 0.322577985127767
-	pnt -21.0774248758952 68.9357254981995 0.323831303914388
-	pnt -21.0491120020549 68.9497714678446 0.325092665354411
-	pnt -21.0220511515935 68.9619912783305 0.332676823933919
-	pnt -20.9950095335643 68.9742381095886 0.34024543762207
-	pnt -20.9676247437795 68.9869749069214 0.346381251017253
-	pnt -20.9400233268738 69.0001981099447 0.351716645558675
-	pnt -20.9142449378967 69.012545522054 0.358070945739746
-	pnt -20.8884900093079 69.0248817443848 0.364419460296631
-	pnt -20.8617682139079 69.0376810709635 0.371006329854329
-	pnt -20.8429311116536 69.0467437744141 0.376245371500651
-	pnt -20.824355951945 69.053763961792 0.383627510070801
-	pnt -20.8086395899455 69.0585372924805 0.390341027577718
-	pnt -20.7906779607137 69.0639925638835 0.398013687133789
-	pnt -20.7790096282959 69.0675364176432 0.402998002370199
-	pnt -20.7665499051412 69.0720019022624 0.405991808573405
-	pnt -20.753585879008 69.0831968943278 0.403683725992839
-	pnt -20.7386468887329 69.098113377889 0.403084214528402
-	pnt -20.718990389506 69.1177405039469 0.403081766764323
-	pnt -20.6958600997925 69.1408360799154 0.40307887395223
-	pnt -20.6762723286947 69.1603947957357 0.398745282491048
-	pnt -20.6598983764648 69.1735802968343 0.392985598246257
-	pnt -20.6447494506836 69.1845996856689 0.388487593332926
-	pnt -20.621120707194 69.20393409729 0.382042789459229
-	pnt -20.5975259145101 69.2232402801514 0.375607395172119
-	pnt -20.5760915120443 69.2407784779867 0.369761339823405
-	pnt -20.5550894419352 69.2579635391633 0.363369337717692
-	pnt -20.5328311920166 69.2761761665344 0.360072994232178
-	pnt -20.5143658955892 69.291285443306 0.35839376449585
-	pnt -20.5007380167643 69.3024366617203 0.356588172912598
-	pnt -20.4845114390055 69.315714041392 0.345277945200602
-	pnt -20.4700766245524 69.3275255203247 0.335216426849365
-	pnt -20.4512882232666 69.3428990046183 0.322120602925619
-	pnt -20.4349872589111 69.3562372048696 0.31585947672526
-	pnt -20.4240828196208 69.3651597181956 0.313794008890788
-	pnt -20.4043986002604 69.3812662601471 0.310065523783366
-	pnt -20.3860378265381 69.3962900161743 0.306587664286296
-	pnt -20.3710478464762 69.4085555394491 0.303748321533203
-	pnt -20.3515228271484 69.4262966156006 0.299461714426676
-	pnt -20.3367147644361 69.4422980308533 0.295827198028564
-	pnt -20.3202698032061 69.4545562903086 0.296262868245443
-	pnt -20.30109928449 69.4691295782725 0.298243490854899
-	pnt -20.2802153110504 69.4849672476451 0.30000836054484
-	pnt -20.262078555425 69.49836769104 0.299286333719889
-	pnt -20.2529044469198 69.5063681920369 0.298717435201009
-	pnt -20.2449321746826 69.5159406979879 0.299053319295247
-	pnt -20.2300091743469 69.5350997606913 0.300834465026855
-	pnt -20.2205039183299 69.5498920758565 0.30153751373291
-	pnt -20.2130751768748 69.5698295911153 0.303995768229167
-	pnt -20.2068668365479 69.5936701456706 0.306109968821208
-	pnt -20.2025251070658 69.61212571462 0.308733367919922
-	pnt -20.1962569554647 69.6256168365478 0.311424668629964
-	pnt -20.1871348698934 69.6510309537252 0.315908940633138
-	pnt -20.167310667038 69.666521803538 0.323446814219157
-	ptl -42.9602275212606 80.6951689561208 0.0500208298365275 -20.1682483355204 69.6802124977112 0.32122278213501 14 {Desolation Beach  Portal}
-	pnt -43.4909286816915 82.3701602300008 2.08333134651184E-05
-	pnt -43.5143634955088 82.3534218470256 2.08333134651184E-05
-	pnt -43.5310894290606 82.3287928263346 2.08333134651184E-05
-	pnt -43.5355971932411 82.3064955393473 2.08333134651184E-05
-	pnt -43.5323281606038 82.2794818242391 2.08333134651184E-05
-	pnt -43.5199165066083 82.2534564654032 2.08333134651184E-05
-	pnt -43.5085352818171 82.2270579973857 2.08333134651184E-05
-	pnt -43.5032233476639 82.1987449645996 2.08333134651184E-05
-	pnt -43.5031804084778 82.1670783996582 2.08333134651184E-05
-	pnt -43.5026449203491 82.1354563077291 2.08333134651184E-05
-	pnt -43.495615530014 82.1045797665914 2.08333134651184E-05
-	pnt -43.4851578553518 82.0755013565222 2.08333134651184E-05
-	pnt -43.4711711883545 82.0477362950643 2.08333134651184E-05
-	pnt -43.4603886445363 82.0179618199666 2.08333134651184E-05
-	pnt -43.4488494237264 81.98609790802 2.08333134651184E-05
-	pnt -43.4384709993998 81.9574394226074 2.08333134651184E-05
-	pnt -43.4269566218058 81.925644048055 2.08333134651184E-05
-	pnt -43.4165646076202 81.8969480514526 2.08333134651184E-05
-	pnt -43.4063519795736 81.8687476476034 2.08333134651184E-05
-	pnt -43.3953801790873 81.8384508132935 2.08333134651184E-05
-	pnt -43.3838619867961 81.8066453297933 2.08333134651184E-05
-	pnt -43.3746294657389 81.7811513264974 2.08333134651184E-05
-	pnt -43.3633196194967 81.7499210357666 2.74136662483215E-05
-	pnt -43.3520364761353 81.7189790725708 0.00260591084758441
-	pnt -43.3411443074544 81.6891095479329 0.00509503781795502
-	pnt -43.3326753298442 81.6658850987752 0.00703040858109792
-	pnt -43.3225175539652 81.6380294799805 0.00935171047846476
-	pnt -43.3138158480326 81.6141666412354 0.0113402803738912
-	pnt -43.3032632827759 81.5852282842 0.0137518097956975
-	pnt -43.294788869222 81.5619887669881 0.0156884372234344
-	pnt -43.3146396319071 81.5433145840963 0.0172446191310883
-	pnt -43.3181867599487 81.5215961138407 0.0190544903278351
-	pnt -43.3292004585266 81.4605803012848 0.0298574884732564
-	pnt -43.3336405754089 81.4456252415975 0.0323554436365763
-	pnt -43.3459638595581 81.4168625195821 0.0357792774836222
-	pnt -43.3514806429545 81.3956805229187 0.0378807862599691
-	pnt -43.3567774454753 81.3635567824046 0.0405577659606934
-	pnt -43.3612248738607 81.3354235728582 0.0438376069068909
-	pnt -43.3660932858785 81.3044223467509 0.0468267440795898
-	pnt -43.3707908630371 81.2745088338852 0.049711000919342
-	pnt -43.3748905817668 81.2484025319417 0.0522281686464946
-	pnt -43.3789902369181 81.2222963968913 0.0547453165054321
-	pnt -43.3833461125692 81.1945584615072 0.0574198007583618
-	pnt -43.387131468455 81.1671896616618 0.0583541631698608
-	pnt -43.3788780371348 81.1494169871012 0.0583541631698608
-	pnt -43.3624422073364 81.1321673075358 0.0583541631698608
-	pnt -43.3440412521362 81.116130065918 0.0583541631698608
-	pnt -43.3176982879639 81.0948115030924 0.0583541631698608
-	pnt -43.2952420552572 81.0766385396322 0.0583541631698608
-	pnt -43.2706265131633 81.0567181905111 0.0583541631698608
-	pnt -43.2440738042196 81.037770207723 0.0583541631698608
-	pnt -43.2360058466593 81.0340389251709 0.0583541631698608
-	pnt -43.1798797607422 81.0080828348796 0.0560039083162944
-	pnt -43.1596050262451 80.9956869761149 0.0553473353385925
-	pnt -43.1332177480062 80.9792622884115 0.0545171181360881
-	pnt -43.1124449412028 80.9604204177856 0.0543562094370524
-	pnt -43.0915504455566 80.9401089350383 0.0534833669662476
-	pnt -43.0655309041341 80.9366572697957 0.0513150731722514
-	pnt -43.0436920801799 80.9231145222982 0.0500208298365275
-	pnt -43.026308631897 80.8986869176229 0.0500208298365275
-	pnt -43.0049602508545 80.8775885264079 0.0500208298365275
-	pnt -42.9822836558024 80.8582899729411 0.0500208298365275
-	pnt -42.9652210235596 80.8418829600016 0.0500208298365275
-	pnt -42.9473550160726 80.817497698466 0.0500208298365275
-	pnt -42.9366928100586 80.7944307963053 0.0500208298365275
-	pnt -42.9292054494222 80.7699768066406 0.0500889778137207
-	pnt -42.9271856943766 80.7464901606242 0.0519220232963562
-	pnt -42.9265429178874 80.7207942326864 0.0519755880037944
-	pnt -42.9272839864095 80.7016967137655 0.0519138336181641
-	pnt -42.939299138387 80.6883772214254 0.0509125709533691
-	pnt -42.9561742782593 80.688074127833 0.0500208298365275
-~~ }
 NAV: nav144___None_ circular ~~ {
 	ptl -42.9609082539876 80.6714670817057 0.0500208298365275 -42.9612458546956 80.6557595888774 0.0500270836055279 37 {Sergeant Trebuus}
 ~~ }
@@ -9405,12 +9261,6 @@ NAV: nav168___None_ once ~~ {
 	pnt -63.2205404281616 -61.598445892334 0.550020790100098
 	pnt -63.2277773221334 -61.5981360435486 0.550020790100098
 	pnt -63.25914478302 -61.6159694989522 0.550020790100098
-~~ }
-NAV: nav169___None_ circular ~~ {
-	cht 69.0531416575114 33.7708708445231 0.0916874965031942 {/hom}
-	pau 69.0531416575114 33.7708708445231 0.0916874965031942 25000
-	cht 69.0531416575114 33.7708708445231 0.0916874965031942 {/vt mexec actiontryuseitem[wobjectfindnearestbynameandobjectclass[10, Dangerous Portal Device]]}
-	pau 69.0531416575114 33.7708708445231 0.0916874965031942 8000
 ~~ }
 NAV: nav170___None_ circular ~~ {
 	cht -63.2836081504822 -61.5652400334676 0.550020790100098 {/mt usep contract}
@@ -9782,47 +9632,6 @@ NAV: nav228___sub_ once ~~ {
 	pnt -100.607170550028 58.6357664267222 -0.0249791661898295
 	pnt -100.60658009847 58.62398686409 -0.0249791661898295
 	ptl -100.607873662313 58.5618576367696 -0.0249791661898295 -100.594791666667 58.61875 -0.025262501090765 14 {Wilderness Citadel Portal}
-~~ }
-NAV: nav229___sub_ once ~~ {
-	pnt -100.839849789937 58.7187664429347 2.08333134651184E-05
-	pnt -100.816450023651 58.7071966807048 2.08333134651184E-05
-	pnt -100.790745035807 58.6944871107737 2.08333134651184E-05
-	pnt -100.760844039917 58.6845457077026 2.08333134651184E-05
-	pnt -100.740233675639 58.6835994879405 -0.008006585141023
-	pnt -100.722384548187 58.6823057810466 -0.0187160531679789
-	pnt -100.705246194204 58.6822763284047 -0.0249791661898295
-	pnt -100.678242524465 58.6822299639384 -0.0249791661898295
-	pnt -100.654715919495 58.6821895599365 -0.0249791661898295
-	pnt -100.6356438001 58.68215675354 -0.0249791661898295
-	pnt -100.607380994161 58.683869043986 -0.0249791661898295
-	pnt -100.607991663615 58.6763373215993 -0.0249791661898295
-	pnt -100.608692995707 58.6676875750224 -0.0249791661898295
-	pnt -100.608729044596 58.6568638324738 -0.0249791661898295
-	pnt -100.607170550028 58.6357664267222 -0.0249791661898295
-	pnt -100.60658009847 58.62398686409 -0.0249791661898295
-	pnt -100.609873008728 58.6054208437602 -0.0249791661898295
-	ptl -100.607873662313 58.5618576367696 -0.0249791661898295 -100.622566668193 58.6020258267721 -0.025262501090765 14 {Ridge Citadel Portal}
-~~ }
-NAV: nav230___sub_ once ~~ {
-	pnt -100.839849789937 58.7187664429347 2.08333134651184E-05
-	pnt -100.816450023651 58.7071966807048 2.08333134651184E-05
-	pnt -100.790745035807 58.6944871107737 2.08333134651184E-05
-	pnt -100.760844039917 58.6845457077026 2.08333134651184E-05
-	pnt -100.740233675639 58.6835994879405 -0.008006585141023
-	pnt -100.722384548187 58.6823057810466 -0.0187160531679789
-	pnt -100.705246194204 58.6822763284047 -0.0249791661898295
-	pnt -100.678242524465 58.6822299639384 -0.0249791661898295
-	pnt -100.654715919495 58.6821895599365 -0.0249791661898295
-	pnt -100.6356438001 58.68215675354 -0.0249791661898295
-	pnt -100.607380994161 58.683869043986 -0.0249791661898295
-	pnt -100.607991663615 58.6763373215993 -0.0249791661898295
-	pnt -100.608692995707 58.6676875750224 -0.0249791661898295
-	pnt -100.608729044596 58.6568638324738 -0.0249791661898295
-	pnt -100.607170550028 58.6357664267222 -0.0249791661898295
-	pnt -100.60658009847 58.62398686409 -0.0249791661898295
-	pnt -100.609873008728 58.6054208437602 -0.0249791661898295
-	pnt -100.607998720805 58.5821034749349 -0.0249791661898295
-	ptl -100.607873662313 58.5618576367696 -0.0249791661898295 -100.595791689555 58.5833266576131 -0.025262501090765 14 {Mountain Citadel Portal}
 ~~ }
 NAV: nav231___sub_ once ~~ {
 	pnt -100.839849789937 58.7187664429347 2.08333134651184E-05
@@ -11037,79 +10846,6 @@ NAV: nav281_ianto once ~~ {
 	pnt -100.940639702479 35.572785226504 0.0250208338101705
 	cht -100.940630976359 35.572785226504 0.0250208338101705 {/ub vendor open Ianto}
 ~~ }
-NAV: nav282_buttersworth once ~~ {
-	pnt -100.846030298869 58.721537621816 2.08333134651184E-05
-	pnt -100.829273160299 58.7106163978577 2.08333134651184E-05
-	pnt -100.817414061228 58.7043695767721 2.08333134651184E-05
-	pnt -100.781411774953 58.6902473131816 2.08333134651184E-05
-	pnt -100.768754037221 58.683579826355 2.08333134651184E-05
-	pnt -100.759625021617 58.6825618108114 2.08333134651184E-05
-	pnt -100.75271987915 58.6823212941488 -0.000514851262172063
-	pnt -100.728492736816 58.6814773877462 -0.015051140387853
-	pnt -100.702723217011 58.6826053937276 -0.0249791661898295
-	pnt -100.67477496465 58.6836701393127 -0.0249791661898295
-	pnt -100.665308030446 58.6840308348338 -0.0249791661898295
-	pnt -100.64847240448 58.6816263834635 -0.0249791661898295
-	pnt -100.649084250132 58.6967262109121 -0.0249791661898295
-	pnt -100.649941126506 58.7128467241923 -0.0249791661898295
-	ptl -100.652258014679 58.8085601091385 -0.0249791661898295 -100.634820842743 58.725 -0.025262501090765 14 {Stonehold Portal}
-	pnt -21.865970269839 68.65854900678 0.323689969380697
-	pnt -21.959340985616 68.6590401808421 0.316662438710531
-	pnt -22.0531231562297 68.6571432113647 0.30816863377889
-	pnt -22.1764721552531 68.6487756888072 0.278840128580729
-	pnt -22.3064784049988 68.6399565378825 0.256437476476034
-	pnt -22.4312706629435 68.6314910252889 0.234933312733968
-	pnt -22.5276771068573 68.6249511559804 0.220407994588216
-	pnt -22.6864785512288 68.6108775933584 0.193941084543864
-	pnt -22.8139766057332 68.5928864161174 0.181596660614014
-	pnt -22.9628168106079 68.5754840135574 0.176076443990072
-	pnt -23.0958588282267 68.5846676985423 0.175020837783813
-	pnt -23.1851259549459 68.5913009166718 0.175020837783813
-	pnt -23.252675151825 68.6211940606435 0.175020837783813
-	ptl -29.3219678243001 67.5030908584595 0.164866638183594 -23.2800429026286 68.6279620806376 0.174737498164177 14 {Westward Portal}
-	pnt -29.7816956996918 71.5932376861572 0.335995483398437
-	pnt -29.8200385093689 71.5329878489176 0.339190705617269
-	pnt -29.8456734577815 71.4918596903483 0.345811462402344
-	pnt -29.9025548696518 71.4026317596436 0.350453058878581
-	pnt -29.9534818013509 71.3233504295349 0.353112093607585
-	pnt -29.9942085266113 71.2549214363098 0.368996206919352
-	pnt -30.040479850769 71.1771766662598 0.387042744954427
-	pnt -30.0758703867594 71.1226721127828 0.397213808695475
-	pnt -30.1340986251831 71.0733392079671 0.405084133148193
-	pnt -30.2070416132609 71.0044102350871 0.408354187011719
-	pnt -30.2652899742126 70.9420214255651 0.413063939412435
-	pnt -30.3822176933289 70.8914548873901 0.415638828277588
-	pnt -30.4244352976481 70.8590365966161 0.394263648986816
-	pnt -30.5356447855632 70.7910378774007 0.383354187011719
-	pnt -30.6194129943848 70.7610740661621 0.377569770812988
-	pnt -30.6910604715347 70.7220623016357 0.364755725860596
-	pnt -30.7758640289307 70.6123914082845 0.341399510701497
-	pnt -30.8083929697673 70.4886654218038 0.325690428415934
-	pnt -30.5083368937174 70.4103537877401 0.576238632202148
-	pnt -30.4632841428121 70.3910535812378 0.611636543273926
-	pnt -30.4284406344096 70.3532924334208 0.631932894388835
-	pnt -30.3601468404134 70.2741584459941 0.654971822102865
-	pnt -30.3239055315653 70.233461411794 0.664877764383952
-	pnt -30.4774362564087 69.951513226827 0.607163747151693
-	pnt -30.5679265022278 69.8206820805867 0.559272638956706
-	pnt -30.6318632682165 69.6811686515808 0.567579587300619
-	pnt -30.6683732906977 69.5627280871073 0.587564595540365
-	pnt -30.7156871279081 69.4149852434794 0.600137774149577
-	pnt -30.6886733015378 69.2464930852254 0.63774585723877
-	pnt -30.598260307312 69.0772816340129 0.698735046386719
-	pnt -30.4796709696452 68.9611388842265 0.746923955281576
-	pnt -30.3346716562907 68.825034236908 0.799535179138184
-	pnt -30.235489209493 68.7242566108704 0.822850163777669
-	pnt -30.1327088673909 68.6126937071482 0.836690012613932
-	pnt -30.0072773615519 68.4682056605816 0.822673479715983
-	pnt -29.8884210109711 68.3308359146118 0.761571375528971
-	pnt -29.7830782731374 68.2090852737427 0.691242599487305
-	cht -29.7412488301595 68.1639844576518 0.662722460428874 {/ub jumpw 150 1000}
-	pnt -29.4169294039408 67.6935243328412 0.222862275441488
-	pnt -29.3683972040812 67.5780330657959 0.184365193049113
-	pnt -29.3314935048421 67.5111188252767 0.166998434066772
-	ptl -29.3314935048421 67.5111188252767 0.166998434066772 -29.3273083368937 67.494783337911 0.163643762469292 14 {Murk Warrens Stronghold}
-~~ }
 NAV: nav287_monroe once ~~ {
 	pnt -101.050647242864 35.5670833190282 2.08333134651184E-05
 	pnt -101.017565902074 35.5670833190282 2.08333134651184E-05
@@ -11143,79 +10879,6 @@ NAV: nav288_dogs once ~~ {
 	pnt -101.450252469381 0.887630335489909 2.08333134651184E-05
 	pnt -101.450088405609 0.876397132873535 2.08333134651184E-05
 	ptl -101.474390125275 0.874432754516602 2.08333134651184E-05 -101.402779197693 0.875670846303304 -0.000262499845121056 14 {Deserted Barracks}
-~~ }
-NAV: nav299_dogs once ~~ {
-	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
-	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
-	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
-	pnt -101.628289031982 -96.6551207224528 2.08333134651184E-05
-	pnt -101.639328575134 -96.672847366333 2.08333134651184E-05
-	pnt -101.654981358846 -96.687374718984 2.08333134651184E-05
-	pnt -101.658333333333 -96.6833333333333 2.08333134651184E-05
-	pnt -101.658784516652 -96.7082027435303 2.08333134651184E-05
-	pnt -101.658187325795 -96.7474998792013 2.08333134651184E-05
-	pnt -101.658121681213 -96.7738900184631 2.08333134651184E-05
-	pnt -101.660122330983 -96.7932850519816 2.08333134651184E-05
-	pnt -101.659269460042 -96.8198152224223 2.08333134651184E-05
-	pnt -101.658305136363 -96.8473803520203 2.08333134651184E-05
-	pnt -101.672409915924 -96.8411247571309 2.08333134651184E-05
-	pnt -101.690890343984 -96.8396783828735 2.08333134651184E-05
-	pnt -101.709313567479 -96.8455004056295 2.08333134651184E-05
-	pnt -101.716956329346 -96.8477783203125 2.08333134651184E-05
-	ptl -101.658333333333 -96.6833333333333 2.08333134651184E-05 -101.727079168955 -96.8500624974569 -0.000262499845121056 14 {Portal to Bluespire}
-	pnt -75.4096843560537 39.5961237589518 2.08333134651184E-05
-	pnt -75.5945133845011 39.7795062144597 2.08333134651184E-05
-	pnt -75.7816782633464 39.9788132031759 2.08333134651184E-05
-	pnt -75.9422016779582 40.1435718536377 2.08333134651184E-05
-	pnt -76.1160555203756 40.3142758687337 0.00820586184660594
-	pnt -76.2726765076319 40.4667210221291 0.0180809179941813
-	pnt -76.4066047032674 40.6015631198883 0.0286371092001597
-	pnt -76.5617853164673 40.7582318623861 0.0320759336153666
-	pnt -76.6763819694519 40.8749868392944 0.0315000613530477
-	pnt -76.805014928182 40.9954003651937 0.0530029813448588
-	pnt -76.9005734920502 41.0765939712524 0.0541397094726562
-	pnt -77.002916987737 41.1164045333862 0.0483451724052429
-	pnt -77.1176541129748 41.1323111216227 0.0414348443349203
-	pnt -77.3027940114339 41.1402711868286 0.0273332019646962
-	pnt -77.4997107505798 41.1447776158651 0.0125449379285177
-	pnt -77.6532829920451 41.1459658940633 0.00801799048980077
-	pnt -77.8836179653804 41.1489133834839 0.00273177996277809
-	pnt -78.0537678400676 41.1497608184814 0.00833423535029093
-	pnt -78.1943030039469 41.1508470535278 0.00466224948565165
-	pnt -78.3417592048645 41.1559052149455 2.08332358549039E-05
-	pnt -78.4314847310384 41.1611529668172 -0.000395833204189936
-	ptl -78.4482625325521 41.1655834197998 -0.000395833204189936 -78.467537911733 41.1706833521525 -0.000679166638292372 14 {Deserted Barracks}
-~~ }
-NAV: nav289_grievvers once ~~ {
-	pnt -101.095132855574 35.5670833349228 2.08333134651184E-05
-	pnt -101.077757461866 35.5671535730362 2.08333134651184E-05
-	pnt -101.068347827593 35.5818099975586 2.08333134651184E-05
-	ptl -101.42520348231 0.790913454691569 2.08333134651184E-05 -101.06676958402 35.5854437510173 0.000229166660574265 37 {Whispering Blade Chapterhouse}
-	pnt -101.616083304087 1.18513282140096 2.08333134651184E-05
-	pnt -101.616083304087 1.13919418652852 2.08333134651184E-05
-	pnt -101.606811141968 1.10113457043966 2.08333134651184E-05
-	pnt -101.581784756978 1.05875107447306 2.08333134651184E-05
-	pnt -101.56444085439 1.04063863754272 2.08333134651184E-05
-	pnt -101.557761065165 1.03845825195312 2.08333134651184E-05
-	pnt -101.55089117686 1.0387578646342 2.08333134651184E-05
-	pnt -101.52652982076 1.03982036908468 2.08333134651184E-05
-	pnt -101.492997296651 1.04056261380514 2.08333134651184E-05
-	pnt -101.461149978638 1.03972185452779 2.08333134651184E-05
-	pnt -101.452049064636 1.03244320551554 2.08333134651184E-05
-	pnt -101.448729038239 1.02342046101888 2.08333134651184E-05
-	pnt -101.449533716838 1.00879940986633 2.08333134651184E-05
-	pnt -101.45002301534 0.964492766062419 2.08333134651184E-05
-	pnt -101.450170294444 0.937514050801595 2.08333134651184E-05
-	pnt -101.449436823527 0.912728277842204 2.08333134651184E-05
-	pnt -101.449873606364 0.868539524078369 2.08333134651184E-05
-	pnt -101.450549761454 0.836464754740397 2.08333134651184E-05
-	pnt -101.451092751821 0.808693218231201 2.08333134651184E-05
-	pnt -101.450265471141 0.793764368693034 2.08333134651184E-05
-	pnt -101.45822690328 0.791559219360352 2.08333134651184E-05
-	pnt -101.47229013443 0.791868527730306 2.08333134651184E-05
-	pnt -101.486761538188 0.792002010345459 2.08333134651184E-05
-	cht -101.486761538188 0.792002010345459 2.08333134651184E-05 {/vt opt set enablecombat true}
-	ptl -101.449191157023 0.7580428759257 2.08333134651184E-05 -101.498145834605 0.783679167429606 -0.000262499845121056 14 {Portal to Frozen Grievver Fortress}
 ~~ }
 NAV: nav290_queen once ~~ {
 	pnt -26.5833077907562 -47.399666595459 0.175020837783813
@@ -11589,148 +11252,6 @@ NAV: nav293_bluelady once ~~ {
 	pnt 9.31681207021077 -21.7052396774292 0.0472188194592794
 	pnt 9.66699959437052 -21.5810027440389 0.0583541631698608
 	pnt 9.67635065714518 -21.5765151977539 0.0583541631698608
-~~ }
-NAV: nav294_banderlings once ~~ {
-	pnt -100.838089879354 58.7197979370753 2.08333134651184E-05
-	pnt -100.813916238149 58.7068560282389 2.08333134651184E-05
-	pnt -100.791851965586 58.6950434048971 2.08333134651184E-05
-	pnt -100.768256982168 58.6824909845988 2.08333134651184E-05
-	pnt -100.728170140584 58.6827216784159 -0.0152446925640106
-	pnt -100.70025583903 58.6827288945516 -0.0249791661898295
-	pnt -100.672744528453 58.6827360153198 -0.0249791661898295
-	pnt -100.648543961843 58.6827422777812 -0.0249791661898295
-	pnt -100.627499294281 58.6831270217896 -0.0249791661898295
-	pnt -100.610159873962 58.6842615127564 -0.0249791661898295
-	pnt -100.607807540894 58.6777656078339 -0.0249791661898295
-	pnt -100.606820678711 58.6709271113078 -0.0249791661898295
-	pnt -100.606919034322 58.6561954498291 -0.0249791661898295
-	pnt -100.607031567891 58.6393414815267 -0.0249791661898295
-	pnt -100.607125663757 58.6252294699351 -0.0249791661898295
-	pnt -100.607116190592 58.5969264507294 -0.0249791661898295
-	ptl -72.4935426712036 3.99255358378092 1.41668752034505 -100.595791689555 58.5833266576131 -0.025262501090765 14 {Mountain Citadel Portal}
-	pnt -23.7666666666667 -45.6847574234009 2.08333134651184E-05
-	pnt -23.7666666666667 -45.6847574234009 2.08333134651184E-05
-	pnt -23.7600790659587 -45.6542774836222 2.08333134651184E-05
-	pnt -23.7436499913534 -45.6477453231812 2.08333134651184E-05
-	pnt -23.7203526178996 -45.6485509872437 2.08333134651184E-05
-	pnt -23.7026951471965 -45.648534711202 2.08333134651184E-05
-	pnt -23.683046913147 -45.654652150472 2.08333134651184E-05
-	pnt -23.6807872772217 -45.6644489924113 2.08333134651184E-05
-	ptl -72.4935426712036 3.99255358378092 1.41668752034505 -23.6833333333333 -45.675 -0.000262499845121056 14 {Surface}
-	pnt -71.3948302110036 5.39967136383057 0.616687456766764
-	pnt -71.3334573109945 5.4140025138855 0.616687456766764
-	pnt -71.2613149325053 5.4280212243398 0.616687456766764
-	pnt -71.2260188102722 5.43853432337443 0.606695302327474
-	pnt -71.1950229326884 5.45195943514506 0.59378039042155
-	pnt -71.1579001108805 5.46803822517395 0.578312492370605
-	pnt -71.1237756093343 5.48281838099162 0.575020790100098
-	pnt -71.0900609970093 5.49742101033529 0.575020790100098
-	pnt -71.0549857457479 5.50960404078166 0.575020790100098
-	pnt -71.0365094184876 5.51758311589559 0.587387148539225
-	pnt -71.0119341532389 5.52719888687134 0.597193908691406
-	pnt -70.9748641331991 5.53210767110189 0.596192423502604
-	pnt -70.9516671498616 5.52654657363892 0.602759742736816
-	pnt -70.9397145589193 5.51378355026245 0.617820167541504
-	pnt -70.9299912134806 5.49621027310689 0.636515935262044
-	pnt -70.9215272903442 5.48091298739115 0.652790323893229
-	pnt -70.9125811258952 5.46558423042297 0.667472267150879
-	pnt -70.9027414957682 5.44911700884501 0.683323287963867
-	pnt -70.8931502024333 5.43671557108561 0.698921839396159
-	pnt -70.8836967468262 5.42449235916138 0.714296213785807
-	pnt -70.8707445780436 5.40758547782898 0.728297106424967
-	pnt -70.8576217651367 5.38855624198914 0.74098326365153
-	pnt -70.8513120015462 5.36846118768056 0.754379971822103
-	pnt -70.8536230723063 5.34376078446706 0.768247286478678
-	pnt -70.85943552653 5.3150732199351 0.775419171651204
-	pnt -70.8695711135864 5.28518608411153 0.782890955607096
-	pnt -70.8823127110799 5.25603252649307 0.790179379781087
-	pnt -70.9020530700684 5.227912012736 0.800890795389811
-	pnt -70.9221281687419 5.20000133514404 0.812520281473796
-	pnt -70.9405480702718 5.17439200083415 0.82319081624349
-	pnt -70.986706606547 5.10863577524821 0.835294850667318
-	pnt -71.009751256307 5.0755989074707 0.839458274841309
-	pnt -71.0273490905762 5.05037123362223 0.842637379964193
-	pnt -71.0455574671427 5.02426853179932 0.845926666259766
-	pnt -71.065543905894 4.99659125010173 0.855607795715332
-	pnt -71.0929172515869 4.96858123143514 0.867278607686361
-	pnt -71.1162879308065 4.94466721216838 0.877242787679036
-	pnt -71.1401007970174 4.92030070622762 0.887395477294922
-	pnt -71.1617259025574 4.89679260253906 0.89230473836263
-	pnt -71.1862799326579 4.86866992314657 0.893791707356771
-	pnt -71.2093574523926 4.84223839441935 0.895189221700033
-	pnt -71.2326912879944 4.81551332473755 0.896602249145508
-	pnt -71.2579784075419 4.78750588099162 0.901059977213542
-	pnt -71.2854021708171 4.75944458643595 0.912752215067546
-	pnt -71.3059369087219 4.7384326616923 0.921507199605306
-	pnt -71.3288792292277 4.71495718955994 0.931288592020671
-	pnt -71.3481808980306 4.69520697593689 0.93951784769694
-	pnt -71.3762656052907 4.66646968523661 0.951491737365723
-	pnt -71.4086449305216 4.63333786328634 0.965296681722005
-	pnt -71.4276166359584 4.61392528216044 0.973385238647461
-	pnt -71.4515097141266 4.58947690327962 0.983572069803874
-	pnt -71.4836843570073 4.5565544684728 0.997289721171061
-	pnt -71.5065423488617 4.53316522439321 1.00703525543213
-	pnt -71.5320100704829 4.50710553328196 1.01789347330729
-	pnt -71.5529682795207 4.48566014369329 1.02682908376058
-	pnt -71.5830395380656 4.45489009519418 1.03964989980062
-	pnt -71.6106129964193 4.42667566935221 1.05140597025553
-	pnt -71.6354359308879 4.40127563476563 1.06198927561442
-	pnt -71.6584482192993 4.37772846221924 1.07180061340332
-	pnt -71.6821705500285 4.35345458984375 1.08191477457682
-	pnt -71.7082724253337 4.32674592336019 1.09304339090983
-	pnt -71.7310797373454 4.30340843200684 1.10276730855306
-	pnt -71.7582284927368 4.2756285349528 1.11434224446615
-	pnt -71.7816160837809 4.25169709523519 1.12431373596191
-	pnt -71.802943166097 4.22987429300944 1.13340657552083
-	pnt -71.8286156654358 4.20472882588704 1.14786504109701
-	pnt -71.8546239852905 4.17983751296997 1.16787567138672
-	pnt -71.8721343676249 4.16457182566325 1.18281618754069
-	pnt -71.9001742998759 4.14359448750814 1.1996342976888
-	pnt -71.927557849884 4.12528317769369 1.21716181437174
-	pnt -71.948091506958 4.1078605333964 1.23245849609375
-	pnt -71.9667188644409 4.08881708780924 1.24961725870768
-	pnt -71.987499777476 4.06705379486084 1.2658317565918
-	pnt -72.0120274225871 4.04036124547323 1.28023834228516
-	pnt -72.040625445048 4.01473360061645 1.29354718526204
-	pnt -72.0733155568441 3.987042872111 1.30628280639648
-	pnt -72.0922392845154 3.96281633377075 1.31593538920085
-	pnt -72.1176445802053 3.9372218132019 1.32658398946126
-	pnt -72.1384514013926 3.9123770236969 1.33659947713216
-	pnt -72.1598996639252 3.88855908711751 1.34715105692546
-	pnt -72.1850873152415 3.8603209177653 1.36488952636719
-	pnt -72.2058482487996 3.83460229237874 1.37825342814128
-	pnt -72.22570104599 3.80796009699504 1.3870911916097
-	pnt -72.2445106506348 3.78271785577138 1.39546457926432
-	pnt -72.2655572970708 3.75614107449849 1.40210189819336
-	pnt -72.2894070466359 3.7275710662206 1.40845769246419
-	pnt -72.3150001804034 3.70422025521596 1.41377080281576
-	pnt -72.3400366733472 3.68157321413358 1.4158571879069
-	pnt -72.3683612187703 3.65606426546971 1.41668752034505
-	pnt -72.3971281051636 3.62683340708415 1.41668752034505
-	pnt -72.4175542195638 3.60986855824788 1.41668752034505
-	pnt -72.4375086466471 3.58776206970215 1.41668752034505
-	pnt -72.4530204772949 3.55783526102702 1.41668752034505
-	pnt -72.470867729187 3.51898555755615 1.41668752034505
-	pnt -72.4821496963501 3.49069321950277 1.41668752034505
-	pnt -72.4910871505737 3.46440671284994 1.41668752034505
-	pnt -72.5051422754923 3.4293404897054 1.41668752034505
-	pnt -72.5274517695109 3.39365704854329 1.41668752034505
-	pnt -72.544133122762 3.38543300628662 1.41668752034505
-	pau -72.4935426712036 3.99255358378092 1.41668752034505 5000
-	pnt -72.5450063069661 3.44202721913656 1.41668752034505
-	pnt -72.5484682718913 3.49292437235514 1.41668752034505
-	pnt -72.5464151382446 3.52818234761556 1.41668752034505
-	pnt -72.544323348999 3.56410395304362 1.41668752034505
-	pnt -72.5417252222697 3.60941416422526 1.41668752034505
-	pnt -72.5442492167155 3.65084438323975 1.41675783793132
-	pnt -72.5420857747396 3.70419274171193 1.42120348612467
-	pnt -72.5440619150798 3.80013105074565 1.4203483581543
-	pnt -72.5387705485026 3.86238077481588 1.41668752034505
-	pnt -72.5332563400269 3.90442163149516 1.41668752034505
-	pnt -72.5244314193726 3.94247481028239 1.41668752034505
-	pnt -72.509148089091 3.97602736155192 1.41668752034505
-	pnt -72.4935426712036 3.99255358378092 1.41668752034505
-	tlk -72.4935426712036 3.99255358378092 1.41668752034505 -72.4849000295003 3.99334583282471 1.41335415840149 37 {Hunter}
 ~~ }
 NAV: nav295_blueladyturnin once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Lost City of Neftet Recall}
@@ -12320,69 +11841,6 @@ NAV: nav306_DaiymoN once ~~ {
 	pnt -41.241007677714 80.5244315385819 0.190495649973551
 	rcl -41.2530015945435 80.5568677266439 0.182209555308024 {Portal Recall}
 ~~ }
-NAV: nav307_bear once ~~ {
-	cht -101.657398668925 -96.5912923177083 2.08333134651184E-05 {/tn}
-	pnt -101.657398668925 -96.5912923177083 2.08333134651184E-05
-	pnt -101.659012762705 -96.5742304801941 2.08333134651184E-05
-	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
-	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
-	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
-	pnt -101.668836911519 -96.527698469162 2.08333134651184E-05
-	pnt -101.682097371419 -96.5280493736267 2.08333134651184E-05
-	pnt -101.699677928289 -96.523085864385 2.08333134651184E-05
-	pnt -101.71255812645 -96.5171237309774 2.08333134651184E-05
-	ptl -101.71255812645 -96.5171237309774 2.08333134651184E-05 -101.725391674042 -96.5164708296458 -0.000262499845121056 14 {Portal to Holtburg}
-	pnt 33.6151215871175 42.1146552880605 0.391687520345052
-	pnt 33.6289602279663 42.1555297851562 0.391687520345052
-	pnt 33.6456785519918 42.2106953620911 0.391687520345052
-	pnt 33.6618255615234 42.2609425226847 0.385304355621338
-	pnt 33.6779584248861 42.3111460526784 0.356018956502279
-	pnt 33.6973167419434 42.3713864326477 0.333354187011719
-	pnt 33.7191766103109 42.4394108454386 0.333354187011719
-	pnt 33.7273700714111 42.477475865682 0.317326577504476
-	pnt 33.7333422660828 42.5342109044393 0.284231122334798
-	pnt 33.7360339800517 42.5807521820068 0.275020853678385
-	pnt 33.7270878473918 42.6370407104492 0.275020853678385
-	pnt 33.7123675982157 42.679061571757 0.275020853678385
-	pnt 33.7037404696147 42.6875806808472 0.275020853678385
-	tlk -100.812866465251 41.1032122770945 0.0250208338101705 33.7041791598002 42.6907833099365 0.275013536214828 37 {Kitty Evans}
-	pnt 33.7317539215088 42.6592004140218 0.275020853678385
-	pnt 33.7466635068258 42.681276067098 0.275020853678385
-	pnt 33.7736819585164 42.721703338623 0.275020853678385
-	pnt 33.7999848047892 42.7424875895182 0.275020853678385
-	pnt 33.8540070215861 42.7431313832601 0.273017342885335
-	pnt 33.9469909032186 42.7373907089233 0.231325499216715
-	pnt 34.1880933125814 42.7401958465576 0.189890305201213
-	pnt 34.4845619837443 42.7587911605835 0.144635740915934
-	pnt 34.8589407811562 42.7597441355387 0.112937498092651
-	pnt 35.7480145374934 42.6862586339315 0.112937498092651
-	pnt 36.3775753657023 42.6368905385335 0.114812501271566
-	pnt 36.4594038367271 42.6282150904338 0.11627082824707
-	pnt 36.8021998723348 42.7679401397705 0.262212530771891
-	pnt 36.877134068807 42.9395362377167 0.34272190729777
-	pnt 36.9891650517782 43.1549622217814 0.406961886088053
-	pnt 37.1045742670695 43.2784823735555 0.431942208607992
-	pnt 37.1615441004435 43.2908877372742 0.437723477681478
-	pnt 37.1652165095011 43.3186495463053 0.440342998504639
-	pnt 37.1515273412069 43.3287937482198 0.44004758199056
-	ptl -100.812866465251 41.1032122770945 0.0250208338101705 37.1379083633423 43.3280166625977 0.438564598560333 14 {Dungeon Fern}
-	pnt -100.983427651723 41.2271149734656 2.08333134651184E-05
-	pnt -100.983327102661 41.2044814189275 2.08333134651184E-05
-	pnt -100.970115184784 41.1510099172592 2.08333134651184E-05
-	pnt -100.932810799281 41.1284778356552 2.08333134651184E-05
-	pnt -100.909735870361 41.1263165394465 2.08333134651184E-05
-	pnt -100.860231908162 41.1236129681269 2.08333134651184E-05
-	pnt -100.856661955516 41.1293715159098 2.08333134651184E-05
-	pnt -100.857873185476 41.1557163794835 0.00960618356863658
-	pnt -100.846377976735 41.1711275180181 0.0177213768164317
-	pnt -100.825720755259 41.1692530632019 0.0250208338101705
-	pnt -100.817054843903 41.1662293593089 0.0250208338101705
-	pnt -100.815338929494 41.1517878611883 0.0250208338101705
-	pnt -100.81540145874 41.1285009145737 0.0250208338101705
-	pnt -100.812866465251 41.1032122770945 0.0250208338101705
-	cht -100.812866465251 41.1032122770945 0.0250208338101705 {/ub jumpw 500}
-	cht -100.812866465251 41.1032122770945 0.0250208338101705 {/vt opt set enablecombat true}
-~~ }
 NAV: nav308_bear once ~~ {
 	pau -101.722076654434 -96.6418460528056 2.08333134651184E-05 2000
 	cht -101.722076654434 -96.6418460528056 2.08333134651184E-05 {/tn}
@@ -12508,110 +11966,6 @@ NAV: nav314___delegate once ~~ {
 	pnt 63.294372844696 17.6494473775228 0.0833541631698608
 	pnt 63.2350523948669 17.7844402949015 0.0833541631698608
 	pnt 63.1644279479981 17.8593170166016 0.0833541631698608
-~~ }
-NAV: nav315_holding once ~~ {
-	rcl -63.1988912264506 -61.6113638877869 0.550020790100098 {Rynthid Recall}
-	pnt -63.1988912264506 -61.6113638877869 0.550020790100098
-	pnt -63.192061773936 -61.6769607226054 0.529800319671631
-	pnt -63.1503164609273 -61.8214714447657 0.409373474121094
-	pnt -63.2963847001394 -62.1055039723714 0.207882006963094
-	pnt -63.4608606497447 -62.2063923517863 0.113067285219828
-	pnt -63.9929777781169 -62.2768195152283 0.175478919347127
-	pnt -64.3906146367391 -62.4243896166484 0.196525875727336
-	pnt -64.8259524027506 -62.6788998921712 0.222525628407796
-	pnt -65.1845069885254 -62.8556620279948 0.273426914215088
-	pnt -65.3494043986003 -62.9264153162638 0.278430207570394
-	pnt -65.6010602633158 -62.9453657150269 0.290698719024658
-	pnt -65.6816247304281 -62.9052141189575 0.305519358317057
-	pnt -65.824527947108 -62.8265496571859 0.341002464294434
-	pnt -65.9754321416219 -62.7958592096965 0.336902713775635
-	pnt -66.3047162373861 -62.7559211730957 0.416687520345052
-	pnt -66.4989035924276 -62.7911500295003 0.395299402872721
-	pnt -66.7705525716146 -62.8734353383382 0.365215047200521
-	pnt -66.9915473302205 -62.9508905410767 0.343244711558024
-	pnt -67.2283219019572 -62.9843490600586 0.318494033813477
-	pnt -67.5563811620077 -62.966740544637 0.27950054804484
-	pnt -67.8379936218262 -62.9323660532633 0.201552947362264
-	pnt -68.3149463613828 -62.8845381418864 0.204271682103475
-	pnt -69.1451399311423 -62.821383412679 0.307949161529541
-	pnt -70.044585609436 -62.9492434183757 0.175020837783813
-	pnt -70.2275028864543 -62.9856501897176 0.24330046971639
-	pnt -70.6648325681686 -62.757990137736 0.377397282918294
-	pnt -70.9552731831868 -62.5079523563385 0.396070353190104
-	pnt -71.0578386942546 -62.5864315191905 0.433948294321696
-	pnt -71.1083458900452 -62.519953028361 0.375803311665853
-	pnt -71.1347108523051 -62.4184567133586 0.300020853678385
-	ptl -71.1239351908366 -62.396644560496 0.300020853678385 -71.1005249977112 -62.3993629137675 0.299737513065338 14 {Aerbax's Holding}
-~~ }
-NAV: nav316_holdingnospell once ~~ {
-	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
-	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
-	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
-	pnt -100.760869375865 58.6838528315226 2.08333134651184E-05
-	pnt -100.736269791921 58.6832586606344 -0.0103849142789841
-	pnt -100.694932206472 58.6826988220215 -0.0249791661898295
-	pnt -100.672870699565 58.6829878807068 -0.0249791661898295
-	pnt -100.643749046326 58.6821770985921 -0.0249791661898295
-	pnt -100.589768600464 58.6838813304901 -0.0249791661898295
-	pnt -100.571911938985 58.6833372592926 -0.0249791661898295
-	pnt -100.566715367635 58.6878907839457 -0.0249791661898295
-	pnt -100.563912773132 58.695538409551 -0.0249791661898295
-	pnt -100.564795939128 58.703063249588 -0.0249791661898295
-	pnt -100.560320027669 58.7092101414998 -0.0249791661898295
-	pnt -100.544314320882 58.7264823357264 -0.0249791661898295
-	pnt -100.54097328186 58.7295550346375 -0.0249791661898295
-	pnt -100.521864000956 58.7489859104156 -0.0249791661898295
-	pnt -100.512184143066 58.7588285764058 -0.0249791661898295
-	pnt -100.504614003499 58.7645247379939 -0.0249791661898295
-	pnt -100.481885019938 58.7672314882278 -0.0249791661898295
-	pnt -100.4701587677 58.7667275746663 -0.0249791661898295
-	pnt -100.448432731628 58.7657939434052 -0.0249791661898295
-	pnt -100.417103068034 58.7667967955271 -0.0249791661898295
-	pnt -100.395100021362 58.767960691452 -0.0249791661898295
-	pnt -100.36974512736 58.7723785718282 -0.0249791661898295
-	pnt -100.36974512736 58.7723785718282 -0.0249791661898295
-	pnt -100.363040669759 58.7862343907356 -0.0249791661898295
-	pnt -100.357517496745 58.8165631651878 -0.0249791661898295
-	pnt -100.36313940684 58.832584776481 -0.0249791661898295
-	pnt -100.387103144328 58.8487511950235 -0.0249791661898295
-	pnt -100.387103144328 58.8487511950235 -0.0249791661898295
-	pnt -100.399343363444 58.8491675590475 -0.0249791661898295
-	pnt -100.406261761983 58.850046821346 -0.0249791661898295
-	pnt -100.419965171814 58.8485990770161 -0.0249791661898295
-	pnt -100.433056322734 58.849785675512 -0.0249791661898295
-	pnt -100.44822807312 58.8473433805009 -0.0249791661898295
-	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.454654184977 58.8352193335692 -0.025262501090765 14 {Rynthid Encampment}
-	pnt -63.1988912264506 -61.6113638877869 0.550020790100098
-	pnt -63.192061773936 -61.6769607226054 0.529800319671631
-	pnt -63.1503164609273 -61.8214714447657 0.409373474121094
-	pnt -63.2963847001394 -62.1055039723714 0.207882006963094
-	pnt -63.4608606497447 -62.2063923517863 0.113067285219828
-	pnt -63.9929777781169 -62.2768195152283 0.175478919347127
-	pnt -64.3906146367391 -62.4243896166484 0.196525875727336
-	pnt -64.8259524027506 -62.6788998921712 0.222525628407796
-	pnt -65.1845069885254 -62.8556620279948 0.273426914215088
-	pnt -65.3494043986003 -62.9264153162638 0.278430207570394
-	pnt -65.6010602633158 -62.9453657150269 0.290698719024658
-	pnt -65.6816247304281 -62.9052141189575 0.305519358317057
-	pnt -65.824527947108 -62.8265496571859 0.341002464294434
-	pnt -65.9754321416219 -62.7958592096965 0.336902713775635
-	pnt -66.3047162373861 -62.7559211730957 0.416687520345052
-	pnt -66.4989035924276 -62.7911500295003 0.395299402872721
-	pnt -66.7705525716146 -62.8734353383382 0.365215047200521
-	pnt -66.9915473302205 -62.9508905410767 0.343244711558024
-	pnt -67.2283219019572 -62.9843490600586 0.318494033813477
-	pnt -67.5563811620077 -62.966740544637 0.27950054804484
-	pnt -67.8379936218262 -62.9323660532633 0.201552947362264
-	pnt -68.3149463613828 -62.8845381418864 0.204271682103475
-	pnt -69.1451399311423 -62.821383412679 0.307949161529541
-	pnt -70.044585609436 -62.9492434183757 0.175020837783813
-	pnt -70.2275028864543 -62.9856501897176 0.24330046971639
-	pnt -70.6648325681686 -62.757990137736 0.377397282918294
-	pnt -70.9552731831868 -62.5079523563385 0.396070353190104
-	pnt -71.0578386942546 -62.5864315191905 0.433948294321696
-	pnt -71.1083458900452 -62.519953028361 0.375803311665853
-	pnt -71.1347108523051 -62.4184567133586 0.300020853678385
-	ptl -71.1239351908366 -62.396644560496 0.300020853678385 -71.1005249977112 -62.3993629137675 0.299737513065338 14 {Aerbax's Holding}
 ~~ }
 NAV: nav317_rage once ~~ {
 	pnt -101.734757328033 -70.1166666666667 2.08333134651184E-05
@@ -12814,30 +12168,6 @@ NAV: nav330_monoreturn once ~~ {
 	jmp -39.0635285059611 91.3045685450236 -0.00372916658719381 270 {False} 700.00003
 	pnt -39.0635285059611 91.3045685450236 -0.00372916658719381
 ~~ }
-NAV: nav331_dinorecall once ~~ {
-	rcl 80.6955357869466 69.5605370203654 0.0333541631698608 {Portal Recall}
-	pnt 80.6955357869466 69.5605370203654 0.0333541631698608
-	pnt 80.7124796231588 69.5697420120239 0.0333541631698608
-	pnt 80.7355253855387 69.5871668497721 0.0333541631698608
-	pnt 80.7690316200256 69.6044631322225 0.0333541631698608
-	pnt 80.7953459421794 69.6186901092529 0.0333541631698608
-	pnt 80.7879320462545 69.603427473704 0.0333541631698608
-	tlk 80.6988582611084 69.5619645118713 0.0333541631698608 80.7821862538656 69.5972433408101 0.0333541668951511 37 {Thorne Bloodclaw}
-	tlk 80.6988582611084 69.5619645118713 0.0333541631698608 80.7867154121399 69.5907325108846 0.0333541668951511 37 {Magnus Ironfang}
-	pnt 80.8194423675537 69.5874534606934 0.0333541631698608
-	pnt 80.8239811261495 69.5734121640523 0.0333541631698608
-	pnt 80.8127917607625 69.5616578102112 0.0333541631698608
-	pnt 80.796937529246 69.5600478490194 0.0333541631698608
-	tlk 80.6988582611084 69.5619645118713 0.0333541631698608 80.7915162404378 69.5658787409464 0.0333541668951511 37 {Jade Flintlock}
-	pnt 80.7856274286906 69.5360700925191 0.0333541631698608
-	pnt 80.8066532452901 69.5430578867594 0.0333541631698608
-	pnt 80.831237634023 69.547209072113 0.0333541631698608
-	pnt 80.8529807090759 69.565417098999 0.0331057727336884
-	pnt 80.8707880973816 69.5974453290304 0.0316218256950378
-	pnt 80.8735352516174 69.6439655621846 0.0313928961753845
-	pnt 80.8729196548462 69.7055137952169 0.0229981104532878
-	pnt 80.8298398335775 69.7913145701091 0.0146921962499619
-~~ }
 NAV: nav332_millicent once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
@@ -12874,43 +12204,6 @@ NAV: nav332_millicent once ~~ {
 	pnt 58.3632132530212 10.257107369105 0.0916874965031942
 	pnt 58.3234236081441 10.2533175627391 0.0916874965031942
 	pnt 58.3147610823313 10.2624738852183 0.0916874965031942
-~~ }
-NAV: nav333_golems once ~~ {
-	pnt 8.69809009234111 -100.711190128326 0.0250208338101705
-	pnt 8.69988077481588 -100.69512424469 0.025041667620341
-	pnt 8.69906506538391 -100.674217351278 0.0177058021227519
-	pnt 8.69785931905111 -100.643313248952 0.0028306523958842
-	pnt 8.69722437858582 -100.627040417989 2.08333134651184E-05
-	pnt 8.69916032155355 -100.622385724386 2.08333134651184E-05
-	pnt 8.70101520220439 -100.601014153163 2.08333134651184E-05
-	pnt 8.71727476119995 -100.601593478521 2.08333134651184E-05
-	pnt 8.7501766204834 -100.601518472036 2.08333134651184E-05
-	pnt 8.77750202814738 -100.60053931872 2.08333134651184E-05
-	pnt 8.78259302775065 -100.600910409292 2.08333134651184E-05
-	pnt 8.78246599833171 -100.607818571726 2.08333134651184E-05
-	pnt 8.78233912785848 -100.614717880885 2.08333134651184E-05
-	pnt 8.78221775690715 -100.646480083466 2.08333134651184E-05
-	pnt 8.78380381266276 -100.653204981486 2.08333134651184E-05
-	pnt 8.78356135686239 -100.660093688965 2.08333134651184E-05
-	pnt 8.7826148668925 -100.674318281809 2.08333134651184E-05
-	ptl 57.3592300017675 -11.2463155428569 0.16668750445048 8.78333333333333 -100.683333333333 0.00105304166208953 14 {Folthid Estate}
-	pnt 53.7003405570984 -8.84962978363037 0.100020829836528
-	pnt 53.8022434870402 -8.9114931901296 0.0829802433649699
-	pnt 53.9212390263875 -8.98424797058106 0.0809574206670125
-	pnt 54.0825624346733 -9.08548049132029 0.0946442047754923
-	pnt 54.2652778784434 -9.19145450592041 0.113081860542297
-	pnt 54.3172541300456 -9.27803185780843 0.124627995491028
-	pnt 54.5270244280497 -9.36833216349284 0.151548512776693
-	pnt 54.7991961161296 -9.53242778778076 0.137587833404541
-	pnt 54.959685476621 -9.60576216379801 0.132547044754028
-	pnt 55.2853783607483 -9.7119384765625 0.119859290122986
-	pnt 55.6114885965983 -9.83039269447327 0.121811548868815
-	pnt 55.8600772062937 -9.96359513600667 0.125020829836528
-	pnt 56.2342506408691 -10.2456289927165 0.14168750445048
-	pnt 56.8254409790039 -10.7038908839226 0.158751916885376
-	pnt 57.1395992279053 -10.9535995483398 0.158054208755493
-	pnt 57.2696545620759 -11.1340027491252 0.150325616200765
-	pnt 57.3592300017675 -11.2463155428569 0.16668750445048
 ~~ }
 NAV: nav334_tomukkirtemple once ~~ {
 	rcl -94.7025000015895 -97.9641666412354 0.364673614501953 {Recall to the Singularity Caul}
@@ -14074,6 +13367,7 @@ NAV: nav371_BanderlingHut once ~~ {
 	pnt -71.9426686286926 1.41356937090556 0.916687456766764
 	pnt -71.9112515767415 1.40104141235352 0.916687456766764
 	ptl -71.9112515767415 1.40104141235352 0.916687456766764 -71.898529179891 1.39713582992554 0.916404128074646 14 {Surface Portal}
+	tlk -72.4935426712036 3.99255358378092 1.41668752034505 -72.4849000295003 3.99334583282471 1.41335415840149 37 {Hunter}
 ~~ }
 NAV: nav372_MountainCitadel once ~~ {
 	rcl -71.978936735789 1.40209205945333 0.916687456766764 {Primary Portal Recall}
@@ -14199,7 +13493,7 @@ NAV: nav377_npcMegamaw once ~~ {
 ~~ }
 NAV: nav378_fortressBSD once ~~ {
 	pnt -38.4387817382813 91.0346412976583 0.350020853678385
-	cht -38.4703497250875 91.012993144989 0.350020853678385 {/my combatstate peace}
+	cht -38.4703497250875 91.012993144989 0.350020853678385 {/mt combatstate peace}
 	pnt -38.4703497250875 91.012993144989 0.350020853678385
 	pnt -38.4731484731038 90.9983355522156 0.350020853678385
 	pnt -38.4868310928345 90.9987673441569 0.350437513987223
@@ -14217,7 +13511,7 @@ NAV: nav378_fortressBSD once ~~ {
 NAV: nav379_tethBSD once ~~ {
 	rcl -72.0721462249756 1.43268976211548 0.916687456766764 {Primary Portal Recall}
 	pnt -72.0721462249756 1.43268976211548 0.916687456766764
-	cht -72.0721462249756 1.43268976211548 0.916687456766764 {/my combatstate peace}
+	cht -72.0721462249756 1.43268976211548 0.916687456766764 {/mt combatstate peace}
 	pnt -72.0876933097839 1.43159952163696 0.916687456766764
 	pnt -72.0875747998555 1.42469167709351 0.916687456766764
 	pnt -72.0874396959941 1.41786332130432 0.916687456766764
