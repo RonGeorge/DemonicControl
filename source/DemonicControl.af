@@ -1302,6 +1302,7 @@ STATE: {Nav To} ~~ {
 			Expr {(Dungeon Mei\|Shreth)#getvar[capturegroup_navtext]} ~~ Shreths
 		DO:	SetState {NavToWhisper}
 	IF:	Any
+			Expr {(Lyceum)#getvar[capturegroup_navtext]}
 			Expr {(Drunken Madman)#getvar[capturegroup_navtext]}
 			Expr {(Wah Chon)#getvar[capturegroup_navtext]}
 			Expr {(Banderlings)#getvar[capturegroup_navtext]}
@@ -1816,7 +1817,7 @@ STATE: {Nav To} ~~ {
 				EmbedNav nav55___None_ {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
-	IF:	Not Expr {(Ahurenga\|Al-Arqas\|Al-Jalima\|Arwic\|Baishi\|Bluespire\|Cragstone\|Danby's Outpost\|Dryreach\|Eastham\|Eastwatch\|Fiun Outpost\|Freehold\|Greenspire\|Hebian-to\|Holtburg\|Kara\|Khayyaban\|Kryst\|Lin Portal\|Linvak Tukal\|Lytelthorpe\|Mayoi\|Nanto\|Neydissa\|Oolutanga's Refuge\|Plateau\|Qalaba'r\|Redspire\|Rithwic\|Samsur\|Sanamar\|Sawato\|Shoushi\|Silyun\|Stonehold\|Tethana\|Timaru\|Tou-Tou\|Tufa\|Uziz\|Westwatch\|Xarabydun\|Yanshi\|Yaraq\|Zaikhal\|Eastham Mask Maker\|Vincadi\|Jeweler\|Delegate)#getvar[capturegroup_navtext]}
+	IF:	Not Expr {(Ahurenga\|Al-Arqas\|Al-Jalima\|Arwic\|Baishi\|Bluespire\|Cragstone\|Danby's Outpost\|Dryreach\|Eastham\|Eastwatch\|Fiun Outpost\|Freehold\|Greenspire\|Hebian-to\|Holtburg\|Kara\|Khayyaban\|Kryst\|Lin Portal\|Linvak Tukal\|Lytelthorpe\|Mayoi\|Nanto\|Neydissa\|Oolutanga's Refuge\|Plateau\|Qalaba'r\|Redspire\|Rithwic\|Samsur\|Sanamar\|Sawato\|Shoushi\|Silyun\|Stonehold\|Tethana\|Timaru\|Tou-Tou\|Tufa\|Uziz\|Westwatch\|Xarabydun\|Yanshi\|Yaraq\|Zaikhal\|Eastham Mask Maker\|Vincadi\|Jeweler\|Delegate\|Lyceum)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_navtext]}
 				ChatExpr {\/t +getcharstringprop[1]+\, I don\'t understand that\.}
@@ -1824,6 +1825,19 @@ STATE: {Nav To} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
+	IF:	All
+			Expr {(Lyceum)#getvar[capturegroup_navtext]}
+			Expr {isportaling[]==0}
+		DO:	DoAll
+				DoExpr {actiontrycastbyid[2358]}
+				DoExpr {actiontrycastbyid[2358]}
+				SetState {Nav To 2}
+	IF:	All
+			Expr {(Lyceum)#getvar[capturegroup_navtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
 	IF:	All 
 			Expr {(Drunken Madman)#getvar[capturegroup_navtext]}
 		DO:	DoAll
@@ -4479,6 +4493,7 @@ STATE: {Mode} ~~ {
 				SetOpt {EnableBuffing} {false}
 				SetOpt {EnableCombat} {false}
 				SetOpt {lootonlyrarecorpses} {false}
+				SetOpt {AutoFellowManagement} {false}
 				DoExpr {listmap[listcreate[`mukkirprogress`,`raretracker`,`activemode`, `ktcomplete`, `capturegroup_modetext`, `monster`], `clearvar[$1]`]}
 				DoExpr {listmap[listcreate[`patrolleader`],`cleargvar[$1]`]}
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`,`rageminion`,`ragesentients`,`ragelord`],`clearvar[$1]`]}
@@ -5807,7 +5822,7 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 				SetOpt {EnableNav} {true}
 				CallState {ActiveStatus} {Default2}
 	IF: Always
-		DO: SetWatchdog 5 5 {ActiveMover}
+		DO: SetWatchdog 5 15 {ActiveMover}
 	IF: All
 			ChatMatch {#reset}
 		DO: DoAll
