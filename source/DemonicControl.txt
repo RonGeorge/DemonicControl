@@ -106,7 +106,7 @@ Nav_Button_13,Buttersworth,#navto Buttersworth
 Nav_Button_14,Dogs,#navto Dogs
 Nav_Button_15,Dino,#quest dino
 Nav_Button_16,Rage Gem,/ub bc /mt use Mausoleum of Rage Portal Gem
-Nav_Button_17,Banderlings,#quest Banderlings
+Nav_Button_17,Banderlings,#navto Banderlings
 Nav_Button_18,Bluelady,#navto BlueLady
 Nav_Button_19,Grievvers,#navto grievvers
 Nav_Button_20,Queen, #quest Queen
@@ -373,7 +373,7 @@ Demon_Button_26,mode Monouga, #mode monouga
 Demon_Button_27,mode Dragon, #mode dragon
 Demon_Button_28,mode Rage,#mode rage
 Demon_Button_29,mode Dino, #mode dino
-Demon_Button_30,
+Demon_Button_30,mode Bugs,#mode bugs
 Demon_Button_31,mode RESET, #mode reset
 Demon_Button_32,#action Junk,#action junk
 Demon_Button_33,Millicent,#navto millicent

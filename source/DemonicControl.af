@@ -861,7 +861,6 @@ STATE: {Default2} ~~ {
 				Expr {listcontains[getgvar[watchlist],getvar[capturegroup_deadname]]}
 			Any 
 				Expr {$activemode==dino}
-				Expr {$activemode==bsd}
 		DO: DoAll
 				SetOpt {enablelooting} {false}
 				SetOpt {enablecombat} {false}
@@ -1258,8 +1257,12 @@ STATE: {Fellow Create} ~~ {
 	IF:	Always
 		DO:	DoAll 
 				ChatExpr {`/ub fellow create `+&fellowname}
-	IF:	Expr {getfellowshipstatus[]==1}
-		DO:	SetState {Fellow Invite}
+				Chat {/ub fellow open}
+	IF:	All 
+			Expr {getfellowshipstatus[]==1}
+			Expr {getfellowshiplocked[]==0}
+		DO:	DoAll 
+				SetState {Fellow Invite}
 	IF:	SecsInStateGE 1
 		DO:	SetState {Fellow Create}
 ~~ }
@@ -1276,6 +1279,7 @@ STATE: {Fellow Invite} ~~ {
 	IF:	Any
 			Expr {getvar[counter]>=listcount[getgvar[charlist]]}
 		DO:	DoAll
+				Chat {/ub fellow open}
 				SetOpt {IdlePeaceMode} {getvar[priorIdlePeaceMode]}
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
@@ -1303,6 +1307,12 @@ STATE: {Nav To} ~~ {
 		DO:	SetState {NavToWhisper}
 	IF:	Any
 			Expr {(Lyceum)#getvar[capturegroup_navtext]}
+			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_navtext]}
+			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_navtext]}
+			Expr {(Matron\|LyceumMatron)#getvar[capturegroup_navtext]}
+			Expr {(Forge\|LyceumForge)#getvar[capturegroup_navtext]}
+		DO:	SetState {NavToLyceum}
+	IF:	Any
 			Expr {(Drunken Madman)#getvar[capturegroup_navtext]}
 			Expr {(Wah Chon)#getvar[capturegroup_navtext]}
 			Expr {(Banderlings)#getvar[capturegroup_navtext]}
@@ -1825,19 +1835,6 @@ STATE: {Nav To} ~~ {
 				SetState {Default2}
 ~~ }
 STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
-	IF:	All
-			Expr {(Lyceum)#getvar[capturegroup_navtext]}
-			Expr {isportaling[]==0}
-		DO:	DoAll
-				DoExpr {actiontrycastbyid[2358]}
-				DoExpr {actiontrycastbyid[2358]}
-				SetState {Nav To 2}
-	IF:	All
-			Expr {(Lyceum)#getvar[capturegroup_navtext]}
-			CellE BC110014 ~~ Lyceum drop
-		DO:	DoAll
-				DoExpr {clearvar[capturegroup_navtext]}
-				SetState {Default2}
 	IF:	All 
 			Expr {(Drunken Madman)#getvar[capturegroup_navtext]}
 		DO:	DoAll
@@ -1898,7 +1895,6 @@ STATE: {Nav To 2} ~~ { ~~ these are self enclosed routes
 				SetOpt {EnableCombat} {false}
 				EmbedNav nav335_varetha {Varetha}
 				SetState {Default2}
-
 	IF: All 
 			Expr {(RareVendor)#getvar[capturegroup_navtext]}
 			CellE 01AC011B
@@ -3056,6 +3052,63 @@ STATE: {NavToWhisper} ~~ {
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 ~~ }
+STATE: {NavToLyceum} ~~ {
+	IF:	All
+			Any 
+				Expr {(Lyceum)#getvar[capturegroup_navtext]}
+				Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_navtext]}
+				Expr {(Lugians\|LyceumPath)#getvar[capturegroup_navtext]}
+				Expr {(Matron\|LyceumMatron)#getvar[capturegroup_navtext]}
+				Expr {(Forge\|LyceumForge)#getvar[capturegroup_navtext]}
+			Expr {isportaling[]==0}
+			Not CellE BC110014
+		DO:	DoAll
+				SetOpt {IdlePeaceMode} {false}
+				SetOpt {EnableCombat} {false}
+				SetOpt {EnableLooting} {false}
+				SetOpt {EnableNav} {true}
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				DoExpr {actiontrycastbyid[2358]}
+				DoExpr {actiontrycastbyid[2358]}
+				SetOpt {IdlePeaceMode} {true}
+				SetState {NavToLyceum}
+	IF:	All
+			Expr {(Lyceum)#getvar[capturegroup_navtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
+	IF:	All ~~ 1
+			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_navtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				SetOpt {IdlePeaceMode} {true}
+				Chat {/mt combatstate peace}
+				EmbedNav nav385_lycBsd {lysBsd}
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_navtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				EmbedNav nav386_lycPath {lysPath}
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Matron\|LyceumMatron)#getvar[capturegroup_navtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				EmbedNav nav390_lycMatron {lycMatron}
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(LyceumForge)#getvar[capturegroup_navtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				EmbedNav nav389_lycForge {lycForge}
+				DoExpr {clearvar[capturegroup_navtext]}
+				SetState {Default2}
+~~ }
 STATE: {Opt Set} ~~ {
 	IF:	Always
 		DO:	DoAll
@@ -3063,7 +3116,108 @@ STATE: {Opt Set} ~~ {
 				SetState {Default2}
 				DoExpr {clearvar[capturegroup_opttext]}
 ~~ }
+STATE: {QuestToLyceum} ~~ {
+	IF:	All
+			Any 
+				Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
+				Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
+				Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
+				Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
+			Expr {isportaling[]==0}
+			Not CellE BC110014
+			Not CellE 69AB000B
+			Not CellE BC110015 ~~ bug end
+			Not CellE BC11001D ~~ bug end
+			Not CellE BC11013A ~~ monkey turnin
+			Expr {$enroute==0}
+		DO:	DoAll
+				DoExpr {actiontrycastbyid[2358]}
+				DoExpr {actiontrycastbyid[2358]}
+				SetOpt {EnableLooting} {false}
+				SetOpt {EnableCombat} {false}
+				SetOpt {EnableNav} {true}
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				SetState {QuestToLyceum}
+	IF:	All
+			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				DoExpr {$enroute=1}
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				EmbedNav nav389_lycForge {lycForge}
+	IF:	All
+			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
+			CellE 69AB000B ~~ Forge drop
+		DO:	DoAll
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				EmbedNav nav391_forge {forge}
+				DoExpr {clearvar[enroute]}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
+			Any 
+				CellE BC110015 ~~ Bug end
+				CellE BC11001D ~~ Bug end
+		DO:	DoAll
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				Chat {/mt combatstate peace}
+				EmbedNav nav392_bugtomonkey {bugtomonkey}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				Chat {/mt combatstate peace}
+				EmbedNav nav387_monkeyTurnin {monkeyTurnin}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
+			CellE BC11013A ~~ monkey turnin
+		DO:	DoAll
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				EmbedNav nav392_bugtomonkey {bugtomonkey}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				SetOpt {IdlePeaceMode} {true}
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				EmbedNav nav388_lycPotbturnin {lycPotbturnin}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	IF:	All
+			Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				EmbedNav nav384_bugturnin {bugturnin}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
+	~~ IF:	All
+			~~ Expr {(Matron)#getvar[capturegroup_questtext]}
+			~~ Not CellE BC110014 ~~ Lyceum drop
+			~~ Expr {isportaling[]==0}
+		~~ DO:	DoAll
+				~~ SetOpt {EnableCombat} {false}
+				~~ SetOpt {EnableLooting} {false}
+				~~ DoExpr {actiontrycastbyid[2358]}
+				~~ DoExpr {actiontrycastbyid[2358]}
+				~~ SetState {Quest}
+~~ }
 STATE: {Quest} ~~ {
+	IF:	Any
+			Expr {(Lyceum)#getvar[capturegroup_questtext]}
+			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
+			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
+			Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
+			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
+		DO:	SetState {QuestToLyceum}
 	IF:	All
 			Any 
 				Expr {(Megamaw)#getvar[capturegroup_questtext]}
@@ -3685,7 +3839,7 @@ STATE: {Quest} ~~ {
 				EmbedNav nav167___None_ {[none]}
 	IF:	All
 			Expr {getisspellknown[6150]==0} ~~ SpellId 6150 is "Rynthid Recall".
-			Expr {(Rynthid Killtasks)#getvar[capturegroup_navtext]}
+			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 		DO:	DoAll
 				Chat {/sub}
 				SetOpt {enablecombat} {false}
@@ -4270,7 +4424,7 @@ STATE: {Quest} ~~ {
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	IF:	All
-			Not Expr {(FortressBSD\|FortBSD\|TethBSD\|Golem\|Mukkir Slayer\|Tou-Tou Killtasks\|Doll\|Graveyard Killtasks\|Rynthid Killtasks\|Hoshino Killtasks\|Frozen Valley Killtasks\|Neftet Killtasks\|Teth\|Hollow\|Monouga\|Curator\|Buttersworth\|Singularity\|Queen\|Bluelady\|Dino\|Dragon\|Bear)#getvar[capturegroup_questtext]}
+			Not Expr {(Lugians\|Monkeys\|LyceumForge\|LyceumPath\|LyceumBSD\|Matron\|FortressBSD\|FortBSD\|TethBSD\|Golem\|Mukkir Slayer\|Tou-Tou Killtasks\|Doll\|Graveyard Killtasks\|Rynthid Killtasks\|Hoshino Killtasks\|Frozen Valley Killtasks\|Neftet Killtasks\|Teth\|Hollow\|Monouga\|Curator\|Buttersworth\|Singularity\|Queen\|Bluelady\|Dino\|Dragon\|Bear)#getvar[capturegroup_questtext]}
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
@@ -4367,6 +4521,15 @@ STATE: {QuestCheck} ~~ {
 				DoExpr {getqueststatus[slayermukkirwait]==0||echo[Mukkir is ready,13]}
 				DoExpr {getqueststatus[vandaltuskwait]==0||echo[FortBSD is ready,13]}
 	IF: All
+			Expr {getcharintprop[25]==1000}
+			Expr {$myquests==1}
+			Expr {$capturegroup_questcheck!=checkg}
+		DO: DoAll
+				DoExpr {echo[`----------1000----------`,14]}
+				DoExpr {getqueststatus[modifiedolthoitimer]==0||echo[Matron is ready,13]}
+				DoExpr {getqueststatus[tukoraonethousandtimer]==0||echo[LycPath is ready,13]}
+				DoExpr {getqueststatus[conquerorkilltasktimer]==0||echo[LycBSD is ready,13]}
+	IF: All
 			Expr {$myquests==1}
 			Expr {$capturegroup_questcheck==checkg}
 		DO: DoAll 
@@ -4395,11 +4558,11 @@ STATE: {Mode} ~~ {
 		DO: DoAll
 				DoExpr {listmap[listcreate[`capturegroup_equiptext`, `monster`, `counter`, `equipexit`], `clearvar[$1]`]}
 	IF: All
-			Expr {(BSD)#getvar[capturegroup_modetext]}
+			Expr {(Path)#getvar[capturegroup_modetext]}
 		DO:	DoAll
-				DoExpr {$activemode=bsd}
-				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=BSD`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-BSD`]}
+				DoExpr {$activemode=path}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=path`}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Path`]}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
@@ -4411,7 +4574,48 @@ STATE: {Mode} ~~ {
 				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.14583`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])}
-				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.0625`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 10
+				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.021`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 5
+				DoExpr {setvar[monster,Tukora Warden]}
+				DoExpr {clearvar[capturegroup_modetext]}
+				SetState {EquipState}
+	IF: All
+			Expr {(Bugs)#getvar[capturegroup_modetext]}
+		DO:	DoAll
+				DoExpr {$activemode=bugs}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=bugs`}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Bugs`]}
+				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
+				SetOpt {SummonPets} {true}
+				SetOpt {idlepeacemode} {false}
+				SetOpt {NavPriorityBoost} {true}
+				SetOpt {navclosestoprange} {0.0062} ~~ follow to 1.5
+				DoExpr {vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`85`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.0625`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])} ~~ distance to 15
+				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.0208`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 10
+				DoExpr {setvar[monster,Changed Olthoi]}
+				DoExpr {clearvar[capturegroup_modetext]}
+				SetState {EquipState}
+	IF: All
+			Expr {(BSD)#getvar[capturegroup_modetext]}
+		DO:	DoAll
+				DoExpr {$activemode=bsd}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=BSD`}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-BSD`]}
+				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
+				SetOpt {SummonPets} {true}
+				SetOpt {idlepeacemode} {false}
+				SetOpt {NavPriorityBoost} {true}
+				SetOpt {navclosestoprange} {0.0062} ~~ follow to 1.5
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`85`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.0625`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])}
+				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.021`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 10
 				DoExpr {setvar[monster,Vandal Tusker]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
@@ -4434,8 +4638,6 @@ STATE: {Mode} ~~ {
 				DoExpr {setvar[monster,Supreme Mukkir]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
-
-
 	IF: All
 			Expr {(Rats)#getvar[capturegroup_modetext]}
 		DO:	DoAll
@@ -4970,7 +5172,7 @@ STATE: {Mule} ~~ {
 	IF:	All 
 			Expr {(Keys)#getvar[capturegroup_muletext]}
 		DO:	DoAll
-				ChatExpr {`/ub givep Primal Moon Chest Key to `+wobjectgetstringprop[wobjectfindnearestbyobjectclass[24],1]}
+				ChatExpr {`/ub givep Ascended Moon Chest Key to `+wobjectgetstringprop[wobjectfindnearestbyobjectclass[24],1]}
 				DoExpr {clearvar[capturegroup_muletext]}
 				SetState {Default2}
 	IF:	Always 
@@ -5580,7 +5782,7 @@ STATE: {Millicent} ~~ {
 	IF: All 
 			Expr {testvar[millicentitems]==0}
 		DO:	DoAll
-				DoExpr {$millicentitems=listcreate[34448,43950,26052,27880,9510,51954,540004,540000,540005]}
+				DoExpr {$millicentitems=listcreate[34448,43950,26052,27880,9510,51954,540004,540000,540005,540006,540002,540001]}
 	IF: All 
 			Expr {wobjectfindininventorybytemplatetype[listgetitem[$millicentitems,0]]!=0}
 			SecsInStateGE 1
@@ -5746,6 +5948,21 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 			IntoPortal
 		DO: DoAll
 				EmbedNav nav0___None_ {Empty}
+
+	IF: All
+			Expr {$activemode==bugs}
+			Expr {isportaling[]==0}
+		DO: DoAll
+				CallState {ActiveStatus} {ActiveLeader}
+	IF: All
+			Expr {$activemode==bugs}
+			Any 
+				ExitPortal
+				Expr {isportaling[]==0}
+		DO: DoAll
+				SetOpt {enablenav} {true}
+				EmbedNav nav72___None_ {recall}
+
 	IF: All 
 			Expr {$activemode==dragon}
 			Not CellE E7D30006 ~~ dragon drop
@@ -5776,20 +5993,21 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 				SetState {ActiveMover}
 	IF: All
 			Expr {$activemode==bsd}
+			Expr {isportaling[]==0}
+			Any
+				BlockE 01040000
+				BlockE 01050000
+				BlockE 01030000 ~~ lyceum bsd
+		DO: DoAll
+				CallState {ActiveStatus} {ActiveLeader}
+	IF: All
+			Expr {$activemode==bsd}
 			Any 
 				ExitPortal
 				Expr {isportaling[]==0}
 		DO: DoAll
 				SetOpt {enablenav} {true}
 				EmbedNav nav72___None_ {recall}
-	IF: All
-			Expr {$activemode==bsd}
-			Expr {isportaling[]==0}
-			Any
-				BlockE 01040000
-				BlockE 01050000
-		DO: DoAll
-				SetState {ActiveLeader}
 	IF: All
 			Expr {$activemode==dino}
 			Any 
@@ -5821,8 +6039,6 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 				EmbedNav nav330_monoreturn {monoreturn}
 				SetOpt {EnableNav} {true}
 				CallState {ActiveStatus} {Default2}
-	IF: Always
-		DO: SetWatchdog 5 15 {ActiveMover}
 	IF: All
 			ChatMatch {#reset}
 		DO: DoAll
@@ -13727,4 +13943,227 @@ NAV: nav383_bsd700 linear ~~ {
 	pnt -100.941896438599 -99.4061421076457 -0.0999791701634725
 	pnt -100.941741641363 -99.2895224889119 -0.124979170163473
 	pnt -100.942144409815 -99.2451171239217 -0.124979170163473
+~~ }
+NAV: nav384_bugturnin once ~~ {
+	pnt 48.654673131307 -88.0302803357442 1.0000207901001
+	pnt 48.7040908813477 -87.9729254722595 1.0000207901001
+	cht 48.7040908813477 -87.9729254722595 1.0000207901001 {/mt combatstate peace}
+	pnt 48.7297154426575 -87.9559494654338 1.0000207901001
+	pnt 48.764476108551 -87.9354497909546 1.00099442799886
+	pnt 48.7868053436279 -87.9139918963114 1.02085412343343
+	pnt 48.7825300534566 -87.908606115977 1.02085412343343
+	pnt 48.7777846654256 -87.9026416460673 1.02085412343343
+	pnt 48.7716231664022 -87.8996119817098 1.02085412343343
+	tlk 48.7518098831177 -87.8994610468547 1.02085412343343 48.7713450113932 -87.8936708450317 1.02085411548615 37 {Olthoi Hunter}
+	pnt 48.7586468696594 -87.9000210444133 1.02085412343343
+	tlk 48.7518098831177 -87.8994610468547 1.02085412343343 48.7610712369283 -87.8936999956767 1.02085411548615 37 {Cole Axlethorpe}
+	tlk 48.7518098831177 -87.8994610468547 1.02085412343343 48.7569804191589 -87.8936666806539 1.02085411548615 37 {Miren Stinger}
+	pnt 48.7518098831177 -87.8994610468547 1.02085412343343
+	tlk 48.7518098831177 -87.8994610468547 1.02085412343343 48.7447666803996 -87.8936666806539 1.02085411548615 37 {Draven Mothbane}
+~~ }
+NAV: nav385_lycBsd once ~~ {
+	pnt 48.6638946056366 -88.0449989636739 1.0000207901001
+	pnt 48.6864186763763 -88.0468745867411 1.0000207901001
+	pnt 48.7171748161316 -88.0509294509888 1.0000207901001
+	cht 48.7171748161316 -88.0509294509888 1.0000207901001 {/mt combatstate peace}
+	pau 48.7171748161316 -88.0509294509888 1.0000207901001 2000
+	pnt 48.7368673960368 -88.0561078707377 1.0000207901001
+	pnt 48.7613883972168 -88.0647002855937 1.0000207901001
+	pnt 48.7719215710958 -88.0716022809347 1.00919195810954
+	pau 48.7719215710958 -88.0716022809347 1.00919195810954 2000
+	cht 48.7719215710958 -88.0716022809347 1.00919195810954 {/vt jump 100 false 1000}
+	pau 48.8748052597046 -88.0692116737366 1.01475410461426 3000
+	pnt 48.9141182263692 -88.1423995494843 1.03207988739014
+	pnt 48.9324440956116 -88.1596296946208 1.0444527943929
+	pnt 48.9484376271566 -88.1737154165904 1.05714480082194
+	pnt 48.9786259969076 -88.20438524882 1.08723322550456
+	pnt 49.0194128036499 -88.2337278286616 1.12420527140299
+	pnt 49.0316252390544 -88.2443145751953 1.13587582906087
+	pnt 49.0400673548381 -88.2499844153722 1.14339383443197
+	pnt 49.0463575998942 -88.2499844153722 1.14758733113607
+	pnt 49.0544672012329 -88.2455217520396 1.15337855021159
+	pnt 49.0644382476807 -88.2355503797531 1.16085713704427
+	pnt 49.0778365453084 -88.2212704102198 1.17149353027344
+	pnt 49.0863265991211 -88.1894934018453 1.19338582356771
+	pnt 49.1057078679403 -88.1199734528859 1.24134750366211
+	pnt 49.1148778915405 -88.0893140951792 1.26255124409993
+	pnt 49.1286493937174 -88.0610761642456 1.27653071085612
+	pnt 49.1435831705729 -88.0483664512634 1.28754564921061
+	pnt 49.1579853693644 -88.0461414972941 1.29168752034505
+	pnt 49.1854839960734 -88.0494010925293 1.29168752034505
+	pnt 49.2131656646729 -88.0488970120748 1.29168752034505
+	pnt 49.2289792378743 -88.0460737546285 1.29168752034505
+	pnt 49.2380566914876 -88.0347370783488 1.29168752034505
+~~	ptl 49.2373991648356 -87.9641538619995 1.29168752034505 49.2255041758219 -88.0266249974569 1.29140412807465 14 {Black Spawn Den}
+~~ }
+NAV: nav386_lycPath once ~~ {
+	cht 48.6638946056366 -88.0449989636739 1.0000207901001 {/mt combatstate peace}
+	pnt 48.6638946056366 -88.0449989636739 1.0000207901001
+	pnt 48.6864186763763 -88.0468745867411 1.0000207901001
+	pnt 48.7171748161316 -88.0509294509888 1.0000207901001
+	pnt 48.7368673960368 -88.0561078707377 1.0000207901001
+	pnt 48.7613883972168 -88.0647002855937 1.0000207901001
+	pnt 48.7719215710958 -88.0716022809347 1.00919195810954
+	pau 48.7719215710958 -88.0716022809347 1.00919195810954 2000
+	cht 48.7719215710958 -88.0716022809347 1.00919195810954 {/vt jump 100 false 1000}
+	pau 48.8748052597046 -88.0692116737366 1.01475410461426 3000
+	pnt 48.9141182263692 -88.1423995494843 1.03207988739014
+	pnt 48.9324440956116 -88.1596296946208 1.0444527943929
+	pnt 48.9484376271566 -88.1737154165904 1.05714480082194
+	pnt 48.9786259969076 -88.20438524882 1.08723322550456
+	pnt 49.0194128036499 -88.2337278286616 1.12420527140299
+	pnt 49.0316252390544 -88.2443145751953 1.13587582906087
+	pnt 49.0400673548381 -88.2499844153722 1.14339383443197
+	pnt 49.0463575998942 -88.2499844153722 1.14758733113607
+	pnt 49.0544672012329 -88.2455217520396 1.15337855021159
+	pnt 49.0644382476807 -88.2355503797531 1.16085713704427
+	pnt 49.0778365453084 -88.2212704102198 1.17149353027344
+	pnt 49.0863265991211 -88.1894934018453 1.19338582356771
+	pnt 49.1057078679403 -88.1199734528859 1.24134750366211
+	pnt 49.1148778915405 -88.0893140951792 1.26255124409993
+	pnt 49.1286493937174 -88.0610761642456 1.27653071085612
+	pau 49.2373991648356 -87.9641538619995 1.29168752034505 1000
+	pnt 49.1654713312785 -88.0321262359619 1.29168752034505
+	ptl 49.2373991648356 -87.9641538619995 1.29168752034505 49.1732083638509 -88.0260862350464 1.29140412807465 14 {Path of the Blind East}
+~~ }
+NAV: nav387_monkeyTurnin once ~~ {
+	cht 48.6534251530965 -88.0213386535645 1.0000207901001 {/mt CombatState peace}
+	pau 48.6534251530965 -88.0213386535645 1.0000207901001 2000
+	pnt 48.6534251530965 -88.0213386535645 1.0000207901001
+	pnt 48.6507371107737 -87.994291083018 1.0000207901001
+	pau 48.6507371107737 -87.994291083018 1.0000207901001 2000
+	pnt 48.6495105743408 -87.9722915331523 1.0000207901001
+	pnt 48.6432140509288 -87.9429309527079 1.0000207901001
+	pnt 48.6467282136281 -87.9382976531982 1.0000207901001
+	pnt 48.6576817512512 -87.9408450126648 1.00333417256673
+	pnt 48.6695959250132 -87.9409671147664 1.01271540323893
+	pnt 48.693258078893 -87.9410115877787 1.03134702046712
+	pnt 48.7184190750122 -87.9410510063171 1.04168745676676
+	pnt 48.7148988405863 -87.9351058642069 1.04168745676676
+	pnt 48.7050602595011 -87.9210368156433 1.04168745676676
+	pnt 48.7008550167084 -87.9137677192688 1.04168745676676
+	pnt 48.7000387986501 -87.8939949671427 1.04168745676676
+	pnt 48.6991407235463 -87.8815834999084 1.04168745676676
+	tlk 48.6991407235463 -87.8815834999084 1.04168745676676 48.6907820860545 -87.8775416692098 1.04168748855591 37 {Sharpeyes, the Tailor}
+~~ }
+NAV: nav388_lycPotbturnin once ~~ {
+	pnt 48.6510252952576 -88.0267368634542 1.0000207901001
+	pnt 48.6493797302246 -87.9908830324809 1.0000207901001
+	cht 48.6493797302246 -87.9908830324809 1.0000207901001 {/mt combatstate peace}
+	pnt 48.646197271347 -87.9599351247152 1.0000207901001
+	pnt 48.6417595863342 -87.9411150296529 1.0000207901001
+	pnt 48.640074634552 -87.9270057678223 1.0000207901001
+	pau 48.6761909484863 -87.8652366320292 1.0250207901001 2000
+	cht 48.6761909484863 -87.8652366320292 1.0250207901001 {/vt jump 15 true 8000}
+	pau 48.6761909484863 -87.8652366320292 1.0250207901001 2000
+	pnt 48.6538162549337 -87.9006196022034 1.0250207901001
+	pnt 48.6673691431681 -87.8898850123088 1.0250207901001
+	pnt 48.6714404582977 -87.8749117215474 1.0250207901001
+	pnt 48.6761909484863 -87.8652366320292 1.0250207901001
+	tlk 48.6761909484863 -87.8652366320292 1.0250207901001 48.6874108314514 -87.8641416549683 1.02502083778381 37 {Elaine Artmad}
+~~ }
+NAV: nav389_lycForge once ~~ {
+	cht 48.6638946056366 -88.0449989636739 1.0000207901001 {/mt combatstate peace}
+	pnt 48.6638946056366 -88.0449989636739 1.0000207901001
+	pnt 48.6864186763763 -88.0468745867411 1.0000207901001
+	pnt 48.7171748161316 -88.0509294509888 1.0000207901001
+	pnt 48.7368673960368 -88.0561078707377 1.0000207901001
+	pnt 48.7613883972168 -88.0647002855937 1.0000207901001
+	pnt 48.7719215710958 -88.0716022809347 1.00919195810954
+	pau 48.7719215710958 -88.0716022809347 1.00919195810954 2000
+	cht 48.7719215710958 -88.0716022809347 1.00919195810954 {/vt jump 100 false 1000}
+	pau 48.8748052597046 -88.0692116737366 1.01475410461426 3000
+	pnt 48.9141182263692 -88.1423995494843 1.03207988739014
+	pnt 48.9324440956116 -88.1596296946208 1.0444527943929
+	pnt 48.9484376271566 -88.1737154165904 1.05714480082194
+	pnt 48.9786259969076 -88.20438524882 1.08723322550456
+	pnt 49.0194128036499 -88.2337278286616 1.12420527140299
+	pnt 49.0316252390544 -88.2443145751953 1.13587582906087
+	pnt 49.0400673548381 -88.2499844153722 1.14339383443197
+	pnt 49.0463575998942 -88.2499844153722 1.14758733113607
+	pnt 49.0544672012329 -88.2455217520396 1.15337855021159
+	pnt 49.0644382476807 -88.2355503797531 1.16085713704427
+	pnt 49.0778365453084 -88.2212704102198 1.17149353027344
+	pnt 49.0863265991211 -88.1894934018453 1.19338582356771
+	pnt 49.1057078679403 -88.1199734528859 1.24134750366211
+	pnt 49.1148778915405 -88.0893140951792 1.26255124409993
+	pnt 49.1286493937174 -88.0610761642456 1.27653071085612
+	pau 49.2373991648356 -87.9641538619995 1.29168752034505 1000
+	pnt 49.1435831705729 -88.0483664512634 1.28754564921061
+	pnt 49.1579853693644 -88.0461414972941 1.29168752034505
+	pnt 49.1854839960734 -88.0494010925293 1.29168752034505
+	pnt 49.2131656646729 -88.0488970120748 1.29168752034505
+	pnt 49.2289792378743 -88.0460737546285 1.29168752034505
+	pnt 49.2380566914876 -88.0347370783488 1.29168752034505
+	pnt 49.2495316187541 -88.0232540766398 1.29168752034505
+	pnt 49.2562574555476 -87.9970506985982 1.289080174764
+	pnt 49.2520596469442 -87.9803412119548 1.29082921346029
+	pnt 49.2373991648356 -87.9641538619995 1.29168752034505
+	ptl 49.2373991648356 -87.9641538619995 1.29168752034505 49.2264333089193 -87.9724220911662 1.29140412807465 14 {Forge Guard Bluff}
+~~ }
+NAV: nav390_lycMatron once ~~ {
+	cht 48.6638946056366 -88.0449989636739 1.0000207901001 {/mt combatstate peace}
+	pnt 48.6638946056366 -88.0449989636739 1.0000207901001
+	pnt 48.6864186763763 -88.0468745867411 1.0000207901001
+	pau 48.6864186763763 -88.0468745867411 1.0000207901001 3000
+	pnt 48.7171748161316 -88.0509294509888 1.0000207901001
+	pnt 48.7368673960368 -88.0561078707377 1.0000207901001
+	pnt 48.7613883972168 -88.0647002855937 1.0000207901001
+	pnt 48.7719215710958 -88.0716022809347 1.00919195810954
+	pau 48.7719215710958 -88.0716022809347 1.00919195810954 2000
+	cht 48.7719215710958 -88.0716022809347 1.00919195810954 {/vt jump 100 false 1000}
+	pau 48.8748052597046 -88.0692116737366 1.01475410461426 3000
+	pnt 48.9141182263692 -88.1423995494843 1.03207988739014
+	pnt 48.9324440956116 -88.1596296946208 1.0444527943929
+	pnt 48.9484376271566 -88.1737154165904 1.05714480082194
+	pnt 48.9786259969076 -88.20438524882 1.08723322550456
+	pnt 49.0194128036499 -88.2337278286616 1.12420527140299
+	pnt 49.0316252390544 -88.2443145751953 1.13587582906087
+	pnt 49.0400673548381 -88.2499844153722 1.14339383443197
+	pnt 49.0463575998942 -88.2499844153722 1.14758733113607
+	pnt 49.0544672012329 -88.2455217520396 1.15337855021159
+	pnt 49.0644382476807 -88.2355503797531 1.16085713704427
+	pnt 49.0778365453084 -88.2212704102198 1.17149353027344
+	pnt 49.0863265991211 -88.1894934018453 1.19338582356771
+	pnt 49.1057078679403 -88.1199734528859 1.24134750366211
+	pnt 49.1148778915405 -88.0893140951792 1.26255124409993
+	pnt 49.1286493937174 -88.0610761642456 1.27653071085612
+	pnt 49.1354389826457 -88.0272060712179 1.28319358825684
+	pnt 49.1411424001058 -87.9932235081991 1.28652051289876
+	pnt 49.1497275670369 -87.975781027476 1.29152857462565
+	pnt 49.1629948298136 -87.9580644289652 1.29168752034505
+	pnt 49.1680498758952 -87.962774626414 1.29168752034505
+~~	ptl 49.2373991648356 -87.9641538619995 1.29168752034505 49.175733311971 -87.9702083269755 1.29140412807465 14 {Matron Hive South}
+~~ }
+NAV: nav391_forge once ~~ {
+	pnt -17.7992044448853 35.0893968582153 1.0000207901001
+	pnt -17.7992099444071 35.1239953358968 1.0000207901001
+	pnt -17.8004425843557 35.1447771390279 1.01403452555339
+	pnt -17.7999587694804 35.1709634145101 1.01668745676676
+	pnt -17.7996191183726 35.1945621172587 1.01668745676676
+	pnt -17.7995928287506 35.2104672114054 1.01668745676676
+	pnt -17.8070509433746 35.2143221219381 1.01668745676676
+	pnt -17.8184710979462 35.2150380452474 1.01668745676676
+	pnt -17.8337375958761 35.2159950892131 1.01668745676676
+	tlk -17.772472858429 35.2108620325724 1.0000207901001 -17.8393966674805 35.2224108378092 1.01669800281525 37 {Vilostibite}
+	tlk -17.772472858429 35.2108620325724 1.0000207901001 -17.8418366670609 35.2137208302816 1.01669800281525 37 {Barydite}
+	pnt -17.8416651407878 35.2047341664632 1.01668745676676
+	pnt -17.8424227158229 35.1910752614339 1.01501681009928
+	pnt -17.8345734357834 35.1700609842936 1.00983428955078
+	pnt -17.822738981247 35.1582035064697 1.00650030771891
+	pnt -17.8042292912801 35.1563097953796 1.00163040161133
+	pnt -17.7854715983073 35.1585092226664 1.0000207901001
+	pnt -17.7760378837585 35.1680310249329 1.0000207901001
+	pnt -17.7728742599487 35.1821926752726 1.0000207901001
+	pnt -17.7698659420013 35.2052823384603 1.00215625762939
+	pnt -17.7690640290578 35.2193429946899 1.0000207901001
+	tlk -17.772472858429 35.2108620325724 1.0000207901001 -17.7610887527466 35.2196066538493 1.00003123283386 37 {Ambuhyite}
+	tlk -17.772472858429 35.2108620325724 1.0000207901001 -17.7661291599274 35.2271012624105 1.00002503395081 37 {Lauhierite}
+	tlk -17.772472858429 35.2108620325724 1.0000207901001 -17.7707820892334 35.2318458239237 1.00002503395081 37 {Idrirgite}
+~~ }
+NAV: nav392_bugtomonkey once ~~ {
+	pnt 48.7095506668091 -87.9018210411072 1.0250207901001
+	cht 48.7095506668091 -87.8778488794963 1.04168745676676 {/vt jump 0 true 8000}
+	pnt 48.7095506668091 -87.8778488794963 1.04168745676676
+	tlk 48.7095506668091 -87.8778488794963 1.04168745676676 48.6907820860545 -87.8775416692098 1.04168748855591 37 {Sharpeyes, the Tailor}
 ~~ }
