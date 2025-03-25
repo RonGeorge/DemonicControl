@@ -3122,7 +3122,6 @@ STATE: {QuestToLyceum} ~~ {
 				Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
 				Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
 				Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
-				Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
 			Expr {isportaling[]==0}
 			Not CellE BC110014
 			Not CellE 69AB000B
@@ -3147,10 +3146,27 @@ STATE: {QuestToLyceum} ~~ {
 				EmbedNav nav389_lycForge {lycForge}
 	IF:	All
 			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
-			CellE 69AB000B ~~ Forge drop
+			Any 
+				CellE 69AB000B ~~ Forge drop
+				CellE 69AB000A ~~ lifestone
 		DO:	DoAll
+				DoExpr {$enroute=1}
 				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
 				EmbedNav nav391_forge {forge}
+	IF:	All
+			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
+			Not BlockE 69AB0000
+			Expr {$enroute==0}
+		DO:	DoAll
+				DoExpr {$enroute=1}
+				EmbedNav nav74___None_ {Lifestone Sending}
+	IF:	All
+			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
+			Any 
+				ChatMatch {Idrirgite tells you, "We will need your assistance again, soon enough}
+				ChatMatch {Idrirgite tells you, "Go Kill 10 of those Big Funny Lookin}
+		DO:	DoAll
+				Chat {/ls}
 				DoExpr {clearvar[enroute]}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
@@ -5582,7 +5598,7 @@ STATE: {DemonSet} ~~ {
 		DO:	DoAll
 				DoExpr {&remote=$capturegroup_settingvartext}
 				DoExpr {&remote==1||&remote==0||(echo[`Something went wrong. Use 1 for True and 0 for False.`,15]&&cleargvar[remote])}
-				ChatExpr {`remote view = `+&remote}
+				ChatExpr {`remote = `+&remote}
 				DoExpr {clearvar[capturegroup_settingtext]&&clearvar[capturegroup_settingvartext]}
 				SetState {Default2}
 	IF:	All

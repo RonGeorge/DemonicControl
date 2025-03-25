@@ -812,7 +812,7 @@ Legendary Defender
 218103842
 (Melee) HeavyWeapon (45%)
 
-0;1;12;3;5;7;0
+0;1;12;3;5;7;0;2008
 9
 44
 159
@@ -826,6 +826,10 @@ Legendary Defender
 1
 24
 Legendary Blood Thirst
+15
+150
+1.4
+1.4
 (temp) FinesseWeapon (md)
 
 0;1;12;3;5;7;2005;0
@@ -866,7 +870,7 @@ Legendary Blood Thirst
 Legendary Blood Thirst
 (Melee) FinesseWeapon (45%)
 
-0;1;12;3;5;7;0
+0;1;12;3;5;7;0;2008
 9
 46
 159
@@ -880,6 +884,10 @@ Legendary Blood Thirst
 1
 24
 Legendary Blood Thirst
+17
+138
+1.42
+1.42
 (Melee) LightWeapon (45%)
 
 0;1;12;3;5;7;2008;0
@@ -1002,9 +1010,9 @@ Legendary Defender
 Bow|Crossbow
 1
 9
-47
+48
 204
-Wand (59%+) (42%+)
+Wand (60%+) (42%+)
 
 0;1;7;12;5;0;0;5
 4
@@ -1019,8 +1027,8 @@ Wand (59%+) (42%+)
 Legendary Spirit Thirst
 20
 Legendary Defender
-11
-1.59
+10
+1.6
 152
 Nether Defender Wands
 
@@ -1063,8 +1071,8 @@ Wand (Melee)
 10
 1.44
 29
-8
-Orb
+14
+Orb|Staff
 1
 (A) Dedication Set
 
@@ -1086,7 +1094,7 @@ Sollerets|Gauntlets|Greaves|Tassets|Pauldrons|Vambraces|Breastplate|Girth|Helm
 1
 (A) Defender's
 
-0;1;7;12;0;3;12;13;12;12
+0;1;7;12;0;3;12;13;12;12;9999
 3
 2
 9
@@ -1109,9 +1117,11 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 8
 0
 374
+6
+true
 (A) Defender's
 
-0;1;7;12;0;3;12;13;12;12
+0;1;7;12;0;3;12;13;12;12;9999
 3
 2
 9
@@ -1134,9 +1144,11 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 8
 0
 374
+6
+true
 (A) Hardened
 
-0;1;7;12;0;3;12;13;12;12
+0;1;7;12;0;3;12;13;12;12;9999
 3
 2
 9
@@ -1159,9 +1171,11 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 8
 0
 376
+6
+true
 (A) Hardened
 
-0;1;7;12;0;3;12;13;12;12
+0;1;7;12;0;3;12;13;12;12;9999
 3
 2
 9
@@ -1184,9 +1198,11 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 8
 0
 374
+6
+true
 (A) Lightning Proof
 
-0;1;7;12;0;3;12;13;12;12
+0;1;7;12;0;3;12;13;12;12;9999
 3
 2
 9
@@ -1209,9 +1225,11 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 8
 0
 376
+6
+true
 (A) Lightning Proof
 
-0;1;7;12;0;3;12;13;12;12
+0;1;7;12;0;3;12;13;12;12;9999
 3
 2
 9
@@ -1234,6 +1252,8 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 8
 0
 376
+6
+true
 (A) Covenant (Damage Resist)
 
 0;1;7;9;1;3;12;9;12;12;12
@@ -1298,7 +1318,7 @@ Minor|Major|Epic
 376
 (A) Armor (Vitality)
 
-0;1;7;0;13;13;13;13;13;13;3;12;12;12;13;13
+0;1;7;0;13;13;13;13;13;13;3;12;12;12;13;13;13
 3
 2
 361
@@ -1339,9 +1359,12 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 9
 21
 265
+9
+13
+265
 (A) Armor (Damage Resist)
 
-0;1;7;0;13;13;13;13;13;13;3;12;12;12;13;13
+0;1;7;0;13;13;13;13;13;13;3;12;12;13;13;13
 3
 2
 361
@@ -1373,18 +1396,18 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 8
 0
 374
-8
-0
-376
 9
 19
 265
 9
 21
 265
+9
+13
+265
 (A) Any Set Armor Balance
 
-0;1;7;0;13;13;13;13;13;12;12;12;2007;13;12;13
+0;1;7;0;13;13;13;13;13;12;12;12;2007;13;12;13;9999
 3
 2
 361
@@ -1424,9 +1447,11 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 9
 21
 265
+6
+true
 (C) (Shirt Pants) Damage
 
-0;1;7;9;1;13;13;13;13;13;3;12;12;13;12;13
+0;1;7;9;1;13;13;13;13;13;3;12;12;13;12;13;13
 3
 3
 504
@@ -1469,9 +1494,12 @@ Smock|Shirt|Pants|Pantaloons|Trousers
 9
 19
 265
+9
+13
+265
 (C) (Shirt Pants) DamageResist
 
-0;1;7;9;1;13;13;13;13;13;3;12;12;13;12;13
+0;1;7;9;1;13;13;13;13;13;3;12;12;13;12;13;13;9999
 3
 3
 504
@@ -1514,9 +1542,14 @@ Smock|Shirt|Pants|Pantaloons|Trousers
 9
 19
 265
+9
+13
+265
+6
+true
 (C) (Shirt Pants) Vitality
 
-0;1;7;9;1;13;13;13;13;13;3;12;13;12;12;13
+0;1;7;9;1;13;13;13;13;13;3;12;13;12;12;13;13
 3
 3
 504
@@ -1559,9 +1592,12 @@ Smock|Shirt|Pants|Pantaloons|Trousers
 9
 19
 265
+9
+13
+265
 (C) (Clothing) Balance
 
-0;1;7;9;1;13;13;13;13;13;12;12;2007;12;13;13
+0;1;7;9;1;13;13;13;13;13;12;12;12;13;13;13;9999
 3
 3
 504
@@ -1592,8 +1628,6 @@ Smock|Shirt|Pants|Pantaloons|Trousers|Qafiya|Beret|Cap|Fez|Cowl|Turban|Hood|Band
 8
 0
 375
-4
-33
 8
 0
 376
@@ -1603,9 +1637,14 @@ Smock|Shirt|Pants|Pantaloons|Trousers|Qafiya|Beret|Cap|Fez|Cowl|Turban|Hood|Band
 9
 19
 265
+9
+13
+265
+6
+true
 (C) (Clothing) DamageResist
 
-0;1;7;9;13;13;13;13;13;3;12;2007;1;2;13;12;13
+0;1;7;9;13;13;13;13;13;3;12;2007;1;2;13;12;13;13
 3
 3
 504
@@ -1650,9 +1689,12 @@ Smock|Shirt|Pants|Pantaloons|Trousers|Qafiya|Beret|Cap|Fez|Cowl|Turban|Hood|Band
 9
 19
 265
+9
+13
+265
 (A) Any Set Clothing Balance
 
-0;1;7;0;13;13;13;13;13;12;12;2007;12;13;13
+0;1;7;0;13;13;13;13;13;12;12;2007;12;13;13;13;2;2
 3
 3
 361
@@ -1689,6 +1731,15 @@ Legendary Str|Legendary End|Legendary Coord|Legendary Quick|Legendary Foc|Legend
 9
 19
 265
+9
+13
+265
+9
+10
+379
+9
+10
+371
 (J) Jewelry Dam30
 
 0;1;7;9;3;12;12;12;12
