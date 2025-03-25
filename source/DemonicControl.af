@@ -61,7 +61,7 @@ STATE: {*** DemonicControl 221 ***} ~~ {
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]]}
 				DoExpr {testgvar[watchlist]&&echo[`Watchlist found.`,13]||setgvar[watchlist,listcreate[]]}
 				DoExpr {echo[`--------------`,13]}
-				DoExpr {echo[`Welcome to DemonicControl v2.20`,5]}
+				DoExpr {echo[`Welcome to DemonicControl v2.21`,5]}
 				DoExpr {echo[`--------------`,13]}
 	IF:	Always
 		DO:	SetState {SpellCheck}
