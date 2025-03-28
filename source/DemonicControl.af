@@ -708,6 +708,12 @@ STATE: {Default2} ~~ {
 			Expr {testvar[activemode]}
 		DO: DoAll
 				SetState {ActiveDead}
+	IF: All 
+			Expr {vtgetsetting[`Recharge-Norm-HitP`]==0]}
+		DO: DoAll
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`85`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				ChatExpr {`/tell `+getcharstringprop[1]+`, Vitals changed.`}
 ~~ Inventory Checks
 	IF: All
 			Expr {$activemode==bsd}
@@ -733,6 +739,40 @@ STATE: {Default2} ~~ {
 		DO: DoAll 
 				SetOpt {EnableLooting} {false}
 				Chat {/f Got my tails!}
+~~Start of Forge Notify
+	IF: All 
+			ChatMatch {You have killed 20 Mana Infused Gear Knight Arbalests! Your task is complete!}
+			Expr {$activemode==forge}
+		DO: DoExpr {$forgea=1}
+	IF: All 
+			ChatMatch {You have killed 20 Mana Infused Gear Knight Mages! Your task is complete!}
+			Expr {$activemode==forge}
+		DO: DoExpr {$forgeb=1}
+	IF: All 
+			ChatMatch {You have killed 20 Mana Infused Gear Knight Phalanxes! Your task is complete!}
+			Expr {$activemode==forge}
+		DO: DoExpr {$forgec=1}
+	IF: All 
+			ChatMatch {You have killed 20 Mana Infused Virindis! Your task is complete!}
+			Expr {$activemode==forge}
+		DO: DoExpr {$forged=1}
+	IF: All 
+			ChatMatch {You have killed 20 Aetherium Infused Virindis! Your task is complete!}
+			Expr {$activemode==forge}
+		DO: DoExpr {$forgee=1}
+	IF: All 
+			ChatMatch {You have killed 50 Big 'Drudge's! Your task is complete!}
+			Expr {$activemode==forge}
+		DO: DoExpr {$forgef=1}
+	IF: All 
+			ChatMatch {You have killed 10 Big 'Drudge's! Your task is complete!}
+			Expr {$activemode==forge}
+		DO: DoExpr {$forgeg=1}
+	IF: All 
+			Expr {$forgea==1&&$forgeb==1&&$forgec==1&&$forged==1&&$forgee==1&&$forgef==1&&$forgeg==1}
+			Expr {$activemode==forge}
+		DO: DoAll 
+				Chat {/f Forge complete.}
 ~~Start of Teth Notify
 	IF: All 
 			Expr {$activemode==teth}
@@ -3070,7 +3110,6 @@ STATE: {NavToLyceum} ~~ {
 				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
 				DoExpr {actiontrycastbyid[2358]}
 				DoExpr {actiontrycastbyid[2358]}
-				SetOpt {IdlePeaceMode} {true}
 				SetState {NavToLyceum}
 	IF:	All
 			Expr {(Lyceum)#getvar[capturegroup_navtext]}
@@ -3082,11 +3121,17 @@ STATE: {NavToLyceum} ~~ {
 			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_navtext]}
 			CellE BC110014 ~~ Lyceum drop
 		DO:	DoAll
-				SetOpt {IdlePeaceMode} {true}
 				Chat {/mt combatstate peace}
 				EmbedNav nav385_lycBsd {lysBsd}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
+
+
+
+
+
+
+
 	IF:	All
 			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_navtext]}
 			CellE BC110014 ~~ Lyceum drop
@@ -3122,6 +3167,7 @@ STATE: {QuestToLyceum} ~~ {
 				Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
 				Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
 				Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
+				Expr {(Flags)#getvar[capturegroup_questtext]}
 			Expr {isportaling[]==0}
 			Not CellE BC110014
 			Not CellE 69AB000B
@@ -3137,6 +3183,14 @@ STATE: {QuestToLyceum} ~~ {
 				SetOpt {EnableNav} {true}
 				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
 				SetState {QuestToLyceum}
+	IF:	All
+			Expr {(Flags)#getvar[capturegroup_questtext]}
+			CellE BC110014 ~~ Lyceum drop
+		DO:	DoAll
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
+				EmbedNav nav393_flags {Flags}
+				DoExpr {clearvar[capturegroup_questtext]}
+				SetState {Default2}
 	IF:	All
 			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
 			CellE BC110014 ~~ Lyceum drop
@@ -3165,9 +3219,11 @@ STATE: {QuestToLyceum} ~~ {
 			Any 
 				ChatMatch {Idrirgite tells you, "We will need your assistance again, soon enough}
 				ChatMatch {Idrirgite tells you, "Go Kill 10 of those Big Funny Lookin}
+				ChatMatch {Idrirgite tells you, "We will need your assistance again, soon enough, Adventurer."}
+				ChatMatch {Idrirgite gives you 50 Trade Notes}
 		DO:	DoAll
 				Chat {/ls}
-				DoExpr {clearvar[enroute]}
+				DoExpr {clearvar[enroute]&&clearvar[forgea]&&clearvar[forgeb]&&clearvar[forgec]&&clearvar[forged]&&clearvar[forgee]&&clearvar[forgef]&&clearvar[forgeg]}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	IF:	All
@@ -3188,6 +3244,21 @@ STATE: {QuestToLyceum} ~~ {
 				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
 				Chat {/mt combatstate peace}
 				EmbedNav nav387_monkeyTurnin {monkeyTurnin}
+	IF:	All
+			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
+			CellE BC11013A ~~ in front of monkeys turn in
+			ItemCountGE 1 {Conqueror Tusk}
+			NavEmpty
+		DO:	DoAll
+				DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Conqueror Tusk`],wobjectfindnearestbytemplatetype[580101]]}
+				SetState {QuestToLyceum}
+	IF:	All
+			Expr {(Monkeys\|LyceumBSD)#getvar[capturegroup_questtext]}
+			CellE BC11013A ~~ in front of monkeys turn in
+			ItemCountGE 0 {Conqueror Tusk}
+			NavEmpty
+			SecsInStateGE 2
+		DO:	DoAll
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	IF:	All
@@ -3202,7 +3273,6 @@ STATE: {QuestToLyceum} ~~ {
 			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
 			CellE BC110014 ~~ Lyceum drop
 		DO:	DoAll
-				SetOpt {IdlePeaceMode} {true}
 				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
 				EmbedNav nav388_lycPotbturnin {lycPotbturnin}
 				DoExpr {clearvar[capturegroup_questtext]}
@@ -3213,6 +3283,22 @@ STATE: {QuestToLyceum} ~~ {
 		DO:	DoAll
 				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
 				EmbedNav nav384_bugturnin {bugturnin}
+	IF:	All
+			Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
+			NavEmpty
+			ItemCountGE 1 {Modified Olthoi Matron Claw}
+			SecsInStateGE 2
+		DO:	DoAll
+				DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Modified Olthoi Matron Claw`],wobjectfindnearestbytemplatetype[580105]]}
+				SetState {QuestToLyceum}
+	IF:	All
+			Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
+			NavEmpty
+			ItemCountGE 0 {Modified Olthoi Matron Claw}
+			Any 
+				CellE BC110015 ~~ Bug end
+				CellE BC11001D ~~ Bug end
+		DO:	DoAll
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	~~ IF:	All
@@ -3233,6 +3319,7 @@ STATE: {Quest} ~~ {
 			Expr {(Lugians\|LyceumPath)#getvar[capturegroup_questtext]}
 			Expr {(Matron\|LyceumMatron)#getvar[capturegroup_questtext]}
 			Expr {(Forge\|LyceumForge)#getvar[capturegroup_questtext]}
+			Expr {(Flags)#getvar[capturegroup_questtext]}
 		DO:	SetState {QuestToLyceum}
 	IF:	All
 			Any 
@@ -4545,6 +4632,8 @@ STATE: {QuestCheck} ~~ {
 				DoExpr {getqueststatus[modifiedolthoitimer]==0||echo[Matron is ready,13]}
 				DoExpr {getqueststatus[tukoraonethousandtimer]==0||echo[LycPath is ready,13]}
 				DoExpr {getqueststatus[conquerorkilltasktimer]==0||echo[LycBSD is ready,13]}
+				DoExpr {getqueststatus[funnydrudgekt]==0||echo[Forge is ready,13]}
+				DoExpr {getqueststatus[dragonoilwait]==0||echo[Maroon Dragon is ready,13]}
 	IF: All
 			Expr {$myquests==1}
 			Expr {$capturegroup_questcheck==checkg}
@@ -4574,6 +4663,25 @@ STATE: {Mode} ~~ {
 		DO: DoAll
 				DoExpr {listmap[listcreate[`capturegroup_equiptext`, `monster`, `counter`, `equipexit`], `clearvar[$1]`]}
 	IF: All
+			Expr {(Forge)#getvar[capturegroup_modetext]}
+		DO:	DoAll
+				DoExpr {$activemode=forge}
+				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Forge`}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Forge`]}
+				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
+				SetOpt {SummonPets} {true}
+				SetOpt {idlepeacemode} {false}
+				SetOpt {NavPriorityBoost} {true}
+				DoExpr {vtsetsetting[Recharge-Norm-HitP,`85`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
+				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.0625`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.00709`])} ~~ distance to 15
+				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.0208`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 10
+				DoExpr {setvar[monster,Drudge]}
+				DoExpr {clearvar[capturegroup_modetext]}
+				SetState {EquipState}
+	IF: All
 			Expr {(Path)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				DoExpr {$activemode=path}
@@ -4583,7 +4691,7 @@ STATE: {Mode} ~~ {
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
 				SetOpt {NavPriorityBoost} {true}
-				SetOpt {navclosestoprange} {0.0062} ~~ follow to 1.5
+				SetOpt {navclosestoprange} {0.00709} ~~ set follow to 1.7
 				DoExpr {vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
 				DoExpr {vtsetsetting[Recharge-Norm-HitP,`85`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
 				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`80`]&&vtsetsetting[Recharge-NoTarg-Mana,`70`]}
@@ -4631,8 +4739,8 @@ STATE: {Mode} ~~ {
 				DoExpr {$class!=melee||vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||vtsetsetting[Recharge-Helper-HitP,`60`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				DoExpr {$class!=mage||(vtsetsetting[attackdistance,`0.0625`]&&vtsetsetting[NavPriorityBoost,`0`]&&vtsetsetting[navclosestoprange,`0.0062`])}
-				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.021`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 10
-				DoExpr {setvar[monster,Vandal Tusker]}
+				DoExpr {$class!=melee||(vtsetsetting[DefaultMeleeAttackHeight,`3`]&&vtsetsetting[attackdistance,`0.025`]&&vtsetsetting[NavPriorityBoost,`1`]&&vtsetsetting[navclosestoprange,`0.021`])} ~~follow at 5, attack at 6
+				DoExpr {setvar[monster,Conqueror]}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {EquipState}
 	IF: All
@@ -5650,7 +5758,7 @@ STATE: {DemonSet} ~~ {
 				DoExpr {echo[`     lootprofile = `+&lootprofile,13]}
 				DoExpr {echo[`     fastloot = `+&fastlootprofile,13]}
 				DoExpr {echo[`     channel = /`+&channel,13]}
-				DoExpr {echo[`     remote view = `+&remote,13]}
+				DoExpr {echo[`     remote = `+&remote,13]}
 				DoExpr {echo[`     persistent join = `+&persistentjoin,13]}
 				DoExpr {echo[`------------`,13]}
 				DoExpr {echo[`Do not add .utl to loot profiles when setting them, just the name.`,5]}
@@ -5738,7 +5846,7 @@ STATE: {Junk} ~~ {
 		DO:	DoAll
 				DoExpr {$jcounter=0}
 				DoExpr {$junk=listcreate[Ball of Gunk,Lucky Gold Letter,Altered Dark Remoran Fin,Drudge Mask,Legendary Key,Scarlet Red Letter,Braced Mana Forge Key,Rock,Fishing Pole,Sealed crate of Salvaged Sandstone,Mythic Chest Key,Durable Legendary Key,Bone Sword]}
-				DoExpr {$junktemplates=listcreate[37274,52701,52703,43950,27258,36189,500173,500175,500343]}
+				DoExpr {$junktemplates=listcreate[37274,52701,52703,43950,27258,36189,500173,500175,500343,500519]}
 	IF: All
 			Expr {testvar[jcounter]}
 			Not Expr {testvar[jtcounter]}
@@ -5911,9 +6019,9 @@ STATE: {Armor} ~~ {
 STATE: {ActiveDead} ~~ {
 	IF: Always ~~ set recharge and healing others to 0 so you dont miss gem hit
 		DO: DoAll
-				DoExpr {vtsetsetting[Recharge-Norm-HitP,`0`]&&vtsetsetting[Recharge-Norm-Stam,`0`]&&vtsetsetting[Recharge-Norm-Mana,`0`]}
-				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`0`]&&vtsetsetting[Recharge-NoTarg-Stam,`0`]&&vtsetsetting[Recharge-NoTarg-Mana,`0`]}
-				DoExpr {vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
+				~~ DoExpr {vtsetsetting[Recharge-Norm-HitP,`0`]&&vtsetsetting[Recharge-Norm-Stam,`0`]&&vtsetsetting[Recharge-Norm-Mana,`0`]}
+				~~ DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`0`]&&vtsetsetting[Recharge-NoTarg-Stam,`0`]&&vtsetsetting[Recharge-NoTarg-Mana,`0`]}
+				~~ DoExpr {vtsetsetting[Recharge-Helper-HitP,`0`]&&vtsetsetting[Recharge-Helper-Stam,`0`]&&vtsetsetting[Recharge-Helper-Mana,`0`]}
 				SetOpt {HelperDistanceHitP} {0}
 				SetOpt {enablelooting} {false}
 				SetOpt {enablecombat} {false}
@@ -5964,9 +6072,11 @@ STATE: {ActiveMover} ~~ { ~~ this is just to move into the correct spot
 			IntoPortal
 		DO: DoAll
 				EmbedNav nav0___None_ {Empty}
-
 	IF: All
-			Expr {$activemode==bugs}
+			Any 
+				Expr {$activemode==bugs}
+				Expr {$activemode==path}
+				Expr {$activemode==forge}
 			Expr {isportaling[]==0}
 		DO: DoAll
 				CallState {ActiveStatus} {ActiveLeader}
@@ -14066,12 +14176,13 @@ NAV: nav388_lycPotbturnin once ~~ {
 	pnt 48.6510252952576 -88.0267368634542 1.0000207901001
 	pnt 48.6493797302246 -87.9908830324809 1.0000207901001
 	cht 48.6493797302246 -87.9908830324809 1.0000207901001 {/mt combatstate peace}
+	pau 48.6493797302246 -87.9908830324809 1.0000207901001 2000
 	pnt 48.646197271347 -87.9599351247152 1.0000207901001
 	pnt 48.6417595863342 -87.9411150296529 1.0000207901001
 	pnt 48.640074634552 -87.9270057678223 1.0000207901001
-	pau 48.6761909484863 -87.8652366320292 1.0250207901001 2000
+	pau 48.6761909484863 -87.8652366320292 1.0250207901001 3000
 	cht 48.6761909484863 -87.8652366320292 1.0250207901001 {/vt jump 15 true 8000}
-	pau 48.6761909484863 -87.8652366320292 1.0250207901001 2000
+	pau 48.6761909484863 -87.8652366320292 1.0250207901001 3000
 	pnt 48.6538162549337 -87.9006196022034 1.0250207901001
 	pnt 48.6673691431681 -87.8898850123088 1.0250207901001
 	pnt 48.6714404582977 -87.8749117215474 1.0250207901001
@@ -14183,3 +14294,26 @@ NAV: nav392_bugtomonkey once ~~ {
 	pnt 48.7095506668091 -87.8778488794963 1.04168745676676
 	tlk 48.7095506668091 -87.8778488794963 1.04168745676676 48.6907820860545 -87.8775416692098 1.04168748855591 37 {Sharpeyes, the Tailor}
 ~~ }
+NAV: nav393_flags once ~~ {
+	pnt 48.6977022488912 -88.0486043612162 1.0000207901001
+	pnt 48.7570282300313 -88.0608342170715 1.0000207901001
+	pnt 48.7669369697571 -88.0669436454773 1.00373694101969
+	pnt 48.780936050415 -88.0802700678507 1.01919460296631
+	pnt 48.7976797103882 -88.0966798146566 1.02085412343343
+	tlk 48.7270870526632 -87.8791664441427 1.0000207901001 48.8006154060364 -88.0994575023651 1.02085411548615 37 {Xeltharic}
+	pnt 48.7869841893514 -88.0867573738098 1.02085412343343
+	pnt 48.7511373519897 -88.0448503176371 1.0000207901001
+	pnt 48.7386253992716 -87.9891401290894 1.0000207901001
+	pnt 48.7282198905945 -87.961505540212 1.0000207901001
+	pnt 48.6980239391327 -87.9511509259542 1.0000207901001
+	pnt 48.6907405376434 -87.9453330993652 1.0000207901001
+	pnt 48.6866425355275 -87.9281967163086 1.0000207901001
+	pnt 48.6858134269714 -87.896439297994 1.0000207901001
+	pnt 48.6867651939392 -87.8572536468506 1.0000207901001
+	pnt 48.7013987541199 -87.8430698394775 1.00233084360758
+	pnt 48.7230803489685 -87.8576992670695 1.0000207901001
+	pnt 48.7282117843628 -87.8723722139994 1.0000207901001
+	pnt 48.7270870526632 -87.8791664441427 1.0000207901001
+	tlk 48.7270870526632 -87.8791664441427 1.0000207901001 48.7249808311462 -87.8832125027974 1.00002074241638 37 {Vince Gearson}
+~~ }
+
