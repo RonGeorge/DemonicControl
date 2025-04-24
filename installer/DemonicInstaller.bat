@@ -13,6 +13,7 @@ if not exist "%target_dir%" (
     mkdir "%target_dir%"
     if errorlevel 1 (
         echo ERROR: Failed to create target directory.
+        pause
         goto :error
     )
 )
@@ -22,12 +23,14 @@ echo Downloading "%met_url%" to "%met_file%"...
 curl -L -o "%met_file%" "%met_url%"
 if errorlevel 1 (
     echo ERROR: Failed to download "%met_url%".
+    pause
     goto :error
 )
 
 REM Check if downloaded file exists
 if not exist "%met_file%" (
     echo ERROR: File DemonicControl.met not found after download.
+    pause
     goto :error
 )
 pause
@@ -38,6 +41,7 @@ echo Moving "%met_file%" to "%target_dir%"...
 move /Y "%met_file%" "%target_dir%"
 if errorlevel 1 (
     echo ERROR: Failed to move DemonicControl.met.
+    pause
     goto :error
 )
 
