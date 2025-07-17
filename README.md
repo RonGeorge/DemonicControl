@@ -1,6 +1,22 @@
 # DemonicControl
 
-DemonicControl is a control meta script that runs with vtank for Asheron's Call. Its aim is to make the normal drudgery of playing the game a bit easier. I began writing it for myself to make traveling easier and I just kept going. It is customized for the [DragonMoon](http://discord.gg/dragonmoon) server.
+DemonicControl is a comprehensive automation meta script for Asheron's Call that runs with VirindiTank. Originally designed to simplify traveling, it has evolved into a full-featured automation system covering quest management, navigation, inventory control, fellowship coordination, and advanced multi-character operations. It is optimized for the [DragonMoon](http://discord.gg/dragonmoon) server.
+
+## Features
+
+### Core Automation
+- **Quest Management**: Automated quest running with timer tracking for 30+ major quests
+- **Navigation System**: 100+ navigation destinations including towns, dungeons, and special locations
+- **Multi-Character Coordination**: Advanced systems for coordinating 2-7 characters simultaneously
+- **Inventory Management**: Sophisticated sorting, muling, and item management systems
+- **Fellowship Integration**: Automatic fellowship creation, management, and coordination
+
+### Advanced Systems
+- **Patrol Routes**: Multiple patrol systems for different dungeons and farming areas
+- **Mode System**: Specialized modes for different activities (Rage, Forge, Dino, Teth, etc.)
+- **Watchlist**: Death monitoring and automatic recall system
+- **Smart Buffing**: Intelligent buff management with spell checking
+- **Loot Profiles**: Dynamic loot profile switching based on activity
 
 ## Requirements
 
@@ -15,7 +31,7 @@ DemonicControl is a control meta script that runs with vtank for Asheron's Call.
 
 ### Option 1
 
-1. Download the [full installer](https://raw.githubusercontent.com/RonGeorge/DemonicControl/refs/heads/main/installer/DemonicInstallerFULL.bat)(Right Click and Save As..) into your Downloads folder, or wherever and let it run. If you see Green at the end, its done. You can alternatively just use the meta only [installer](https://github.com/RonGeorge/DemonicControl/blob/main/installer/DemonicInstaller.bat)(Right Click and Save As..), double click it and it will download and move the files accordingly.
+1. Download the [installer](https://raw.githubusercontent.com/RonGeorge/DemonicControl/refs/heads/main/installer/DemonicInstallerFULL.bat)(Right Click and Save As..) into your Downloads folder, or wherever and let it run. You will see a message when it finishes. You can alternatively just grab the meta only [installer](https://github.com/RonGeorge/DemonicControl/blob/main/installer/DemonicInstaller.bat)(Right Click and Save As..), double click it and it will download and move the files accordingly.
 
 ### Option 2
 
@@ -24,7 +40,19 @@ DemonicControl is a control meta script that runs with vtank for Asheron's Call.
 
 ## Commands
 
-For a list of commands, go to [/wiki/Demonic-Control-Commands](https://github.com/RonGeorge/DemonicControl/wiki/Demonic-Control-Commands)
+DemonicControl supports 200+ commands across multiple categories:
+
+- **Configuration**: `#demonset` commands for persistent settings
+- **Quest Management**: `#quest` commands for 30+ automated quests
+- **Navigation**: `#navto` commands for 100+ destinations
+- **Action Commands**: `#action` commands for common automation tasks
+- **Mode System**: `#mode` commands for specialized activity modes
+- **Patrol System**: `#patrol` commands for coordinated group farming
+- **Inventory Management**: `#sort`, `#mule`, `#bite` commands for item handling
+- **Fellowship**: Fellowship creation, management, and coordination
+- **Utility**: Movement, information, and helper commands
+
+For a complete command reference, see the [Commands Wiki](https://github.com/RonGeorge/DemonicControl/wiki/Demonic-Control-Commands)
 
 ### Files in Repo
 

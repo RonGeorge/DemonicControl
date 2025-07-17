@@ -2,443 +2,480 @@ windowposition: 150, 50
 windowstartopen: true
 windowsize: 500, 250
 buttonpadding: 8
+
+
 tab: Basic
-tabvisible: false
-tabsize: 340, 400
-tabposition: 390, 50
-cols: 2
-rows: 13
-Button_01: 1
-Button_02: 1
-Button_03: 1
-Button_04: 1
-Button_05: 1
-Button_06: 1
-Button_07: 1
-Button_08: 1
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 1
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 2
-Button_22: 2
-Button_23: 2
+	tabvisible: false
+	tabsize: 340, 400
+	tabposition: 390, 50
+	cols: 2
+	rows: 13
+		Button		1,Follow,#action follow
+		Button		1,Stay,#action stay
+		Button		1,Create Fellow,/tell [player],#action fellow
+		Button		1,Disband,#action disband
+		Button		1,Force Buff,#action buff
+		Button		1,Cancel Buff,#echo /vt cancelforcebuff
+		Button		1,All On,#action all on
+		Button		1,All Off,#action all off
+		Button		1,Combat On,#optset enablecombat true
+		Button		1,Combat Off,#optset enablecombat false
+		Button		1,Buff On,#optset enablebuffing true
+		Button		1,Buff Off,#optset enablebuffing false
+		Button		1,Nav On,#optset enablenav true
+		Button		1,Nav Off,#optset enablenav false
+		Button		1,Loot All,#action loot all
+		Button		1,Loot Rares Only,#action rares only
+		ToggleButton		2,Summon On,Summon Off,#optset summonpets false,#optset summonpets true
+		Button		1,Peace Mode On,#optset idlepeacemode true
+		Button		1,Peace Mode Off,#optset idlepeacemode false
+		Button		2,Navigation Only,#action nav only
+		Button		2,Closest NPC,#action npc
+		Button		2,Closest Portal,#action ucp
+
+
 tab: Adv 
-tabvisible: false
-tabsize: 340, 510
-tabposition: 390, 50
-cols: 2  
-rows: 19 
-Button_01: 1
-Button_02: 1
-Button_03: 1
-Button_04: 1
-Button_05: 1
-Button_06: 1
-Button_07: 1
-Button_08: 1
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 1
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 1
-Button_22: 1
-Button_23: 2
-Button_24: 2
-Button_25: 2
-Button_26: 1
-Button_27: 1
-Button_28: 2
-Button_29: 1
-Button_30: 1
-Button_31: 1
-Button_32: 1
-Button_33: 1
-Button_34: 1
+	tabvisible: false
+	tabsize: 340, 510
+	tabposition: 390, 50
+	cols: 2  
+	rows: 16 
+		Button		1,Corners On,#optset followaroundcorners true
+		Button		1,Corners Off,#optset followaroundcorners false
+		Button		1,Jiggle On,#optset dojiggle true
+		Button		1,Jiggle Off,#optset dojiggle false
+		Button		1,Nav Boost On,#optset navpriorityboost true
+		Button		1,Nav Boost Off,#optset navpriorityboost false
+		Button		1,Loot Boost On,#optset lootpriorityboost true
+		Button		1,Loot Boost Off,#optset lootpriorityboost false
+		Button		1,Open Doors On,#optset opendoors true
+		Button		1,Open Doors Off,#optset opendoors false
+		Button		1,Autostack On,#optset autostack true
+		Button		1,Autostack Off,#optset autostack false
+		Button		1,Autocram On,#optset autocram true
+		Button		1,Autocram Off,#optset autocram false
+		Button		1,Use Dispel Items On,#optset usedispelitems true
+		Button		1,Use Dispel Items Off,#optset usedispelitems false
+		Button		1,Cast Dispel Self On,#optset castdispelself true
+		Button		1,Cast Dispel Self Off,#optset castdispelself false
+		Button		1,Rebuff When Idle On,#optset idlebufftopoff true
+		Button		1,Rebuff When Idle Off,#optset idlebufftopoff false
+		Button		1,Attack Height Low,#optset defaultmeleeattackheight 3
+		Button		1,Attack Height Medium,#optset defaultmeleeattackheight 2
+		Button		2,Attack Height High,#optset defaultmeleeattackheight 1
+		Button		1,Fastcast Buffs On,#optset fastcastbuffs true
+		Button		1,Fastcast Buffs Off,#optset fastcastbuffs false
+		Button		1,Breakable Turn To On,#optset usebreakableturnto true
+		Button		1,Breakable Turn To Off,#optset usebreakableturnto false
+		Button		1,Don't Shoot At Walls On,#optset useprojectileawareness true
+		Button		1,Don't Shoot At Walls Off,#optset useprojectileawareness false
+		Button		2,Go into Peace,/ub bc /mt combatstate peace
+
 tab: Recalls 
-tabvisible: false
-tabsize: 340, 350
-tabposition: 390, 50
-cols: 6 
-rows: 7 
-Button_01: 3
-Button_02: 3
-Button_03: 3
-Button_04: 3
-Button_05: 1
-Button_06: 1
-Button_07: 1
-Button_08: 1
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 1
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 1
-Button_22: 1
-Button_23: 1
-Button_24: 1
-Button_25: 1
-Button_26: 1
-Button_27: 1
-Button_28: 1
-Button_29: 1
-Button_30: 1
-Button_31: 1
-Button_32: 1
-Button_33: 1
-Button_34: 1
+	tabvisible: false
+	tabsize: 340, 350
+	tabposition: 390, 50
+	cols: 6 
+	rows: 7 
+		Button		3,Use Gateway,#action ucp
+		Button		3,Use Closest Portal,#action ucp
+		Button		3,Marketplace,/ub bc /mp
+		Button		3,Haven,/ub bc /haven
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+		Button		1,
+
+
+
 tab: Nav
-tabvisible: false
-tabsize: 340, 530
-tabposition: 390, 50
-cols: 2 
-rows: 22
-Button_01: 1
-Button_02: 1
-Button_03: 1
-Button_04: 1
-Button_05: 1
-Button_06: 1
-Button_07: 2
-Button_08: 1
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 2
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 2
-Button_22: 2
-Button_23: 1
-Button_24: 1
-Button_25: 1
-Button_26: 1 
-Button_27: 1
-Button_28: 1
-Button_29: 1
-Button_30: 1
-Button_31: 1
-Button_32: 1
-Button_33: 1
-Button_34: 1
-Button_35: 1
-Button_36: 1
-Button_37: 2
-Button_38: 2
-tab: Nav2
-tabvisible: false
-tabsize: 450, 450
-tabposition: 390, 50
-cols: 4 
-rows: 13
-Button_01: 1
-Button_02: 1
-Button_03: 1
-Button_04: 1
-Button_05: 1
-Button_06: 1
-Button_07: 1
-Button_08: 1
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 1
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 1
-Button_22: 1
-Button_23: 1
-Button_24: 1
-Button_25: 1
-Button_26: 1
-Button_27: 1
-Button_28: 1
-Button_29: 1
-Button_30: 1
-Button_31: 1
-Button_32: 1
-Button_33: 1
-Button_34: 1
-Button_35: 1
-Button_36: 1
-Button_37: 1
-Button_38: 1
-Button_39: 1
-Button_40: 1
-Button_41: 1
-Button_42: 1
-Button_43: 1
-Button_44: 1
-Button_45: 1
-Button_46: 1
-Button_47: 1
-Button_48: 1
-Button_49: 1
-Button_50: 1
-Button_51: 1
-Button_52: 1
-tab: Rngs
-tabvisible: false
-tabsize: 340, 400
-tabposition: 390, 50
-cols: 3  
-rows: 16
-Button_01: 1
-Button_02: 1
-Button_03: 1
-Button_04: 1
-Button_05: 1
-Button_06: 1
-Button_07: 1
-Button_08: 1
-Button_09: 1
-Button_10: 3
-Button_11: 3
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 1
-Button_17: 1
-Button_18: 3
-Button_19: 3
-Button_20: 1
-Button_21: 1
-Button_22: 1
-Button_23: 1
-Button_24: 1
-Button_25: 1
-Button_26: 3
-Button_27: 3
-Button_28: 3
-Button_29: 3
-Button_30: 1
-Button_31: 1
-Button_32: 1
+	tabvisible: false
+	tabsize: 340, 530
+	tabposition: 390, 50
+	cols: 2
+	rows: 20
+		Button		1,Tou-Tou KT's,#quest Tou-Tou Killtasks
+		Button		1,Frozen Valley KT's,#quest Frozen Valley Killtasks
+		Button		1,Hoshino KT's,#quest Hoshino Killtasks
+		Button		1,Rynthid KT's,#quest Rynthid Killtasks
+		Button		1,Graveyard KT's,#quest Graveyard Killtasks
+		Button		1,Neftet KT's,#quest Neftet Killtasks
+		Button		1,Teth KT's,#quest teth
+		Button		1,Hollow KT's,#quest hollow
+		Button		1,Peppermint Factory,#navto peppermint
+		Button		1,Buttersworth,#navto Buttersworth
+		Button		1,Dogs,#navto Dogs
+		Button		1,Banderlings,#navto Banderlings
+		Button		1,Grievvers,#navto grievvers
+		Button		1,Queen, #quest Queen
+		Button		1,Town Network,/ub bc /tn
+		Button		1,Alchemist,#navto Alchemist
+		Button		1,Jeweler,#navto Jeweler
+		Button		1,Barber,#navto Barber
+		Button		1,Ivory Crafter,#navto Ivory Crafter
+		Button		1,Leather Crafter,#navto Leather Crafter
+		Button		1,Stone Collector,#navto Stone Collector
+		Button		1,Collector,#navto Collector
+		Button		1,Buy Medkits,#action medkits
+		Button		1,Stipend,#navto Stipend
+		Button		2,Recomp at Jeeves,#action recomp
+		Button		2,Haven (version 22),/ub bc /haven
+		Button		2,Lyceum,#navto lyceum
+		Button		2,Dino Island,/ub bc /mt use Saurohaven Portal Gem
+		Button		2,Hatred Gem,/ub bc /mt use Stabilized Mausoleum of Hatred Portal Gem
+		Button		2,Rage Gem,/ub bc /mt use Stabilized Mausoleum of Rage Portal Gem
+		Button		2,DragonRoost,/ub bc /mt use Stabilized DragonRoost Island Portal Gem
+		Button		2,Fortress,/ub bc /ub use Ascension Fortress Portal Gem
+
+	tab: TN
+	tabvisible: false
+	tabsize: 450, 450
+	tabposition: 390, 50
+	cols: 4 
+	rows: 13
+		Button		1,Holtburg,#navto Holtburg
+		Button		1,Shoushi,#navto shoushi
+		Button		1,Yaraq,#navto yaraq
+		Button		1,Sanamar,#navto sanamar
+		Button		1,Cragstone,#navto cragstone
+		Button		1,Hebian-To,#navto hebian-to
+		Button		1,Zaikhal,#navto zaikhal
+		Button		1,Greenspire,#navto greenspire
+		Button		1,Arwic,#navto arwic
+		Button		1,Baishi,#navto baishi
+		Button		1,Al-Arqas,#navto al-arqas
+		Button		1,Bluespire,#navto bluespire
+		Button		1,Dryreach,#navto dryreach
+		Button		1,Kara,#navto kara
+		Button		1,Al-Jalima,#navto al-jalima
+		Button		1,Redspire,#navto redspire
+		Button		1,Eastham,#navto eastham
+		Button		1,Kryst,#navto kryst
+		Button		1,Khayyaban,#navto khayyaban
+		Button		1,Silyun,#navto silyun
+		Button		1,Fort Tethana,#navto tethana
+		Button		1,Lin,#navto Lin Portal
+		Button		1,Qalaba'r,#navto qalaba'r
+		Button		1,Eastwatch,#navto eastwatch
+		Button		1,Glenden Wood,#navto glenden wood
+		Button		1,Mayoi,#navto mayoi
+		Button		1,Samsur,#navto samsur
+		Button		1,Westwatch,#navto westwatch
+		Button		1,Lytelthorpe,#navto lytelthorpe
+		Button		1,Nanto,#navto nanto
+		Button		1,Tufa,#navto tufa
+		Button		1,Ahurenga,#navto ahurenga
+		Button		1,Plateau,#navto plateau
+		Button		1,Sawato,#navto sawato
+		Button		1,Uziz,#navto uziz
+		Button		1,Fiun Outpost,#navto fiun outpost
+		Button		1,Rithwic,#navto rithwic
+		Button		1,Yanshi,#navto yanshi
+		Button		1,Xarabydun,#navto xarabydun
+		Button		1,Timaru,#navto timaru
+		Button		1,Stonehold,#navto stonehold
+		Button		1,Macniall's Freehold,#navto freehold
+		Spacer		1,
+		Button		1,Neydissa Castle,#navto neydissa
+		Spacer		1,
+		Button		1,Tou-Tou,#navto tou-tou
+		Spacer		1,
+		Button		1,Danby's Outpost,#navto danby's outpost
+		Button		1,Holding,#navto holding
+		Spacer		1,
+		Button		1,Beachfort,#navto Beachfort
+		Button		1,Linvak Tukal,#navto linvak tukal
+
+
+	tab: Rngs
+	tabvisible: false
+	tabsize: 340, 400
+	tabposition: 390, 50
+	cols: 3  
+	rows: 16
+		StaticText	3,Range
+		Button		1,2,#optset attackdistance 0.0083
+		Button		1,5,#optset attackdistance 0.021
+		Button		1,10,#optset attackdistance 0.042
+		Button		1,15,#optset attackdistance 0.063
+		Button		1,20,#optset attackdistance 0.084
+		Button		1,25,#optset attackdistance 0.105
+		Button		1,30,#optset attackdistance 0.126
+		Button		1,40,#optset attackdistance 0.166
+		Button		1,45,#optset attackdistance 0.1875		
+		Button		1,50,#optset attackdistance 0.2085
+		Button		1,55,#optset attackdistance 0.2291
+		Button		1,60,#optset attackdistance 0.25
+		Button		3,Attack Range Max,#optset attackdistance 0.294
+		StaticText	3,Approach
+		Button		1,0,#optset approachdistance 0
+		Button		1,5,#optset approachdistance 0.021
+		Button		1,10,#optset approachdistance 0.042
+		Button		3,Approach Max,#optset approachdistance 0.294
+		StaticText	3,Follow
+		Button		1,1.7,#optset navclosestoprange 0.00625
+		Button		1,3,#optset navclosestoprange 0.0125
+		Button		1,5,#optset navclosestoprange 0.021
+		Button		1,6,#optset navclosestoprange 0.025
+		Button		1,10,#optset navclosestoprange 0.042
+		Button		1,25,#optset navclosestoprange 0.105
+		Button		3,Follow Max,#optset navclosestoprange 0.294
+		Spacer		3,
+		ToggleButton	3,Custom Pet Range,#optset petrangemode 1,#optset petrangemode 0
+		Button		1,5,#optset petcustomrange 0.021
+		Button		1,10,#optset petcustomrange 0.042
+		Button		1,15,#optset petcustomrange 0.063
+
+
 tab: Jump
-tabvisible: false
-tabsize: 340, 300
-tabposition: 390, 50
-cols: 9
-rows: 8 
-Button_01: 2
-Button_02: 1
-Button_03: 3
-Button_04: 0
-Button_05: 0
-Button_06: 1
-Button_07: 2
-Button_08: 2
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 2
-Button_15: 0
-Button_16: 1
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 1
-Button_22: 1
-Button_23: 2
-Button_24: 1
-Button_25: 1
-Button_26: 1
-Button_27: 1
-Button_28: 1
-Button_29: 1
-Button_30: 1
-Button_31: 1
-Button_32: 1
-Button_33: 2
-Button_34: 1
-Button_35: 1
-Button_36: 1
-Button_37: 1
-Button_38: 1
-Button_39: 2
-Button_40: 3
-Button_41: 1
-Button_42: 1
-Button_43: 1
-Button_44: 3
-Button_45: 3
-Button_46: 1
-Button_47: 1
-Button_48: 1
-Button_49: 3
-Button_50: 4
-Button_51: 1
-Button_52: 4
+	tabvisible: false
+	tabsize: 340, 300
+	tabposition: 390, 50
+	cols: 9
+	rows: 8
+		Button		2,Jump 100%,#jump 700 false 1000
+		Spacer		1,
+		Button		3,Tap Jump,#action tap jump
+		Spacer		1,
+		Button		2,Jump 75%,#jump 700 false 750
+		Button		2,Jump 50%,#jump 700 false 500
+		Spacer		5,
+		Button		2,Jump 25%,#jump 700 false 250
+		Spacer		3,
+		Button		1,NW,#action face northwest
+		Button		1,N,#action face north
+		Button		1,NE,#action face northeast
+		Spacer		4,
+		Spacer		3,
+		Button		1,W,#action face west
+		Spacer		1,
+		Button		1,E,#action face east
+		Spacer		4,
+		Spacer		3,
+		Button		1,SW,#action face southwest
+		Button		1,S,#action face south
+		Button		1,SE,#action face southeast
+		Spacer		4,
+		Button		3,Shift Jump 100%,#jump 700 true 1000
+		Spacer		1,
+		Spacer		1,
+		Spacer		1,
+		Button		3,Shift Jump 75%,#jump 700 true 750
+		Button		3,Shift Jump 50%,#jump 700 true 500
+		Spacer		1,
+		Spacer		1,
+		Spacer		1,
+		Button		3,Shift Jump 25%,#jump 700 true 250
+		Button		4,Tap Jump Forward,#jump 700 false 50 
+		Spacer		1,
+		Button		4,Shift Tap Jump Forward,#jump 700 true 50
+
+
 tab: Subway
-tabvisible: false
-tabsize: 750, 450
-tabposition: 390, 50
-cols: 5
-rows: 9
-Button_01: 1
-Button_02: 1
-Button_03: 1
-Button_04: 1
-Button_05: 1
-Button_06: 1
-Button_07: 1
-Button_08: 1
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 1
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 1
-Button_22: 1
-Button_23: 1
-Button_24: 1
-Button_25: 1
-Button_26: 1
-Button_27: 1
-Button_28: 1
-Button_29: 1
-Button_30: 1
-Button_31: 1
-Button_32: 1
-Button_33: 1
-Button_34: 1
-Button_35: 1
-Button_36: 1
-Button_37: 1
-Button_38: 1
-Button_39: 1
-Button_40: 1
-Button_41: 1
-Button_42: 1
-Button_43: 1
-Button_44: 1
-Button_45: 1
-Button_46: 1
-Button_47: 1
-Button_48: 1
-Button_49: 1
-Button_50: 1
-tab: Portals
-tabvisible: false
-tabsize: 340, 450
-tabposition: 390, 50
-cols: 3 
-rows: 10
-Button_01: 1
-Button_02: 1
-Button_03: 1
-Button_04: 1
-Button_05: 1
-Button_06: 1
-Button_07: 1
-Button_08: 1
-Button_09: 1
-Button_10: 1
-Button_11: 1
-Button_12: 1
-Button_13: 1
-Button_14: 1
-Button_15: 1
-Button_16: 1
-Button_17: 1
-Button_18: 1
-Button_19: 1
-Button_20: 1
-Button_21: 1
-Button_22: 1
-Button_23: 1
-Button_24: 1
-Button_25: 1
-Button_26: 1
-Button_27: 1
-Button_28: 1
-Button_29: 1
-Button_30: 1
-tab: Demon
-tabvisible: false
-tabsize: 340, 600
-tabposition: 390, 50
-cols: 6
-rows: 21
-Button_01: 3
-Button_02: 3
-Button_03: 3
-Button_04: 3
-Button_05: 3
-Button_06: 3
-Button_07: 3
-Button_08: 3
-Button_09: 3
-Button_10: 3
-Button_11: 3
-Button_12: 3
-Button_13: 3
-Button_14: 3
-Button_15: 3
-Button_16: 3
-Button_17: 3
-Button_18: 3
-Button_19: 3
-Button_20: 3
-Button_21: 2
-Button_22: 2
-Button_23: 2
-Button_24: 6
-Button_25: 6
-Button_26: 6
-Button_27: 6
-Button_28: 6
-Button_29: 6
-Button_30: 6
-Button_31: 6
-Button_32: 6
-Button_33: 2
-Button_34: 2
-Button_35: 2
+	tabvisible: false
+	tabsize: 750, 450
+	tabposition: 390, 50
+	cols: 5
+	rows: 9
+		Button		1,Withered Beach,#navto Withered Beach
+		Button		1,Asheron's Castle,#navto Asheron's Castle
+		Button		1,Candeth Keep,#navto Candeth Keep Subway
+		Button		1,Aerlinthe Island,#navto Aerlinthe Island Portal
+		Button		1,Stonehold,#navto Stonehold
+		Button		1,Abayar's Laboratory,#navto Abayar's Laboratory
+		Button		1,Humming Crystal,#navto Humming Crystal
+		Button		1,Wilderness Citadel,#navto Wilderness Citadel
+		Button		1,Ridge Citadel,#navto Ridge Citadel
+		Button		1,Mountain Citadel,#navto Mountain Citadel
+		Button		1,Desert Citadel,#navto Desert Citadel
+		Button		1,Jungle Shadows,#navto Jungle Shadows
+		Button		1,Malignant Tabernacle,#navto Malignant Tabernacle
+		Button		1,Venemous Nidus,#navto Venemous Nidus
+		Button		1,Convergent Median,#navto Convergent Median
+		Button		1,Paradox Encampment Tent,#navto Paradox Encampment Tent
+		Button		1,Portal to Tou-Tou,#navto Portal to Tou-Tou
+		Button		1,The Royal Tent,#navto Royal Tent
+		Button		1,Frozen Valley,#navto Frozen Valley
+		Button		1,Viridian Rise Access,#navto Viridian Rise Access
+		Button		1,Rynthid Encampment,#navto Rynthid Encampment
+		Button		1,Crystalline Crag,#navto Crystalline Crag
+		Button		1,Ayan Baqur,#navto Ayan Baqur
+		Button		1,Empyrean Facility,#navto Empyrean Facility
+		Button		1,Bandit Castle,#navto Bandit Castle
+		Button		1,Hall of Metos(2),#navto Hall of Metos
+		Button		1,Nexus Portal,#navto Nexus Portal
+		Button		1,Black Spawn Dens(3),#navto Black Spawn Dens
+		Spacer		2,
+		Spacer		1,
+		Button		1,Thrungus Hole,#navto thrungus hole
+		Button		1,Subway Surface,#navto Subway Surface
+		Button		1,Dark Design,#navto Dark Design
+		Button		1,Feeding Tubes,#navto Feeding Tubes
+		Button		1,Creepy Canyon,#navto Creepy Canyon
+		Button		1,Hidden Cavern,#navto Hidden Cavern
+		Button		1,Black Death Catacombs,#navto Black Death Catacombs
+		Button		1,Singularity Bore,#navto Singularity Bore
+		Button		1,Mines of Despair,#navto Mines of Despair
+		Button		1,Underground City,#navto Underground City
+		Button		1,Insatiable Vault,#navto Insatiable Vault
+		Button		1,Augmentation Realm,#navto Augmentation Realm
+		Button		1,Egg Orchard,#navto Egg Orchard
+		Button		1,Path of the Blind,#navto Path of the Blind
+
+
+	tab: Portals
+	tabvisible: false
+	tabsize: 340, 450
+	tabposition: 390, 50
+	cols: 3 
+	rows: 10
+		StaticText	1,Ron
+		Button		1,Teth,#action sum7a
+		Button		1,Banders,#action sum7b
+		StaticText	1,RonUSMC
+		Button		1,Teth,#action sum4a
+		Button		1,Teth Incursion,#action sum4b
+		StaticText	1,Ron II
+		Button		1,Teth,#action sum6a
+		Button		1,BDC,#action sum6b
+		StaticText	1,Ron IV
+		Button		1,Teth,#action sum3a
+		Button		1,BDC,#action sum3b
+		StaticText	1,Ron V
+		Button		1,Teth,#action sum2a
+		Button		1,Banders,#action sum2b
+		StaticText	1,Ron VI
+		Button		1,Teth,#action sum1a
+		Button		1,Sir Galen,#action sum1b
+		StaticText	1,Demonic
+		Button		1,Teth,#action sum5a
+		Button		1,Butter,#action sum5b
+		StaticText	1,Hellhound
+		Button		1,Teth,#action sum9a
+		Button		1,Dino Eaters,#action sum9b
+		StaticText	1,Gargoyle
+		Button		1,Teth,#action sum8a
+		Button		1,BDC,#action sum8b
+		Spacer		1
+		Spacer		1
+		Button		1,closest portal,#action ucp
+
+
+	tab: Demon
+	tabvisible: false
+	tabsize: 340, 620
+	tabposition: 390, 50
+	cols: 6
+	rows: 25
+		StaticText	6,Quests
+		Button		3,#navto bluelady,#navto bluelady
+		Button		3,#quest bluelady,#quest bluelady
+		Button		3,#navto curator,#navto curator
+		Button		3,#quest curator,#quest curator
+		Button		3,#quest Bear, #quest Bear
+		Button		3,#quest Doll, #quest Doll
+		Button		3,#quest Mukkir, #quest Mukkir
+		Button		3,#quest Queen,#quest queen
+		Button		3,#quest Monouga,#quest monouga
+		Button		3,#quest dino,#quest dino
+		Button		3,#quest Dragon,#quest Dragon
+		Button		3,#quest FortBSD,#quest fortbsd
+		Button		3,#quest matron,#quest matron
+		Button		3,#navto matron,#navto matron
+		Button		3,#quest monkeys,#quest monkeys
+		Button		3,#navto monkeys,#navto monkeys
+		Button		3,#quest lugians,#quest lugians
+		Button		3,#navto lugians,#navto lugians
+		Button		3,#quest eaters,#quest eaters
+		Button		3,#navto eaters,#navto eaters
+		Button		3,#quest dolls,#quest dolls
+		Button		3,#quest forge,#quest forge
+		StaticText	6,Commands
+		Button		2,Fellow Quit,/ub bc /ub fellow quit
+		Button		2,#recruit,#recruit
+		Button		2,Find Group,#findgroup
+		Button		2,Reload Loot,/ub bc /vt loot load Demonic12.utl
+		Button		2,Rares Only,/ub bc /vt loot load RaresOnly.utl
+		Button		2,#checkg,#checkg
+		Button		2,#checku,#checku
+		Button		2,#check,#check
+		Spacer		2
+		StaticText	6,Modes
+		Button		2,mode BSD,#mode bsd
+		Button		2,mode Path,#mode Path
+		Button		2,mode Teth,#mode teth
+		Button		2,mode Monouga, #mode monouga
+		Button		2,mode Dragon, #mode dragon
+		Button		2,mode Rage,#mode rage
+		Button		2,mode forge, #mode forge
+		Button		2,mode Bow, #mode bow
+		Button		2,mode Bugs, #mode bugs
+		Button		3,mode OFF, #mode off		
+		Button		3,mode RESET, #mode reset
+		Button		2,#quest flags,#quest flags
+		Button		2,Lum Check,#action lumcheck
+		Button		2,#navto Lum,#navto lum
+		Button		3,Millicent,#navto millicent
+		Button		3,#ap,/ub bc /mt autopack
+		Button		3,/vt stop,/ub bc /vt stop
+		Button		3,/vt start,/ub bc /vt start
+		Button		2,Camper,/ub bc /vt meta load DemonicCamper
+		Button		2,Robot,/ub bc /vt meta load DemonicRobot
+		Button		2,Control,/ub bc /vt meta load DemonicControl
+
+
+	tab: Pets
+	tabvisible: true
+	tabsize: 400, 105
+	tabposition: 1350, 20
+	cols: 9
+	rows: 3
+		Button		1,B1,#summon Bludgeon1
+		Button		1,S1,#summon Slash1
+		Button		1,P1,#summon Pierce1
+		Button		1,A1,#summon Acid1
+		Button		1,Fr1,#summon Frost1
+		Button		1,Fi1,#summon Fire1
+		Button		1,L1,#summon Lightning1
+		Button		2,Bz,#summon Bz
+		Button		1,B2,#summon Bludgeon2
+		Button		1,S2,#summon Slash2
+		Button		1,P2,#summon Pierce2
+		Button		1,A2,#summon Acid2
+		Button		1,Fr2,#summon Frost2
+		Button		1,Fi2,#summon Fire2
+		Button		1,L2,#summon Lightning2
+		Button		2,Gu,#summon Guardian
+		Button		1,B3,#summon Bludgeon3
+		Button		1,S3,#summon Slash3
+		Button		1,P3,#summon Pierce3
+		Button		1,A3,#summon Acid3
+		Button		1,Fr3,#summon Frost3
+		Button		1,Fi3,#summon Fire3
+		Button		1,L3,#summon Lightning3
