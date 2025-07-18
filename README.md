@@ -34,21 +34,22 @@ DemonicControl is a comprehensive automation meta script for Asheron's Call that
 
 ### Option 1
 
-1. Download the [installer (right click Save As..)](https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/dist/DemonicInstaller.exe) and after it finishes double click it. You will see a message when it finishes. 
+1. Download the [installer](https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/dist/DemonicInstaller.exe) and after it finishes double click it. You will see a message when it finishes. 
 
 #### The installer includes
 
 > To VirindiTank folder:
+
 - DemonicControl.met - the Meta
- - Demonic12.utl - Default loot profile, change it in settings
- - RaresOnly.utl - bare minimum loot profile used in some places
+- Demonic12.utl - Default loot profile, change it in settings
+- RaresOnly.utl - bare minimum loot profile used in some places
 
 > To chaoshelper folder:
 
 - chaoshelper.ini - configuration file for ChaosHelper
- - ChaosHelper.dll - Custom version of ChaosHelper that I built, [it shows colors](https://i.imgur.com/VUhz1kh.png)
- - DemonicControl.txt - ChaosHelper profile
- - DemonicControl.Layout - ChaosHelper profile
+- ChaosHelper.dll - Custom version of ChaosHelper that I built, [it shows colors](https://i.imgur.com/VUhz1kh.png)
+- DemonicControl.txt - ChaosHelper profile
+- DemonicControl.Layout - ChaosHelper profile
 
 ### Option 2
 
