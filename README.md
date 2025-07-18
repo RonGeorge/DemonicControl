@@ -28,6 +28,7 @@ DemonicControl is a comprehensive automation meta script for Asheron's Call that
 - Mudsort v2.1.6+ - <https://github.com/mudzereli/mudsort/>
 - Utility Belt v.0.2.7 - <https://utilitybelt.gitlab.io/>
 - Chaos Helper v2.2.5 - <https://github.com/Oonej/ChaosHelper>
+- I built a custom version of ChaosHelper that lets you customize buttons with color, [grab it here](source\chaoshelper_colored.zip).
 
 ## Installation
 
