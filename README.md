@@ -27,14 +27,14 @@ DemonicControl is a comprehensive automation meta script for Asheron's Call that
 - Mag Tools v2.1.6+ - <https://github.com/Mag-nus/Mag-Plugins/releases/tag/Mag-Tools-v2.1.6>
 - Mudsort v2.1.6+ - <https://github.com/mudzereli/mudsort/>
 - Utility Belt v.0.2.7 - <https://utilitybelt.gitlab.io/>
-- Chaos Helper v2.2.5 - <https://github.com/Oonej/ChaosHelper>
+- Chaos Helper v2.2.6.1 - <https://github.com/Oonej/ChaosHelper>
 - I built a custom version of ChaosHelper that lets you customize buttons with color, [grab it here](source\chaoshelper_colored.zip).
 
 ## Installation
 
 ### Option 1
 
-1. Download the [installer](dist\DemonicControl_Installer.exe) and after it finishes double click it. You will see a message when it finishes. 
+1. Download the [installer (right click Save As..)](https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/dist/DemonicInstaller.exe) and after it finishes double click it. You will see a message when it finishes. 
 
 #### The installer includes
 
