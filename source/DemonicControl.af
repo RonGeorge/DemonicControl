@@ -38,7 +38,7 @@
 ~~ }																					
 
 
-STATE: {***DemonicControlv228***} ~~ {
+STATE: {***DemonicControlv250***} ~~ {
 	IF:	Expr {getgvar[remote]==true}
 		DO:	DoAll
 				CreateView {Remote} {<?xml version="1.0"?><view width="168" height="217" title="Demonic Control"><control type="layout"><control type="button" name="All On" left="6" top="6" width="75" height="15" text="All On" setstate="Default2" actionexpr="chatbox[\#action all on]" /><control type="button" name="All Off" left="87" top="6" width="75" height="15" text="All Off" setstate="Default2" actionexpr="chatbox[\#action all off]" /><control type="button" name="Follow" left="6" top="27" width="75" height="15" text="Follow" setstate="Default2" actionexpr="chatbox[\#action follow]" /><control type="button" name="Stay" left="87" top="27" width="75" height="15" text="Stay" setstate="Default2" actionexpr="chatbox[\#action stay]" /><control type="button" name="Nav Only" left="87" top="48" width="75" height="15" text="Nav Only" setstate="Default2" actionexpr="chatbox[\#action nav only]" /><control type="button" name="Forcebuff" left="6" top="48" width="75" height="15" text="Forcebuff" setstate="Default2" actionexpr="chatbox[\#action buff]" /><control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="Default2" actionexpr="chatbox[\#optset enablecombat true]" /><control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="Default2" actionexpr="chatbox[\#optset enablecombat false]" /><control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Default2" actionexpr="chatbox[\#optset enablenav false]" /><control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="Default2" actionexpr="chatbox[\#optset enablenav true]" /><control type="button" name="Rares Only" left="87" top="111" width="75" height="15" text="Rares Only" setstate="Default2" actionexpr="chatbox[\#action rares only]" /><control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Default2" actionexpr="chatbox[\#action loot all]" /><control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing true]" /><control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing false]" /><control type="button" name="Portal" left="6" top="174" width="75" height="15" text="Portal" setstate="Default2" actionexpr="chatbox[\#action ucp]" /><control type="button" name="NPC" left="87" top="174" width="75" height="15" text="NPC" setstate="Default2" actionexpr="chatbox[\#action npc]" /><control type="button" name="Vendor" left="6" top="195" width="75" height="15" text="Vendor" setstate="Default2" actionexpr="chatbox[\#action ucv]" /></control></view>}
@@ -68,9 +68,8 @@ STATE: {***DemonicControlv228***} ~~ {
 		DO:	DoAll
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]}
-				DoExpr {testgvar[watchlist]&&echo[`Watchlist found.`,13]||setgvar[watchlist,listcreate[]]}
 				DoExpr {echo[`--------------`,13]}
-				DoExpr {echo[`Welcome to DemonicControl v2.25`,5]}
+				DoExpr {echo[`Welcome to DemonicControl v2.50`,5]}
 				DoExpr {echo[`--------------`,13]} 
 
 	IF:	Always
@@ -93,8 +92,6 @@ STATE: {Default} ~~ {
 		DO: DoAll
 				DoExpr {testgvar[charlist]||setgvar[charlist,listcreate[getcharstringprop[1]]]}
 				DoExpr {listcontains[getgvar[charlist],getcharstringprop[1]]||listadd[getgvar[charlist],getcharstringprop[1]]}
-				~~ DoExpr {testgvar[leaderlist]||setgvar[leaderlist,listcreate[Ron VI,Ronusmc,Demonic]]}
-				~~ DoExpr {setgvar[leaderlist,listcreate[Ron VI,Ronusmc,Demonic]]}
 	IF:	Always
 		DO:	DoAll
 				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]}
@@ -114,7 +111,7 @@ STATE: {Default} ~~ {
 		DO: DoAll 
 				DoExpr {setvar[DemonicOptions, 1]}
 				Chat {/vt echo Config Loaded}
-				SetState {***DemonicControlv228***}
+				SetState {***DemonicControlv250***}
 ~~ }
 STATE: {Action} ~~ {
 	IF: Expr {(Exchange)#getvar[capturegroup_actiontext]}
@@ -206,10 +203,10 @@ STATE: {Action} ~~ {
 	IF: All 
 			Expr {(LumCheck)#getvar[capturegroup_actiontext]}
 		DO: DoAll 
-				DoExpr {echo[`Aura of Invulnerability is `+getcharintprop[334],13}
-				DoExpr {echo[`Aura of the World is `+getcharintprop[365],13}
-				DoExpr {echo[`Aura Purity is `+getcharintprop[342],13}
-				DoExpr {echo[`Aura Destruction is `+getcharintprop[333],13}
+				DoExpr {echo[`Aura of Invulnerability is `+getcharintprop[334],13]}
+				DoExpr {echo[`Aura of the World is `+getcharintprop[365],13]}
+				DoExpr {echo[`Aura Purity is `+getcharintprop[342],13]}
+				DoExpr {echo[`Aura Destruction is `+getcharintprop[333],13]}
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF: All 
@@ -629,7 +626,7 @@ STATE: {Action} ~~ {
 				DoExpr {clearvar[capturegroup_actiontext]}
 				SetState {Default2}
 	IF:	All
-			Not Expr {getvar[capturegroup_actiontext]#`ReadContracts|Medkits|AutoCraft|disband|buff|rares only|Backpack Open|npc|ucp|fpo|select|afk|stay|recomp|follow|Face East|Face West|Face North|Face South|Face Southeast|Face Southwest|Face Northeast|Face Northwest|fellow|ucv|All On|All Off|loot all|nav only|tap jump|sum\d+(a|b)`}
+			Not Expr {getvar[capturegroup_actiontext]#`ReadContracts|Medkits|disband|buff|rares only|Backpack Open|npc|ucp|fpo|select|afk|stay|recomp|follow|Face East|Face West|Face North|Face South|Face Southeast|Face Southwest|Face Northeast|Face Northwest|fellow|ucv|All On|All Off|loot all|nav only|tap jump|sum\d+(a|b)`}
 			Expr {$summonsecondary==0&&$summonprimary==0}
 		DO:	DoAll
 				DoExpr {clearvar[capturegroup_actiontext]}
@@ -649,7 +646,7 @@ STATE: {Command} ~~ {
 	IF: Expr {testvar[CommandInit]==0}
 		DO: DoAll
 				DoExpr {setvar[CommandInit,1]}
-				DoExpr {clearvar[capturegroup_command]&&clearvar[capturegroup_arg1]&&clearvar[capturegroup_arg2]&&clearvar[capturegroup_saythink]&&clearvar[capturegroup_name]&&clearvar[capturegroup_0]&&clearvar[capturecolor)&&clearvar[speaker]}
+				DoExpr {clearvar[capturegroup_command]&&clearvar[capturegroup_arg1]&&clearvar[capturegroup_arg2]&&clearvar[capturegroup_saythink]&&clearvar[capturegroup_name]&&clearvar[capturegroup_0]&&clearvar[capturecolor]&&clearvar[speaker]}
 
 	IF:	All 
 			ChatCapture {^(?:\[[A-z]+\] )?(?:You|.*\<Tell:IIDString:[^:]+:(?<name>[^\<]+)\>[^<]+<\\(?:Tell|Tell:IIDString:[^:]+:[^>]+)>)\s+(?:says?|say),\s+"#(?<command>[^\s"]+)(?:\s+(?<arg1>[^\s"]+)(?:\s+(?<arg2>[^\s"]+))?)?"$} {}
@@ -715,15 +712,6 @@ STATE: {Default2} ~~ {
 	IF: ChatMatch {#chest}
 		DO: SetState {Chest}
 
-
-	~~ IF: Expr {testvar[activemode]}
-		~~ DO: DoExpr {echo[`|||  Active Mode: `+$activemode+`  |||`,20]}
-	~~ IF: All 
-			~~ Death
-			~~ Any 
-				~~ Expr {$activemode==dino}
-				~~ Expr {$activemode==bsd}
-		~~ DO: SetState {ActiveDead}
 	IF: All 
 			Any 
 				Expr {vtgetsetting[`Recharge-Norm-HitP`]==0]}
@@ -734,22 +722,18 @@ STATE: {Default2} ~~ {
 				ChatExpr {`/tell `+getcharstringprop[1]+`, Vitals changed.`}
 ~~ Inventory Checks
 	IF: All
-			Expr {$activemode==bsd}
 			SecsInStateGE 4
 			Any 
 				ItemCountGE 1 {Vandal Tusk}
 				ItemCountGE 1 {Demolisher Tusk}
 				ItemCountGE 1 {Conqueror Tusk}
+				ItemCountGE 1 {Wrecker Tusk}
 		DO: Chat {/f Got my Tusk!}
 	IF: All
-			Expr {$activemode==bluelady}
+			BlockE 8B640000
 			SecsInStateGE 4
 			ItemCountGE 1 {Bottled Water}
 		DO: Chat {/f Got Water!}
-	IF: All 
-			Expr {testvar[raretracker]}
-			SecsInStateGE 20
-		DO: SetState {RareTracker}
 	IF: All 
 			Expr {$activemode==rats}
 			ItemCountGE 10 {Calamitous Rat Tail}
@@ -964,34 +948,22 @@ STATE: {Default2} ~~ {
 		DO: DoAll
 				DoExpr {listmap[listcreate[`dinoelder`,`dinofangs`,`dinoterries`],`clearvar[$1]`]}
 				DoExpr {cleargvar[dinodone]}
-~~ End of Dino Notify
-~~ ~~ Being death watching
-	~~ IF: All
-			~~ ChatCapture {^Your fellow (?<deadname>.*) has died\!$} {}
-			~~ Any 
-				~~ Expr {listcontains[getgvar[charlist],getvar[capturegroup_deadname]]}
-				~~ Expr {listcontains[getgvar[watchlist],getvar[capturegroup_deadname]]}
-			~~ Any 
-				~~ Expr {$activemode==dino}
-		~~ DO: DoAll
-				~~ SetOpt {enablelooting} {false}
-				~~ SetOpt {enablecombat} {false}
-				~~ SetOpt {enablenav} {true}
-				~~ DoExpr {clearvar[capturegroup_deadname]}
-				~~ SetState {ActiveMover}
-	~~ IF: All
-			~~ Any 
-				~~ Expr {$activemode==dragon}
-				~~ Expr {$activemode==rage}
-			~~ ChatCapture {^Your fellow (?<deadname>.*) has died\!$} {}
-			~~ Expr {listcontains[getgvar[charlist],getvar[capturegroup_deadname]]}
-		~~ DO: DoAll
-				~~ SetOpt {enablelooting} {false}
-				~~ SetOpt {enablecombat} {false}
-				~~ SetOpt {enablenav} {true}
-				~~ DoExpr {clearvar[capturegroup_deadname]}
-				~~ SetState {ActiveMover}
-~~ ~~ End death watching
+
+
+
+
+
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#keycount\"$} {}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+		DO: DoAll
+				DoExpr {echo[`You have `+getitemcountininventorybyname[Durable Ascended Moon Chest Key]+` Durable Ascended Moon Chest Keys`,5]}
+				DoExpr {echo[`You have `+getitemcountininventorybyname[Durable Primal Moon Chest Keys]+` Durable Primal Moon Chest Keys`,5]}
+				SetState {Default2}
+
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#summon (?<elementtext>.*)\"$} {}
 			Any
@@ -1000,6 +972,18 @@ STATE: {Default2} ~~ {
 				Expr {getvar[capturegroup_saythink]==think}
 		DO: DoAll
 				SetState {Summon}
+
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#attackdistance (?<distance>([2-9]|[1-6][0-9]|70))\"$} {}
+			Any
+				Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
+				Expr {getvar[capturegroup_saythink]==say}
+				Expr {getvar[capturegroup_saythink]==think}
+		DO: DoAll
+				DoExpr {vtsetsetting[AttackDistance,cstr[cnumber[getregexmatch[getvar[capturegroup_distance],`([2-9]|[1-6][0-9]|70)\$`]]/240]]}
+				DoExpr {clearvar[capturegroup_distance]}
+				SetState {Default2}
+
 
 	IF: All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#fire\"$} {}
@@ -1343,17 +1327,6 @@ STATE: {Default2} ~~ {
 		DO:	DoAll
 				ChatExpr {`/ub bc /ub follow `+wobjectgetstringprop[wobjectgetselection[],1]}
 				SetState {Default2}
-	~~ IF:	All
-			~~ ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#chase (?<pursued>.*)\"$} {}
-			~~ Any
-				~~ Expr {listcontains[getgvar[charlist],getvar[capturegroup_name]]}
-				~~ Expr {getvar[capturegroup_saythink]==say}
-				~~ Expr {getvar[capturegroup_saythink]==think}
-			~~ Expr {getvar[capturegroup_pursued]!=getcharstringprop[1]}
-		~~ DO:	DoAll
-				~~ ChatExpr {`/ub follow `+getvar[capturegroup_pursued]}
-				~~ DoExpr {clearvar[capturegroup_pursued]}
-				~~ SetState {Default2}
 	IF:	All
 			Expr {getvar[goto]==true}
 			Expr {getvar[capturegroup_coords]==coordinatetostring[getplayercoordinates[]]}
@@ -1556,246 +1529,246 @@ STATE: {NavTo} ~~ {
 		DO:	DoAll
 				EmbedNav nav00_empty {[none]}
 				Chat {/tn}
-	IF:	Expr {(Vincadi)#getvar[capturegroup_navtext]}
+	IF:	Expr {(Vincadi)#getvar[capturegroup_navtext]} ~~ Virindi Mask Maker
 		DO:	DoAll
-				EmbedNav nav58_vincadi_ {[none]}
+				EmbedNav nav58_vincadi {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Eastham)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav19___None_ {[none]}
+				EmbedNav nav19_eastham {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Eastham Mask Maker)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/vt opt set opendoors true}
-				EmbedNav nav57_maskmaker_ {[none]}
+				EmbedNav nav57_maskmaker {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Ahurenga)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav10___None_ {[none]}
+				EmbedNav nav10_ahurenga {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Al-Arqas)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav11___None_ {[none]}
+				EmbedNav nav11_al_arqas {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Al-Jalima)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav12___None_ {[none]}
+				EmbedNav nav12_al_jalima {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Arwic)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav13___None_ {[none]}
+				EmbedNav nav13_arwic {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Baishi)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav14___None_ {[none]}
+				EmbedNav nav14_baishi {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Bluespire)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav15___None_ {[none]}
+				EmbedNav nav15_bluespire {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Cragstone)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav16___None_ {[none]}
+				EmbedNav nav16_candeth {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Danby's Outpost)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav17___None_ {[none]}
+				EmbedNav nav17_danbys_outpost {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Dryreach)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav18___None_ {[none]}
+				EmbedNav nav18_dryreach {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Eastwatch)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav20___None_ {[none]}
+				EmbedNav nav20_eastwatch {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Fiun Outpost)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav21___None_ {[none]}
+				EmbedNav nav21_fiun_outpost {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Freehold)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav22___None_ {[none]}
+				EmbedNav nav22_fort_tethana {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Greenspire)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav23___None_ {[none]}
+				EmbedNav nav23_greenspire {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Hebian-to)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav24___None_ {[none]}
+				EmbedNav nav24_hebian_to {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Holtburg)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav25___None_ {[none]}
+				EmbedNav nav25_holtburg {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Kara)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav26___None_ {[none]}
+				EmbedNav nav26_kara {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Khayyaban)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav27___None_ {[none]}
+				EmbedNav nav27_kryst {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Kryst)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav28___None_ {[none]}
+				EmbedNav nav28_lin {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Lin Portal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav29___None_ {[none]}
+				EmbedNav nav29_linvak_tukal {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Linvak Tukal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav30___None_ {[none]}
+				EmbedNav nav30_linvak_tukal {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Lytelthorpe)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav31___None_ {[none]}
+				EmbedNav nav31_lytelthorpe {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Mayoi)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav32___None_ {[none]}
+				EmbedNav nav32_mayoi {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Nanto)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav33___None_ {[none]}
+				EmbedNav nav33_nanto {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Neydissa)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav34___None_ {[none]}
+				EmbedNav nav34_neydisa_castle {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Oolutanga's Refuge)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav35___None_ {[none]}
+				EmbedNav nav35_oolutangas_refuge {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Redspire)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav36___None_ {[none]}
+				EmbedNav nav36_redspire {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Plateau)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav37___None_ {[none]}
+				EmbedNav nav37_plateau {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Qalaba'r)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav38___None_ {[none]}
+				EmbedNav nav38_qalabar {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Rithwic)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav39___None_ {[none]}
+				EmbedNav nav39_rithwic {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Samsur)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav40___None_ {[none]}
+				EmbedNav nav40_samsur {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Sanamar)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav41___None_ {[none]}
+				EmbedNav nav41_sanamar {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Sawato)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav42___None_ {[none]}
+				EmbedNav nav42_sawato {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Shoushi)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav43___None_ {[none]}
+				EmbedNav nav43_shoushi {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Silyun)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav44___None_ {[none]}
+				EmbedNav nav44_tou_tou {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Stonehold)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav45___None_ {[none]}
+				EmbedNav nav45_dryreach {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Tethana)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav46___None_ {[none]}
+				EmbedNav nav46_fort_tethana {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Timaru)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav47___None_ {[none]}
+				EmbedNav nav47_yaraq {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Tou-Tou)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav48___None_ {[none]}
+				EmbedNav nav48_tou_tou {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Tufa)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav49___None_ {[none]}
+				EmbedNav nav49_tufa {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Uziz)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav50___None_ {[none]}
+				EmbedNav nav50_uziz {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Westwatch)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav51___None_ {[none]}
+				EmbedNav nav51_xarabyd {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Xarabydun)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav52___None_ {[none]}
+				EmbedNav nav52_xarabydun {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Yanshi)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav53___None_ {[none]}
+				EmbedNav nav53_zaikhal {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Yaraq)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav54___None_ {[none]}
+				EmbedNav nav54_yaraq {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Zaikhal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav55___None_ {[none]}
+				EmbedNav nav55_zaikhal {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Not Expr {(Ahurenga\|Al-Arqas\|Al-Jalima\|Arwic\|Baishi\|Bluespire\|Cragstone\|Danby's Outpost\|Dryreach\|Eastham\|Eastwatch\|Fiun Outpost\|Freehold\|Greenspire\|Hebian-to\|Holtburg\|Kara\|Khayyaban\|Kryst\|Lin Portal\|Linvak Tukal\|Lytelthorpe\|Mayoi\|Nanto\|Neydissa\|Oolutanga's Refuge\|Plateau\|Qalaba'r\|Redspire\|Rithwic\|Samsur\|Sanamar\|Sawato\|Shoushi\|Silyun\|Stonehold\|Tethana\|Timaru\|Tou-Tou\|Tufa\|Uziz\|Westwatch\|Xarabydun\|Yanshi\|Yaraq\|Zaikhal\|Eastham Mask Maker\|Vincadi\|Jeweler\|Lyceum)#getvar[capturegroup_navtext]}
@@ -1890,7 +1863,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Drunken Madman)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav376__DrunkenMadman {Drunken}
+				EmbedNav nav376_drunkenMadman {Drunken}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All 
@@ -1989,12 +1962,12 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 		DO: DoAll
 				Chat {/sub}
 				SetOpt {navclosestoprange} {0.00833} ~~set follow to 2 for corners
-				EmbedNav nav312___castlelum {AsheronsCastle}
-				DoExpr {echo[`Aura of Invulnerability is `+getcharintprop[334],13}
-				DoExpr {echo[`Aura of Valor is `+getcharintprop[333],13}
-				DoExpr {echo[`Aura of the World is `+getcharintprop[365],13}
-				DoExpr {echo[`Aura Purity is `+getcharintprop[342],13}
-				DoExpr {echo[`Aura Destruction is `+getcharintprop[333],13}
+				EmbedNav nav312_castlelum {AsheronsCastle}
+				DoExpr {echo[`Aura of Invulnerability is `+getcharintprop[334],13]}
+				DoExpr {echo[`Aura of Valor is `+getcharintprop[333],13]}
+				DoExpr {echo[`Aura of the World is `+getcharintprop[365],13]}
+				DoExpr {echo[`Aura Purity is `+getcharintprop[342],13]}
+				DoExpr {echo[`Aura Destruction is `+getcharintprop[333],13]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF: All 
@@ -2028,7 +2001,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Daiymo)#getvar[capturegroup_navtext]}
 		DO: DoAll
 				Chat {/sub}
-				EmbedNav nav238___sub_ {Royal Tent}
+				EmbedNav nav238_royaltent {Royal Tent}
 				SetOpt {enablenav} {true}
 	IF:	All
 			Expr {(BlueLady)#getvar[capturegroup_navtext]}
@@ -2068,14 +2041,14 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Grocer)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav278___grocer {Grocer}
+				EmbedNav nav278_grocer {Grocer}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
 			Expr {(Alchemist)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav277___alchemist {Alchemist}
+				EmbedNav nav277_alchemist {Alchemist}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
@@ -2088,7 +2061,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Beachfort)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav276___beachfort {BeachFort}
+				EmbedNav nav276_beachfort {BeachFort}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
@@ -2096,54 +2069,54 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 		DO:	DoAll
 				Chat {/haven}
 				Chat {/vt opt set opendoors true}
-				EmbedNav nav275___kendrick {Kendrick}
+				EmbedNav nav274_kendric {Kendrick}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
-			Expr {(Jeweler)#getvar[capturegroup_navtext]}
+			Expr {(Jeweler\|Kendrick)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
 				Chat {/vt opt set opendoors true}
-				EmbedNav nav274___jeweler {none}
+				EmbedNav nav274_jeweler {none}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
 			Expr {(Barber)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav272___barber {none}
+				EmbedNav nav272_barber {none}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
 			Expr {(Peppermint)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav271___peppermint_ {none}
+				EmbedNav nav271_peppermint {none}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
 			Expr {(Currency Exchanger)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav59___None_ {[none]}
+				EmbedNav nav59_Higashiyama {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 				Chat {/vt opt set opendoors true}
 	IF:	Any
 			Expr {(Vissidal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav62__vissidal {vissidal}
+				EmbedNav nav62_vissidal {vissidal}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
 			Expr {(Wai Jhou)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav63___None_ {[none]}
+				EmbedNav nav63_Wai_Jhou {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Ayan Baqur\|ulgrim's recall)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[2941]==1} ~~ SpellId 2941 is "Ulgrim's Recall".
 		DO:	DoAll
-				EmbedNav nav65___None_ {[none]}
+				EmbedNav nav65_ulgrims_recall {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2154,7 +2127,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Singularity Caul)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[2943]==1} ~~ SpellId 2943 is "Recall to the Singularity Caul".
 		DO:	DoAll
-				EmbedNav nav68___None_ {[none]}
+				EmbedNav nav68_singularity_caul {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2162,18 +2135,18 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {getisspellknown[2943]==0} ~~ SpellId 2943 is "Recall to the Singularity Caul".
 			CellE 2F2F0038
 		DO:	DoAll
-				EmbedNav nav69___None_ {[none]}
+				EmbedNav nav69_singularity_bore {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Singularity Caul)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[2943]==0} ~~ SpellId 2943 is "Recall to the Singularity Caul".
-		DO:	EmbedNav nav70___None_ {[none]}
+		DO:	EmbedNav nav70_singviadevice {[none]}
 	IF:	All
 			Expr {(Vslayer Staging Area)#getvar[capturegroup_navtext]}
 			CellE 30320014
 		DO:	DoAll
-				EmbedNav nav71___None_ {[none]}
+				EmbedNav nav71_Vslayer {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2234,14 +2207,14 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 	IF:	All
 			Expr {(Aphus Lassel)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav81___None_ {[none]}
+				EmbedNav nav81_aphus_lassel {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Aerlinthe)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[2041]==1} ~~ SpellId 2041 is "Aerlinthe Recall".
 		DO:	DoAll
-				EmbedNav nav82___None_ {[none]}
+				EmbedNav nav82_aerlinthe {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2254,28 +2227,28 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Mount Lethe)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[2813]==1} ~~ SpellId 2813 is "Mount Lethe Recall".
 		DO:	DoAll
-				EmbedNav nav85___None_ {[none]}
+				EmbedNav nav85_mount_lethe {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Glenden Wood)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[3865]==0} ~~ SpellId 3865 is "Glenden Wood Recall".
 		DO:	DoAll
-				EmbedNav nav86___None_ {[none]}
+				EmbedNav nav86_fort_tethana {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Glenden Wood)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[3865]==1} ~~ SpellId 3865 is "Glenden Wood Recall".
 		DO:	DoAll
-				EmbedNav nav87___None_ {[none]}
+				EmbedNav nav87_glenden_wood {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Candeth Keep)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4214]==1} ~~ SpellId 4214 is "Return to the Keep".
 		DO:	DoAll
-				EmbedNav nav88___None_ {[none]}
+				EmbedNav nav88_return_to_the_keep {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2287,21 +2260,21 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Bur)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4084]==1} ~~ SpellId 4084 is "Bur Recall".
 		DO:	DoAll
-				EmbedNav nav90___None_ {[none]}
+				EmbedNav nav90_bur_recall {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Bur)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4084]==0} ~~ SpellId 4084 is "Bur Recall".
 		DO:	DoAll
-				EmbedNav nav91__toBur {toBur}
+				EmbedNav nav91_toBur {toBur}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Graveyard)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4128]==1} ~~ SpellId 4128 is "Call of the Mhoire Forge".
 		DO:	DoAll
-				EmbedNav nav92___None_ {[none]}
+				EmbedNav nav92_graveyard {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2313,7 +2286,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Colosseum)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4213]==1} ~~ SpellId 4213 is "Colosseum Recall".
 		DO:	DoAll
-				EmbedNav nav93___None_ {[none]}
+				EmbedNav nav93_colosseum {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2325,7 +2298,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Neftet)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5541]==1} ~~ SpellId 5541 is "Lost City of Neftet Recall".
 		DO:	DoAll
-				EmbedNav nav95___None_ {[none]}
+				EmbedNav nav95_neftet {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2333,28 +2306,28 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {getisspellknown[5541]==0} ~~ SpellId 5541 is "Lost City of Neftet Recall".
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav96___None_ {[none]}
+				EmbedNav nav96_neftetrun {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Paradox)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4198]==1} ~~ SpellId 4198 is "Paradox-touched Olthoi Infested Area Recall".
 		DO:	DoAll
-				EmbedNav nav97___None_ {[none]}
+				EmbedNav nav97_olthoitent {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Paradox)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[4198]==0} ~~ SpellId 4198 is "Paradox-touched Olthoi Infested Area Recall".
 		DO:	DoAll
-				EmbedNav nav98___None_ {[none]}
+				EmbedNav nav98_paradoxrun {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Gear Knight)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5330]==1} ~~ SpellId 5330 is "Gear Knight Invasion Area Camp Recall".
 		DO:	DoAll
-				EmbedNav nav99___None_ {[none]}
+				EmbedNav nav99_gear_knight {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2375,14 +2348,14 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Facility Hub)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[5175]==1} ~~ SpellId 5175 is "Facility Hub Recall".
 		DO:	DoAll
-				EmbedNav nav102___None_ {[none]}
+				EmbedNav nav102_fachub {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Viridian Rise)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6321]==1} ~~ SpellId 6321 is "Viridian Rise Recall".
 		DO:	DoAll
-				EmbedNav nav103___None_ {[none]}
+				EmbedNav nav103_viridian_rise {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2395,42 +2368,42 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Viridian Tree)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6322]==1} ~~ SpellId 6322 is "Viridian Rise Great Tree Recall".
 		DO:	DoAll
-				EmbedNav nav105___None_ {[none]}
+				EmbedNav nav105_viridiantree {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Viridian Root)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6321]==1} ~~ SpellId 6321 is "Viridian Rise Recall".
 		DO:	DoAll
-				EmbedNav nav106___None_ {[none]}
+				EmbedNav nav106_viridianroot {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Viridian Root)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6321]==0} ~~ SpellId 6321 is "Viridian Rise Recall".
 		DO:	DoAll
-				EmbedNav nav107__viridianroot {viridianroot}
+				EmbedNav nav107_viridianroot {viridianroot}
 				DoExpr {clearvar[captuergroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Society)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6325]==1} ~~ SpellId 6325 is not a recognized spell.
 		DO:	DoAll
-				EmbedNav nav108__handrecall {[none]}
+				EmbedNav nav108_handrecall {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Society)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6326]==1} ~~ SpellId 6326 is not a recognized spell.
 		DO:	DoAll
-				EmbedNav nav109__webrecall {[none]}
+				EmbedNav nav109_webrecall {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Society)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6327]==1} ~~ Radiant Blood Recall 6327 is not a recognized spell.
 		DO:	DoAll
-				EmbedNav nav110__bloodrecall {[none]}
+				EmbedNav nav110_bloodrecall {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2449,7 +2422,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 				SetState {Default2}
 	IF:	All
 			Expr {(WAL)#getvar[capturegroup_navtext]}
-		DO:	EmbedNav nav111___None_ {[none]}
+		DO:	EmbedNav nav111_wal {[none]}
 	IF:	All
 			Expr {(WAL)#getvar[capturegroup_navtext]}
 			CellE F36D0030
@@ -2491,7 +2464,7 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {(Rynthid Encampment)#getvar[capturegroup_navtext]}
 			Expr {getisspellknown[6150]==1} ~~ SpellId 6150 is "Rynthid Recall".
 		DO:	DoAll
-				EmbedNav nav117___None_ {[none]}
+				EmbedNav nav117_rynthid_recall {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2499,13 +2472,13 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 			Expr {getisspellknown[6150]==0} ~~ SpellId 6150 is "Rynthid Recall".
 		DO:	DoAll
 				Chat {/sub}
-				EmbedNav nav241___sub {[none]}
+				EmbedNav nav241_subrythnid {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(vod)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav120___None_ {[none]}
+				EmbedNav nav120_dangerous {[none]}
 	IF:	All
 			Expr {(vod)#getvar[capturegroup_navtext]}
 			CellE 28490033
@@ -2518,21 +2491,21 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 		DO:	DoAll
 				Chat {/vt opt set opendoors true}
 				Chat {/tn}
-				EmbedNav nav122___None_ {[none]}
+				EmbedNav nav122_ivorycrafter {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Collector)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav123___collector {[none]}
+				EmbedNav nav123_collector {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Stone Collector)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav124__stonecollector {To Stone Collector.nav}
+				EmbedNav nav124_stonecollector {To Stone Collector.nav}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2540,20 +2513,20 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 		DO:	DoAll
 				Chat {/tn}
 				Chat {/vt opt set opendoors true}
-				EmbedNav nav125___None_ {[none]}
+				EmbedNav nav125_leathercrafter {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Northwatch Castle)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav126__northwatch {Northwatch}
+				EmbedNav nav126_northwatch {Northwatch}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
 			Expr {(Trophy Smith)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav127___None_ {[none]}
+				EmbedNav nav127_trophysmith {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Any
@@ -2582,14 +2555,14 @@ STATE: {NavTo2} ~~ { ~~ these are self enclosed routes
 				Chat {/sub}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablebuffing} {true}
-				EmbedNav nav209___curatornoscroll {[none]}
+				EmbedNav nav209_curatornoscroll {[none]}
 	IF:	All
 			Expr {getisspellknown[6150]==1} ~~ SpellId 6150 is "Rynthid Recall".
 			Expr {(Curator)#getvar[capturegroup_navtext]}
 		DO:	DoAll
 				SetOpt {enablecombat} {false}
 				SetOpt {enablebuffing} {true}
-				EmbedNav nav203___None_ {[none]}
+				EmbedNav nav203_curator {[none]}
 	IF:	All
 			Expr {(Curator)#getvar[capturegroup_navtext]}
 			NavEmpty
@@ -2629,154 +2602,154 @@ STATE: {NavToSub} ~~ {
 		DO:	SetState {NavToSubBasement}
 	IF:	Expr {(Asheron's Castle)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav220___sub_ {AsheronsCastle}
+				EmbedNav nav220_subasherons {AsheronsCastle}
 				DoExpr {clearvar[capturegroup_navtext]}
 				Chat {/vt opt set opendoors true}
 				SetState {Default2}
 	IF:	Expr {(Candeth Keep Subway)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav221___sub_ {[none]}
+				EmbedNav nav222_subcandeth {[none]}
 				Chat {/vt opt set opendoors true}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Withered Beach)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav222___sub_ {[none]}
+				EmbedNav nav222_subwithered {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Aerlinthe Island Portal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav223___sub_ {[none]}
+				EmbedNav nav223_aerlinthe {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Stonehold)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav224___sub_ {[none]}
+				EmbedNav nav224_substonehold {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Abayar's Laboratory)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav225___sub_ {[none]}
+				EmbedNav nav225_subabayarlab {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Humming Crystal Portal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav226___sub_ {[none]}
+				EmbedNav nav226_subhumming {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Olthoi Horde Nest)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav227___sub_ {[none]}
+				EmbedNav nav227_subolthoinest {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Wilderness Citadel)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav228___sub_ {[none]}
+				EmbedNav nav228_subwilderness {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}				
 	IF:	Expr {(Desert Citadel)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav231___sub_ {[none]}
+				EmbedNav nav231_subdesert {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}						
 	IF:	Expr {(Jungle Shadows)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav232___sub_ {[none]}
+				EmbedNav nav232_subjungle {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}					
 	IF:	Expr {(Malignant Tabernacle)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav233___sub_ {[none]}
+				EmbedNav nav233_submalignant {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Venemous Nidus)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav234___sub_ {[none]}
+				EmbedNav nav234_subvenemous {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Convergent Median)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav235___sub_ {[none]}
+				EmbedNav nav235_subconvergent {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}					
 	IF:	Expr {(Portal to Tou-Tou)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav236___sub_ {[none]}
+				EmbedNav nav236_subtoutou {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}					
 	IF:	Expr {(Paradox Encampment Tent)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav237___sub_ {[none]}
+				EmbedNav nav237_subparadox {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}					
 	IF:	Expr {(Royal Tent)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav238___sub_ {[none]}
+				EmbedNav nav238_royaltent {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Viridian Rise Access)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav239___sub_ {[vraccess]}
+				EmbedNav nav239_subvrise {[vraccess]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				ChatExpr {\/t +getcharstringprop[1]+\, Gromnies are west\.}
 				DoExpr {`Felonious Assault`==getcharstringprop[1]&&chatbox[`/lfg I am not that bright.`]||echo[`Gromnies are west`,15]}
 				SetState {Default2}
 	IF:	Expr {(Frozen Valley)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav240___sub_ {[none]}
+				EmbedNav nav240_subfrozenv {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Crater Village)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav242___sub_ {[none]}
+				EmbedNav nav242_subcrater {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 	IF:	Expr {(Crystaline Crag)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav243___sub_ {[none]}
+				EmbedNav nav243_subcrystal {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 	IF:	Expr {(Ayan Baqur Portal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav244___sub_ {[none]}
+				EmbedNav nav244_subab {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 	IF:	Expr {(Empyrean Facility)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav245___sub_ {[none]}
+				EmbedNav nav245_subempyrean {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 	IF:	Expr {(Bandit Castle Portal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav246___sub_ {[none]}
+				EmbedNav nav246_subbandit {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	Expr {(Black Spawn Dens)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav247___sub_ {[none]}
+				EmbedNav nav247_bsd {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 	IF:	Expr {(Hall of Metos)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav248___sub_ {[none]}
+				EmbedNav nav248_submetos {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 	IF:	Expr {(Nexus Portal)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav250___sub_ {[none]}
+				EmbedNav nav250_subnexus {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 ~~ }
 STATE: {NavToSubBasement} ~~ {
 	IF: All
 			ExitPortal
-		DO: EmbedNav nav251___subjump_ {[none]}
+		DO: EmbedNav nav251_subjump {[none]}
 	IF:	All
 			CellE 01C90114
 			NavEmpty
 			Expr {(Path of the Blind)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav252___sub_ {[none]}
+				EmbedNav nav252_subpotb {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2784,7 +2757,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Egg Orchard)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav253___sub_ {[none]}
+				EmbedNav nav253_subeo {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2792,7 +2765,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Augmentation Realm)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav254___sub_ {[none]}
+				EmbedNav nav254_subaugrealm {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2800,7 +2773,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Insatiable Vault)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav255___sub_ {[none]}
+				EmbedNav nav255_subinsatiable {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2808,7 +2781,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Underground City)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav256___sub_ {[none]}
+				EmbedNav nav256_subunderground {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2816,7 +2789,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Mines of Despair)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav257___sub_ {[none]}
+				EmbedNav nav257_submines {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2824,7 +2797,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Singularity Bore)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav258___sub_ {[none]}
+				EmbedNav nav258_subsingbore {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2832,7 +2805,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Black Death Catacombs)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav259___sub_ {[none]}
+				EmbedNav nav259_subbdc {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}					
 	IF:	All
@@ -2840,7 +2813,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Hidden Cavern)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav260___sub_ {[none]}
+				EmbedNav nav260_subhidden {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2848,7 +2821,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Creepy Canyon)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav261___sub_ {[none]}
+				EmbedNav nav261_subcreepy {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2856,7 +2829,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Feeding Tubes)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav262___sub_ {[none]}
+				EmbedNav nav262_subfeeding {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}					
 	IF:	All
@@ -2864,7 +2837,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Dark Design)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav263___sub_ {[none]}
+				EmbedNav nav263_subdarkdes {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2872,7 +2845,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Subway Surface)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav264___sub_ {[none]}
+				EmbedNav nav264_subsurface {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}
 	IF:	All
@@ -2880,7 +2853,7 @@ STATE: {NavToSubBasement} ~~ {
 			NavEmpty
 			Expr {(Thrungus Hole)#getvar[capturegroup_navtext]}
 		DO:	DoAll
-				EmbedNav nav265___sub_ {[none]}
+				EmbedNav nav265_subthrungus {[none]}
 				DoExpr {clearvar[capturegroup_navtext]}
 				SetState {Default2}	
 ~~ }
@@ -3536,6 +3509,7 @@ STATE: {QuestAdventure} ~~ {
 			Expr {wobjectgetopencontainer[]||actiontryuseitem[$corpseobj]}
 			Expr {$corpseitemslistobjects=listfilter[wobjectfindallbycontainer[wobjectgetopencontainer[]],`wobjectgetintprop[$1,218103808]==33758`]}
 			Expr {actiontryuseitem[listgetitem[$corpseitemslistobjects,0]]}
+			Expr {wobjectfindininventorybytemplatetype[33758]==1}
 			Never
 		DO: DoAll 
 				Chat {/ub close corpse}
@@ -3757,26 +3731,7 @@ STATE: {QuestAdventure} ~~ {
 		~~ DO:	DoAll
 				~~ DoExpr {actiontrygiveitem[wobjectfindininventorybynamerx[`Shard of the Black Spear`],wobjectfindnearestbytemplatetype[33746]]}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ~~ }
-
 STATE: {Quest} ~~ {
 	IF:	Any
 			Expr {(Mukkir Slayer)#getvar[capturegroup_questtext]}
@@ -3994,7 +3949,7 @@ STATE: {Quest} ~~ {
 			Not BlockE C98C0000
 		DO:	DoAll
 				Chat {/tn}
-				EmbedNav nav39___None_ {Rithwic}
+				EmbedNav nav39_rithwic {Rithwic}
 				SetOpt {EnableNav} {true}
 	IF:	All
 			Expr {(Guardian)#getvar[capturegroup_questtext]}
@@ -4114,7 +4069,7 @@ STATE: {Quest} ~~ {
 				SetOpt {enablebuffing} {true}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablelooting} {false}
-				EmbedNav nav200___None_ {[TethNPCs]}
+				EmbedNav nav200_tethquest {[TethNPCs]}
 				SetOpt {enablenav} {true}
 	IF: All
 			Expr {(Teth)#getvar[capturegroup_questtext]}
@@ -4375,26 +4330,26 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Expr {(Neftet Killtasks)#getvar[capturegroup_questtext]}
 		DO:	DoAll
-				EmbedNav nav130___None_ {[none]}
+				EmbedNav nav130_neftetkt {[none]}
 				SetOpt {enablenav} {true}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablebuffing} {true}
 	IF:	All
 			Expr {(Neftet Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Sir Ibreh bin Kassim tells you}
-		DO:	EmbedNav nav131___None_ {[none]}
+		DO:	EmbedNav nav131_neftetkt2 {[none]}
 	IF:	All
 			Expr {(Neftet Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Sir Unell bin Rakke tells you}
-		DO:	EmbedNav nav132___None_ {[none]}
+		DO:	EmbedNav nav132_neftetkt3 {[none]}
 	IF:	All
 			Expr {(Neftet Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Dame Tularin tells you}
-		DO:	EmbedNav nav133___None_ {[none]}
+		DO:	EmbedNav nav133_neftetkt4 {[none]}
 	IF:	All
 			Expr {(Neftet Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Sir Adarl tells you}
-		DO:	EmbedNav nav134___None_ {[none]}
+		DO:	EmbedNav nav134_neftet5 {[none]}
 	IF:	All
 			Expr {(Neftet Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Sir Hassim bin Tamarek tells you}
@@ -4409,45 +4364,45 @@ STATE: {Quest} ~~ {
 		DO: DoAll
 				Chat {/sub}
 				SetOpt {enablenav} {true}
-				EmbedNav nav240___sub_ {sub to frozenvalley}
+				EmbedNav nav240_subfrozenv {sub to frozenvalley}
 	IF:	All
 			Expr {(Frozen Valley Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				BlockE 7AE80000
 				BlockE 79E80000
 		DO: DoAll
-				EmbedNav nav136___None_ {[none]}
+				EmbedNav nav136_frozenkt1 {[none]}
 				SetOpt {enablenav} {true}
 	IF:	All
 			Expr {(Frozen Valley Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {to be rewarded again for hunting Gurog Henchmen}
 				ChatMatch {Gregoria, Gurog Destroyer tells you}
-		DO:	EmbedNav nav137___None_ {[none]}
+		DO:	EmbedNav nav137_frozenkt2 {[none]}
 	IF:	All
 			Expr {(Frozen Valley Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Hunter tells you}
 				ChatMatch {to be rewarded again for hunting Snow Tusker}
-		DO:	EmbedNav nav138___None_ {[none]}
+		DO:	EmbedNav nav138_frozenkt3 {[none]}
 	IF:	All
 			Expr {(Frozen Valley Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Leilah tells you}
 				ChatMatch {to be rewarded again for hunting Frozen Wight}
-		DO:	EmbedNav nav139___None_ {[none]}
+		DO:	EmbedNav nav139_frozenkt4 {[none]}
 	IF:	All
 			Expr {(Frozen Valley Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {George tells you}
 				ChatMatch {to be rewarded again for hunting Frost Golem}
-		DO:	EmbedNav nav140___None_ {[none]}
+		DO:	EmbedNav nav140_frozenkt5 {[none]}
 	IF:	All
 			Expr {(Frozen Valley Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Kumiko tells you}
 				ChatMatch {to be rewarded again for hunting Frozen Dread}
-		DO:	EmbedNav nav141___None_ {[none]}
+		DO:	EmbedNav nav141_frozenkt6 {[none]}
 	IF:	All
 			Expr {(Frozen Valley Killtasks)#getvar[capturegroup_questtext]}
 			Any
@@ -4457,7 +4412,6 @@ STATE: {Quest} ~~ {
 				EmbedNav nav00_empty {empty.nav}
 				DoExpr {clearvar[Killtasks]}
 				DoExpr {clearvar[capturegroup_questtext]}
-				SetOpt {enablecombat} {true}
 				SetOpt {enablebuffing} {true}
 				SetOpt {enablelooting} {true}
 				SetState {Default2}
@@ -4466,45 +4420,45 @@ STATE: {Quest} ~~ {
 			Any
 				CellE 49E4002B
 				CellE 49E40033
-		DO:	EmbedNav nav144___None_ {[none]}
+		DO:	EmbedNav nav144_hoshinokt {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 		DO:	DoAll
 				Chat {/sub}
-				EmbedNav nav238___sub_ {[none]}
+				EmbedNav nav238_royaltent {[none]}
 				SetOpt {enablecombat} {false}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Sergeant Trebuus tells you}
-		DO:	EmbedNav nav145___None_ {[none]}
+		DO:	EmbedNav nav145_hoshinokt3 {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Lord Eorlinde tells you}
-		DO:	EmbedNav nav146___None_ {[none]}
+		DO:	EmbedNav nav146_hoshinokt4 {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Griffon tells you}
-		DO:	EmbedNav nav147___None_ {[none]}
+		DO:	EmbedNav nav147_hoshinokt5 {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Hanamoto Aki'ko tells you}
-		DO:	EmbedNav nav148___None_ {[none]}
+		DO:	EmbedNav nav148_hoshinokt6 {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Corporal Irashi tells you}
-		DO:	EmbedNav nav149___None_ {[none]}
+		DO:	EmbedNav nav149_hoshinokt7 {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Lieutenant Takamaki tells you}
-		DO:	EmbedNav nav150___None_ {[none]}
+		DO:	EmbedNav nav150_hoshinokt8 {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Lieutenant Aurin tells you}
-		DO:	EmbedNav nav151___None_ {[none]}
+		DO:	EmbedNav nav151_hoshinokt9 {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Aun Kirtal tells you}
-		DO:	EmbedNav nav152___None_ {[none]}
+		DO:	EmbedNav nav152_hoshinokt {[none]}
 	IF:	All
 			Expr {(Hoshino Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Sergeant Freng tells you}
@@ -4517,7 +4471,7 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			Not BlockE F5590000
-		DO:	EmbedNav nav154___None_ {[none]}
+		DO:	EmbedNav nav154_toutoukt {[none]}
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			CellE F5590034
@@ -4525,42 +4479,42 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			CellE F559003D
-		DO:	EmbedNav nav155___None_ {[none]}
+		DO:	EmbedNav nav155_toutoukt {[none]}
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Royal Guard tells you, "Another thanks for reducing the numbers of those awful Grievvers"}
 				ChatMatch {Royal Guard tells you, "Kill 15 Grievver Shredders and I will reward you for your efforts."}
 				ChatMatch {Royal Guard tells you, "Once you've killed 15 Grievver Shredders, I will reward you. Keep up the good work."}
-		DO:	EmbedNav nav156___None_ {[none]}
+		DO:	EmbedNav nav156_toutoukt {[none]}
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Umbral Guard tells you, "You did well soldier. Every Margul struck down is a direct blow to Bael'zharon and his generals."}
 				ChatMatch {Umbral Guard tells you, "Kill 15 Devourer Marguls and I will reward you for your efforts."}
 				ChatMatch {Umbral Guard tells you, "Once you've killed 15 Devourer Marguls, I will reward you. Keep up the good work."}
-		DO:	EmbedNav nav157___None_ {[none]}
+		DO:	EmbedNav nav157_toutoukt {[none]}
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Umbral Guard tells you, "Those winged creatures still seems scarce since your last assault."}
 				ChatMatch {Umbral Guard tells you, "Kill 15 Shadow Flyers and I will reward you for your efforts."}
 				ChatMatch {Umbral Guard tells you, "Once you've killed 15 Shadow Flyers, I will reward you. Keep up the good work."}
-		DO:	EmbedNav nav158___None_ {[none]}
+		DO:	EmbedNav nav158_toutoukt {[none]}
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Royal Guard tells you, "Once you've destroyed 4 Shadowy Pillars, I will reward you."}
 				ChatMatch {Royal Guard tells you, "Come back tomorrow and we will plan another assault on the Shadows."}
 				ChatMatch {Royal Guard tells you, "Destroy 4 of these Shadowy Pillars and I will reward you for your efforts."}
-		DO:	EmbedNav nav159___None_ {[none]}
+		DO:	EmbedNav nav159_toutoukt {[none]}
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Royal Guard tells you, "Come back tomorrow and we will plan another attack."}
 				ChatMatch {Royal Guard tells you, "Kill 15 Void Lords and I will reward you for your efforts."}
 				ChatMatch {Royal Guard tells you, "Once you've killed 15 Void Lords, I will reward you. Keep up the good work."}
-		DO:	EmbedNav nav160___None_ {[none]}
+		DO:	EmbedNav nav160_toutoukt {[none]}
 	IF:	All
 			Expr {(Tou-Tou Killtasks)#getvar[capturegroup_questtext]}
 			Any
@@ -4575,7 +4529,7 @@ STATE: {Quest} ~~ {
 	IF:	All
 			Expr {(Graveyard Killtasks)#getvar[capturegroup_questtext]}
 		DO:	DoAll
-				EmbedNav nav162___None_ {[none]}
+				EmbedNav nav162_graveyardkt {[none]}
 				SetOpt {enablecombat} {false}
 				SetOpt {enablenav} {true}
 				SetOpt {enablebuffing} {true}
@@ -4585,19 +4539,19 @@ STATE: {Quest} ~~ {
 			Any
 				ChatMatch {Renata tells you}
 				ChatMatch {to be rewarded again for hunting Wisps}
-		DO:	EmbedNav nav163___None_ {[none]}
+		DO:	EmbedNav nav163_graveyardkt {[none]}
 	IF:	All
 			Expr {(Graveyard Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Yoite tells you}
 				ChatMatch {to be rewarded again for hunting Skeletons}
-		DO:	EmbedNav nav164___None_ {[none]}
+		DO:	EmbedNav nav164_graveyardkt {[none]}
 	IF:	All
 			Expr {(Graveyard Killtasks)#getvar[capturegroup_questtext]}
 			Any
 				ChatMatch {Gadi tells you}
 				ChatMatch {to be rewarded again for hunting Wights}
-		DO:	EmbedNav nav165___None_ {[none]}
+		DO:	EmbedNav nav165_graveyardkt {[none]}
 	IF:	All
 			Expr {(Graveyard Killtasks)#getvar[capturegroup_questtext]}
 			Any
@@ -4612,7 +4566,7 @@ STATE: {Quest} ~~ {
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			Expr {getisspellknown[6150]==1} ~~ SpellId 6150 is "Rynthid Recall".
 		DO:	DoAll
-				EmbedNav nav167___None_ {[none]}
+				EmbedNav nav167_rythnidkt {[none]}
 	IF:	All
 			Expr {getisspellknown[6150]==0} ~~ SpellId 6150 is "Rynthid Recall".
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
@@ -4625,47 +4579,46 @@ STATE: {Quest} ~~ {
 			Expr {getisspellknown[6150]==0} ~~ SpellId 6150 is "Rynthid Recall".
 			CellE 2F2F0038
 		DO:	DoAll
-				EmbedNav nav168___None_ {[none]}
+				EmbedNav nav168_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			CellE 30320014
 		DO:	DoAll
-				EmbedNav nav170___None_ {[none]}
+				EmbedNav nav170_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Hernd tells you}
-		DO:	EmbedNav nav171___None_ {[none]}
+		DO:	EmbedNav nav171_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Lohrn tells you}
-		DO:	EmbedNav nav172___None_ {[none]}
+		DO:	EmbedNav nav172_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Wido tells you}
-		DO:	EmbedNav nav173___None_ {[none]}
+		DO:	EmbedNav nav173_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Rhys tells you}
-		DO:	EmbedNav nav174___None_ {[none]}
+		DO:	EmbedNav nav174_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Ranulf tells you}
-		DO:	EmbedNav nav175___None_ {[none]}
+		DO:	EmbedNav nav175_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Sylvanus tells you}
-		DO:	EmbedNav nav176___None_ {[none]}
+		DO:	EmbedNav nav176_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Marcus tells you}
-		DO:	EmbedNav nav177___None_ {[none]}
+		DO:	EmbedNav nav177_rythnidkt {[none]}
 	IF:	All
 			Expr {(Rynthid Killtasks)#getvar[capturegroup_questtext]}
 			ChatMatch {Tillahan tells you}
 		DO:	DoAll
-				EmbedNav nav178___None_ {[none]}
+				EmbedNav nav178_rythnidkt {[none]}
 				DoExpr {clearvar[capturegroup_questtext]}
-				SetOpt {enablecombat} {true}
 				SetOpt {enablebuffing} {true}
 				SetOpt {enablelooting} {true}
 				SetState {Default2}
@@ -4675,7 +4628,7 @@ STATE: {Quest} ~~ {
 				CellE 4FF1001B
 			Expr {(Hollow)#getvar[capturegroup_questtext]}
 		DO: DoAll
-				EmbedNav nav204___None_ {[dungeonNPCs]}
+				EmbedNav nav204_hollowdungeon {[dungeonNPCs]}
 				DoExpr {$virinditurnin=1}
 				SetOpt {enablebuffing} {true}
 				SetOpt {enablecombat} {false}
@@ -4709,14 +4662,14 @@ STATE: {Quest} ~~ {
 				ExitPortal
 		DO:	DoAll 
 				DoExpr {$virinditurnin=2}
-				EmbedNav nav205___None_ {[none]}
+				EmbedNav nav205_hollowdungeon {[none]}
 	IF:	All
 			Expr {(Hollow)#getvar[capturegroup_questtext]}
 			ChatMatch {Ascended Virindi Hunter tells you}
 			Expr {$virinditurnin==2}
 		DO:	DoAll 
 				DoExpr {$virinditurnin=3}
-				EmbedNav nav206___None_ {[none]}
+				EmbedNav nav206_hollowdungeon {[none]}
 	IF:	All
 			Expr {(Hollow)#getvar[capturegroup_questtext]}
 			ChatMatch {Ascended Void Hunter tells you}
@@ -4745,7 +4698,7 @@ STATE: {Quest} ~~ {
 				ChatMatch {You hand over 1 of your Ascended Void Energy Fragments.}
 			SecsInStateGE 4
 		DO:	DoAll 
-				EmbedNav nav208___None_ {[1point]}
+				EmbedNav nav208_hollowdungeon {[1point]}
 				DoExpr {clearvar[capturegroup_questtext]&&clearvar[virinditurnin]}
 				SetOpt {enablebuffing} {true}
 				SetState {Default2}
@@ -4781,7 +4734,7 @@ STATE: {Quest} ~~ {
 				CellE 4FF1001B
 				CellE 4FF10023
 		DO:	DoAll
-				EmbedNav nav273___fortress_ {[fortressNpcs]}
+				EmbedNav nav273_fortress {[fortressNpcs]}
 				SetOpt {enablenav} {true}
 	IF:	All
 			Expr {(Monougas?)#getvar[capturegroup_questtext]}
@@ -4799,7 +4752,7 @@ STATE: {Quest} ~~ {
 				ChatMatch {You allow Rex the Ribcage Reaper to examine your Monouga Rib.}
 				ChatMatch {You hand over 1 of your Monouga Ribs.}
 		DO:	DoAll
-				EmbedNav nav273B___rex {[fortressNpcs]}
+				EmbedNav nav273B_monouga {[fortressNpcs]}
 				DoExpr {ifthen[$activemode=monouga,`clearvar[activemode]&&clearvar[monouga1]&&clearvar[monouga2]`]}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
@@ -4810,7 +4763,7 @@ STATE: {Quest} ~~ {
 			NavEmpty
 		DO:	DoAll
 				Chat {/f I need a rib.}
-				EmbedNav nav273B___rex {[fortressNpcs]}
+				EmbedNav nav273B_monouga {[fortressNpcs]}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
 	IF:	All
@@ -4830,7 +4783,7 @@ STATE: {Quest} ~~ {
 			Expr {(Curator)#getvar[capturegroup_questtext]}
 			ItemCountGE 1 {Shard of the Curator of Torment's Mask}
 		DO:	DoAll
-				EmbedNav nav270___curatorti_ {[none]}
+				EmbedNav nav270_curatorti {[none]}
 				DoExpr {clearvar[capturegroup_quest]}
 				SetOpt {enablenav} {true}
 				SetOpt {enablecombat} {false}
@@ -5334,7 +5287,7 @@ STATE: {Quest} ~~ {
 		DO: DoAll
 				DoExpr {setvar[activemode,dragon]}
 				DoExpr {cleargvar[dinodone]}
-				EmbedNav nav313___dragonNpcs {dragonNpcs}
+				EmbedNav nav313_dragonnpcs {dragonNpcs}
 				SetOpt {enablenav} {true}
 				DoExpr {clearvar[capturegroup_questtext]}
 				SetState {Default2}
@@ -5486,6 +5439,9 @@ STATE: {QuestCheck} ~~ {
 				DoExpr {(getqueststatus[putridkilltasktimer]&&testquestflag[putridcount]&&echo[Putrid Eaters is flagged and ready,16])||(getqueststatus[putridkilltasktimer]&&testquestflag[putridcount]==0&&echo[Putrid Eaters is ready but not flagged,4])}
 				DoExpr {(getqueststatus[empowereddollkt]&&testquestflag[empowereddollcount]&&echo[Dolls are ready and flagged,16])||(getqueststatus[empowereddollkt]&&testquestflag[empowereddollcount]==0&&echo[Dolls are ready but not flagged,4])}
 				DoExpr {(getqueststatus[prismaticcrystalguardiankilltasktimer]&&testquestflag[prismaticcrystalguardianktcount]&&echo[Guardian is ready and flagged,16])||(getqueststatus[prismaticcrystalguardiankilltasktimer]&&testquestflag[prismaticcrystalguardianktcount]==0&&echo[Guardian is ready but not flagged,4])}
+				DoExpr {(getqueststatus[killtaskbrowndragontimer]&&getqueststatus[killtaskgreendragontimer]&&testquestflag[browndragonktcount]&&testquestflag[greendragonktcount]&&echo[Brown and Green Dragons are flagged and ready,16]||getqueststatus[killtaskbrowndragontimer]&&testquestflag[greendragonktcount]==0 && echo[Brown and Green Dragons are ready, but not flagged,4]}
+
+
 
 	IF: All
 			Expr {$myquests==1}
@@ -5532,7 +5488,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=forge}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Forge`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Forge`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Forge`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
@@ -5552,7 +5508,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=path}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=path`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Path`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Path`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
@@ -5573,7 +5529,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=bugs}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=bugs`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Bugs`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Bugs`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
@@ -5593,7 +5549,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=bsd}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=BSD`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-BSD`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-BSD`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
@@ -5615,7 +5571,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=mukkir}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Mukkir`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Mukkir`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Mukkir`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
@@ -5634,7 +5590,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=rats}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rats`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`}
 				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
 				SetOpt {SummonPets} {true}
 				SetOpt {idlepeacemode} {false}
@@ -5655,7 +5611,7 @@ STATE: {Mode} ~~ {
 				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&patrolleader=getcharstringprop[1]`]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Rage`}
 				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Rage`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Rage`}
 				SetOpt {idlepeacemode} {false}
 				SetOpt {navclosestoprange} {0.011} ~~ follow to 2
 				SetOpt {attackdistance} {0.042} ~~ attack to 10
@@ -5697,7 +5653,7 @@ STATE: {Mode} ~~ {
 			Expr {(Hollow)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Hollow`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Hollow`}
 				SetOpt {Recharge-Norm-HitP} {70}
 				SetOpt {Recharge-Norm-Stam} {40}
 				SetOpt {Recharge-Norm-Mana} {15}
@@ -5733,7 +5689,7 @@ STATE: {Mode} ~~ {
 		DO:	DoAll
 				DoExpr {$activemode=monouga}
 				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Monouga`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Monouga`}
 				SetOpt {Recharge-Norm-HitP} {70}
 				SetOpt {Recharge-Norm-Stam} {40}
 				SetOpt {Recharge-Norm-Mana} {20}
@@ -5771,7 +5727,7 @@ STATE: {Mode} ~~ {
 				Expr {getvar[class]==missile}
 				Expr {getvar[class]==melee}
 		DO:	DoAll
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-TethBow`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-TethBow`}
 				DoExpr {clearvar[capturegroup_modetext]}
 				SetState {Default2}
 	IF: All
@@ -5785,7 +5741,7 @@ STATE: {Mode} ~~ {
 			Expr {(Teth)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Teth`}
 				DoExpr {$activemode=teth}
 				SetOpt {OpenDoors} {false}
 				SetOpt {SummonPets} {true}
@@ -5820,7 +5776,7 @@ STATE: {Mode} ~~ {
 			Expr {(Butter)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				ChatExpr {`/vt loot load `+&fastlootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Butter`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Butter`}
 				SetOpt {Recharge-Norm-HitP} {70}
 				SetOpt {Recharge-Norm-Stam} {40}
 				SetOpt {Recharge-Norm-Mana} {20}
@@ -5860,13 +5816,13 @@ STATE: {Mode} ~~ {
 			Expr {(BB)#getvar[capturegroup_modetext]}
 			Not Expr {getvar[class]==mage}
 		DO: DoAll
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-ButterBow`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-ButterBow`}
 				SetState {Default2}
 	IF: All
 			Expr {(VR)#getvar[capturegroup_modetext]}
 		DO:	DoAll
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-VR`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-VR`}
 				SetOpt {Recharge-Norm-HitP} {70}
 				SetOpt {Recharge-Norm-Stam} {40}
 				SetOpt {Recharge-Norm-Mana} {20}
@@ -5907,7 +5863,7 @@ STATE: {Mode} ~~ {
 				Expr {getvar[class]==ranger}
 		DO:	DoAll
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Bow`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Bow`}
 				SetOpt {Recharge-Norm-HitP} {70}
 				SetOpt {Recharge-Norm-Stam} {40}
 				SetOpt {Recharge-Norm-Mana} {20}
@@ -5937,7 +5893,7 @@ STATE: {Mode} ~~ {
 				DoExpr {$activemode=dragon}
 				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&patrolleader=getcharstringprop[1]`]}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Dino`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Dino`}
 				SetOpt {navclosestoprange} {0.042} ~~ follow 10
 				SetOpt {attackdistance} {0.063} ~~ attack to 15
 				DoExpr {($class==mage||$class==void)&&vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
@@ -5953,7 +5909,7 @@ STATE: {Mode} ~~ {
 				DoExpr {ifthen[$capturegroup_name==getcharstringprop[1],`&patrolleader=getcharstringprop[1]`]}
 				ChatExpr {`/t `+getcharstringprop[1]+`, Mode=Dino`}
 				ChatExpr {`/vt loot load `+&lootprofile+`.utl`}
-				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Dino`]}
+				ChatExpr {`/vt settings loadchar `+getcharstringprop[1]+`-Dino`}
 				DoExpr {vtsetsetting[Recharge-Norm-HitP,`90`]&&vtsetsetting[Recharge-Norm-Stam,`40`]&&vtsetsetting[Recharge-Norm-Mana,`15`]}
 				DoExpr {vtsetsetting[Recharge-NoTarg-HitP,`90`]&&vtsetsetting[Recharge-NoTarg-Stam,`90`]&&vtsetsetting[Recharge-NoTarg-Mana,`90`]}
 				DoExpr {($class==mage||$class==void)&&vtsetsetting[attackdistance,`.12`]} ~~attack to 28.8
@@ -7653,7 +7609,7 @@ NAV: nav08_jeeves once ~~ {
 	pnt -100.848035717011 35.5608573357264 2.08333134651184E-05
 	cht -100.850022379557 35.5591933647792 2.08333134651184E-05 {/ub vendor open Jeeves}
 ~~ }
-NAV: nav10___None_ once ~~ {
+NAV: nav10_ahurenga once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -7675,7 +7631,7 @@ NAV: nav10___None_ once ~~ {
 	pnt -101.711994806925 -96.9350133260091 2.08333134651184E-05
 	ptl -101.711994806925 -96.9350133260091 2.08333134651184E-05 -101.725804169973 -96.9330958048503 -0.000262499845121056 14 {Ahurenga Portal}
 ~~ }
-NAV: nav11___None_ once ~~ {
+NAV: nav11_al_arqas once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -7690,7 +7646,7 @@ NAV: nav11___None_ once ~~ {
 	pnt -101.825612823168 -96.6988527933757 2.08333134651184E-05
 	ptl -101.825612823168 -96.6988527933757 2.08333134651184E-05 -101.825237496694 -96.7097541809082 -0.000262499845121056 14 {Portal to Al-Arqas}
 ~~ }
-NAV: nav12___None_ once ~~ {
+NAV: nav12_al_jalima once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -7704,7 +7660,7 @@ NAV: nav12___None_ once ~~ {
 	pnt -101.921268634001 -96.5995579560598 2.08333134651184E-05
 	ptl -101.921268634001 -96.5995579560598 2.08333134651184E-05 -101.933363375068 -96.6 -0.000262499845121056 14 {Al-Jalima Portal}
 ~~ }
-NAV: nav13___None_ once ~~ {
+NAV: nav13_arwic once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -7714,7 +7670,7 @@ NAV: nav13___None_ once ~~ {
 	pnt -101.60187737147 -96.5210749785105 2.08333134651184E-05
 	ptl -101.60187737147 -96.5210749785105 2.08333134651184E-05 -101.588099161784 -96.5166525046031 -0.000262499845121056 14 {Portal to Arwic}
 ~~ }
-NAV: nav14___None_ once ~~ {
+NAV: nav14_baishi once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -7731,7 +7687,7 @@ NAV: nav14___None_ once ~~ {
 	pnt -101.450210952759 -96.6904671351115 2.08333134651184E-05
 	ptl -101.450671927134 -96.6912790616353 2.08333134651184E-05 -101.450108337402 -96.7101625124613 -0.000262499845121056 14 {Baishi Portal}
 ~~ }
-NAV: nav15___None_ once ~~ {
+NAV: nav15_bluespire once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -7751,7 +7707,7 @@ NAV: nav15___None_ once ~~ {
 	pnt -101.716956329346 -96.8477783203125 2.08333134651184E-05
 	ptl -101.658333333333 -96.6833333333333 2.08333134651184E-05 -101.727079168955 -96.8500624974569 -0.000262499845121056 14 {Portal to Bluespire}
 ~~ }
-NAV: nav16___None_ once ~~ {
+NAV: nav16_candeth once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -7766,7 +7722,7 @@ NAV: nav16___None_ once ~~ {
 	pnt -101.714499839147 -96.476748029391 2.08333134651184E-05
 	ptl -101.714499839147 -96.476748029391 2.08333134651184E-05 -101.727349996567 -96.4750416676203 -0.000262499845121056 14 {Portal to Cragstone}
 ~~ }
-NAV: nav17___None_ once ~~ {
+NAV: nav17_danbys_outpost once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -7792,7 +7748,7 @@ NAV: nav17___None_ once ~~ {
 	pnt -101.604228242238 -97.0134592056274 2.08333134651184E-05
 	ptl -101.604228242238 -97.0134592056274 2.08333134651184E-05 -101.589920838674 -97.0166708628337 -0.000262499845121056 14 {Danby's Outpost}
 ~~ }
-NAV: nav18___None_ once ~~ {
+NAV: nav18_dryreach once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -7807,7 +7763,7 @@ NAV: nav18___None_ once ~~ {
 	pnt -101.601999378204 -96.3948575735092 2.08333134651184E-05
 	ptl -101.601999378204 -96.3948575735092 2.08333134651184E-05 -101.589936669668 -96.3916666666667 -0.000262499845121056 14 {Portal to Dryreach}
 ~~ }
-NAV: nav19___None_ once ~~ {
+NAV: nav19_eastham once ~~ {
 	pnt -101.659012762705 -96.5742304801941 2.08333134651184E-05
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
@@ -7820,7 +7776,7 @@ NAV: nav19___None_ once ~~ {
 	pnt -101.603844801585 -96.4333572308222 2.08333134651184E-05
 	ptl -101.603844801585 -96.4333572308222 2.08333134651184E-05 -101.5896220843 -96.4334579149882 -0.000262499845121056 14 {Eastham Portal}
 ~~ }
-NAV: nav20___None_ once ~~ {
+NAV: nav20_eastwatch once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -7847,7 +7803,7 @@ NAV: nav20___None_ once ~~ {
 	pnt -101.606450462341 -97.0580299377441 2.08333134651184E-05
 	ptl -101.606450462341 -97.0580299377441 2.08333134651184E-05 -101.589529164632 -97.0585624694824 -0.000262499845121056 14 {Portal to Eastwatch}
 ~~ }
-NAV: nav21___None_ once ~~ {
+NAV: nav21_fiun_outpost once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -7871,7 +7827,7 @@ NAV: nav21___None_ once ~~ {
 	pnt -101.712453508377 -97.0562619527181 2.08333134651184E-05
 	ptl -101.712453508377 -97.0562619527181 2.08333134651184E-05 -101.725833336512 -97.0584083557129 -0.000262499845121056 14 {Fiun Outpost}
 ~~ }
-NAV: nav22___None_ once ~~ {
+NAV: nav22_fort_tethana once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -7890,7 +7846,7 @@ NAV: nav22___None_ once ~~ {
 	pnt -101.350303522746 -96.6847568194071 2.08333134651184E-05
 	ptl -101.350303522746 -96.6847568194071 2.08333134651184E-05 -101.339312489827 -96.6835291544596 -0.000262499845121056 14 {Freehold Portal}
 ~~ }
-NAV: nav23___None_ once ~~ {
+NAV: nav23_greenspire once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -7912,7 +7868,7 @@ NAV: nav23___None_ once ~~ {
 	pnt -101.710630226135 -96.8936115264893 2.08333134651184E-05
 	ptl -101.658333333333 -96.6833333333333 2.08333134651184E-05 -101.726895840963 -96.8914375305176 -0.000262499845121056 14 {Portal to Greenspire}
 ~~ }
-NAV: nav24___None_ once ~~ {
+NAV: nav24_hebian_to once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -7930,7 +7886,7 @@ NAV: nav24___None_ once ~~ {
 	pnt -101.408026504517 -96.5867412090302 2.08333134651184E-05
 	ptl -101.408026504517 -96.5867412090302 2.08333134651184E-05 -101.408333333333 -96.5734279155731 -0.000262499845121056 14 {Portal to Hebian-To}
 ~~ }
-NAV: nav25___None_ once ~~ {
+NAV: nav25_holtburg once ~~ {
 	pnt -101.657398668925 -96.5912923177083 2.08333134651184E-05
 	pnt -101.659012762705 -96.5742304801941 2.08333134651184E-05
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
@@ -7942,7 +7898,7 @@ NAV: nav25___None_ once ~~ {
 	pnt -101.71255812645 -96.5171237309774 2.08333134651184E-05
 	ptl -101.71255812645 -96.5171237309774 2.08333134651184E-05 -101.725391674042 -96.5164708296458 -0.000262499845121056 14 {Portal to Holtburg}
 ~~ }
-NAV: nav26___None_ once ~~ {
+NAV: nav26_kara once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -7961,7 +7917,7 @@ NAV: nav26___None_ once ~~ {
 	pnt -101.367835617065 -96.5837583859762 2.08333134651184E-05
 	ptl -101.367835617065 -96.5837583859762 2.08333134651184E-05 -101.366483306885 -96.5741500059764 -0.000262499845121056 14 {Portal to Kara}
 ~~ }
-NAV: nav27___None_ once ~~ {
+NAV: nav27_kryst once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -7975,7 +7931,7 @@ NAV: nav27___None_ once ~~ {
 	pnt -101.866196457545 -96.6953823725382 2.08333134651184E-05
 	ptl -101.866196457545 -96.6953823725382 2.08333134651184E-05 -101.866741665204 -96.7101833343506 -0.000262499845121056 14 {Portal to Khayyaban}
 ~~ }
-NAV: nav28___None_ once ~~ {
+NAV: nav28_lin once ~~ {
 	pnt -101.558403046926 -96.6408270200094 2.08333134651184E-05
 	pnt -101.535144678752 -96.6414740244548 2.08333134651184E-05
 	pnt -101.50295235316 -96.6423695882161 2.08333134651184E-05
@@ -7988,7 +7944,7 @@ NAV: nav28___None_ once ~~ {
 	pnt -101.356865310669 -96.6014538447062 2.08333134651184E-05
 	ptl -101.356865310669 -96.6014538447062 2.08333134651184E-05 -101.339491653442 -96.5998541673025 -0.000262499845121056 14 {Portal to Kryst}
 ~~ }
-NAV: nav29___None_ once ~~ {
+NAV: nav29_linvak_tukal once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8006,7 +7962,7 @@ NAV: nav29___None_ once ~~ {
 	pnt -101.44970442454 -96.587699286143 2.08333134651184E-05
 	ptl -101.44970442454 -96.587699286143 2.08333134651184E-05 -101.45 -96.5726250012716 -0.000262499845121056 14 {Lin Portal}
 ~~ }
-NAV: nav30___None_ once ~~ {
+NAV: nav30_linvak_tukal once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -8030,7 +7986,7 @@ NAV: nav30___None_ once ~~ {
 	pnt -101.605458164215 -96.9748471577962 2.08333134651184E-05
 	ptl -101.605458164215 -96.9748471577962 2.08333134651184E-05 -101.590654182434 -96.9749624888102 -0.000262499845121056 14 {Portal to Linvak Tukal}
 ~~ }
-NAV: nav31___None_ once ~~ {
+NAV: nav31_lytelthorpe once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -8043,7 +7999,7 @@ NAV: nav31___None_ once ~~ {
 	pnt -101.716023302078 -96.4337033987045 2.08333134651184E-05
 	ptl -101.716023302078 -96.4337033987045 2.08333134651184E-05 -101.727483336131 -96.4333333333333 -0.000262499845121056 14 {Lytelthorpe Portal}
 ~~ }
-NAV: nav32___None_ once ~~ {
+NAV: nav32_mayoi once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8063,7 +8019,7 @@ NAV: nav32___None_ once ~~ {
 	pnt -101.487973213196 -96.5865608692169 2.08333134651184E-05
 	ptl -101.487973213196 -96.5865608692169 2.08333134651184E-05 -101.491666666667 -96.5723725001017 -0.000262499845121056 14 {Mayoi Portal}
 ~~ }
-NAV: nav33___None_ once ~~ {
+NAV: nav33_nanto once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8083,7 +8039,7 @@ NAV: nav33___None_ once ~~ {
 	pnt -101.491503810883 -96.699586168925 2.08333134651184E-05
 	ptl 82.4539999961853 -52.1928249994914 0.310727087656657 -101.491741657257 -96.7083499908447 -0.000262499845121056 14 {Portal to Nanto}
 ~~ }
-NAV: nav34___None_ once ~~ {
+NAV: nav34_neydisa_castle once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -8105,7 +8061,7 @@ NAV: nav34___None_ once ~~ {
 	pnt -101.711434793472 -96.9733016967773 2.08333134651184E-05
 	ptl -101.711434793472 -96.9733016967773 2.08333134651184E-05 -101.72478334109 -96.9749208450317 -0.000262499845121056 14 {Portal to Neydisa Castle}
 ~~ }
-NAV: nav35___None_ once ~~ {
+NAV: nav35_oolutangas_refuge once ~~ {
 	pnt -101.658333333333 -96.6833333333333 2.08333134651184E-05
 	pnt -101.658531665802 -96.7015703837077 2.08333134651184E-05
 	pnt -101.659263642629 -96.7204051335653 2.08333134651184E-05
@@ -8127,7 +8083,7 @@ NAV: nav35___None_ once ~~ {
 	pnt -101.618829886119 -97.0715187072754 2.08333134651184E-05
 	ptl -101.658333333333 -96.6833333333333 2.08333134651184E-05 -101.616704177856 -97.0845125198364 -0.000210000071092509 14 {Oolutanga's Refuge}
 ~~ }
-NAV: nav36___None_ once ~~ {
+NAV: nav36_redspire once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -8152,7 +8108,7 @@ NAV: nav36___None_ once ~~ {
 	pnt -101.601230748494 -96.8934349060059 2.08333134651184E-05
 	ptl -101.601230748494 -96.8934349060059 2.08333134651184E-05 -101.589112504323 -96.8918166478475 -0.000262499845121056 14 {Portal to Redspire}
 ~~ }
-NAV: nav37___None_ once ~~ {
+NAV: nav37_plateau once ~~ {
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
 	pnt -101.653368886312 -96.5122077147166 2.08333134651184E-05
@@ -8166,7 +8122,7 @@ NAV: nav37___None_ once ~~ {
 	pnt -101.695690981547 -96.3798531194528 2.08333134651184E-05
 	ptl -101.695690981547 -96.3798531194528 2.08333134651184E-05 -101.7 -96.3645083338022 -0.000262499845121056 14 {Plateau Portal}
 ~~ }
-NAV: nav38___None_ once ~~ {
+NAV: nav38_qalabar once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8180,7 +8136,7 @@ NAV: nav38___None_ once ~~ {
 	pnt -101.830421455701 -96.5868792851766 2.08333134651184E-05
 	ptl -101.829606612523 -96.5870081106822 2.08333134651184E-05 -101.824954168002 -96.5737500031789 -0.000262499845121056 14 {Qalaba'r Portal}
 ~~ }
-NAV: nav39___None_ once ~~ {
+NAV: nav39_rithwic once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -8195,7 +8151,7 @@ NAV: nav39___None_ once ~~ {
 	pnt -101.604680728912 -96.4770609219869 2.08333134651184E-05
 	ptl -101.604992675781 -96.478316171964 2.08333134651184E-05 -101.590664164225 -96.475 -0.000262499845121056 14 {Portal to Rithwic}
 ~~ }
-NAV: nav40___None_ once ~~ {
+NAV: nav40_samsur once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8207,7 +8163,7 @@ NAV: nav40___None_ once ~~ {
 	pnt -101.781997156143 -96.5831333796183 2.08333134651184E-05
 	ptl -101.781878391902 -96.5828683853149 2.08333134651184E-05 -101.783470837275 -96.5733333269755 -0.000262499845121056 14 {Portal to Samsur}
 ~~ }
-NAV: nav41___None_ once ~~ {
+NAV: nav41_sanamar once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -8228,7 +8184,7 @@ NAV: nav41___None_ once ~~ {
 	pnt -101.605130036672 -96.8503903071086 2.08333134651184E-05
 	ptl -101.605130036672 -96.8503903071086 2.08333134651184E-05 -101.590900007884 -96.8501458485921 -0.000262499845121056 14 {Portal to Sanamar}
 ~~ }
-NAV: nav42___None_ once ~~ {
+NAV: nav42_sawato once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8249,7 +8205,7 @@ NAV: nav42___None_ once ~~ {
 	pnt -101.371389007568 -96.6966569900513 2.08333134651184E-05
 	ptl -101.371389007568 -96.6966569900513 2.08333134651184E-05 -101.366929181417 -96.7098250071208 -0.000262499845121056 14 {Sawato Portal}
 ~~ }
-NAV: nav43___None_ once ~~ {
+NAV: nav43_shoushi once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8264,7 +8220,7 @@ NAV: nav43___None_ once ~~ {
 	pnt -101.535810248057 -96.5857377847036 2.08333134651184E-05
 	ptl -101.535126431783 -96.5850825468699 2.08333134651184E-05 -101.533333333333 -96.5734350045522 -0.000262499845121056 14 {Portal to Shoushi}
 ~~ }
-NAV: nav44___None_ once ~~ {
+NAV: nav44_tou_tou once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -8287,7 +8243,7 @@ NAV: nav44___None_ once ~~ {
 	pnt -101.712850618362 -97.0149301528931 2.08333134651184E-05
 	ptl -101.712850618362 -97.0149301528931 2.08333134651184E-05 -101.726670837402 -97.0165458043416 -0.000262499845121056 14 {Portal to Silyun}
 ~~ }
-NAV: nav45___None_ once ~~ {
+NAV: nav45_dryreach once ~~ {
 	pnt -101.658329677582 -96.6835114796956 2.08333134651184E-05
 	pnt -101.675724569956 -96.6723512013753 2.08333134651184E-05
 	pnt -101.687401564916 -96.6578074455261 2.08333134651184E-05
@@ -8312,7 +8268,7 @@ NAV: nav45___None_ once ~~ {
 	pnt -101.615774218241 -96.3762532969316 2.08333134651184E-05
 	ptl -101.615774218241 -96.3762532969316 2.08333134651184E-05 -101.616920820872 -96.3639541665713 -0.000262499845121056 14 {Stonehold Portal}
 ~~ }
-NAV: nav46___None_ once ~~ {
+NAV: nav46_fort_tethana once ~~ {
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
 	pnt -101.653368886312 -96.5122077147166 2.08333134651184E-05
@@ -8327,7 +8283,7 @@ NAV: nav46___None_ once ~~ {
 	pnt -101.65618241628 -96.3757331728935 2.08333134651184E-05
 	ptl -101.656137593587 -96.3756600121657 2.08333134651184E-05 -101.658379173279 -96.3648416668177 -0.000262499845121056 14 {Fort Tethana Portal}
 ~~ }
-NAV: nav47___None_ once ~~ {
+NAV: nav47_yaraq once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -8354,7 +8310,7 @@ NAV: nav47___None_ once ~~ {
 	pnt -101.696188863118 -97.0662338892619 2.08333134651184E-05
 	ptl -101.696188863118 -97.0662338892619 2.08333134651184E-05 -101.699920829137 -97.0851958592733 -0.000262499845121056 14 {Base of the Timaru Plateau Portal}
 ~~ }
-NAV: nav48___None_ once ~~ {
+NAV: nav48_tou_tou once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8371,7 +8327,7 @@ NAV: nav48___None_ once ~~ {
 	pnt -101.535761165619 -96.6994355519613 2.08333134651184E-05
 	ptl 94.6857966740926 -30.4132628758748 0.0833541631698608 -101.533420848846 -96.7096000035604 -0.000262499845121056 14 {Portal to Tou-Tou}
 ~~ }
-NAV: nav49___None_ once ~~ {
+NAV: nav49_tufa once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8386,7 +8342,7 @@ NAV: nav49___None_ once ~~ {
 	pnt -101.920199465752 -96.6803729057312 2.08333134651184E-05
 	ptl -101.921443947156 -96.6800419807434 2.08333134651184E-05 -101.932960750659 -96.6833333333333 -0.000262499845121056 14 {Tufa Portal}
 ~~ }
-NAV: nav50___None_ once ~~ {
+NAV: nav50_uziz once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8402,7 +8358,7 @@ NAV: nav50___None_ once ~~ {
 	pnt -101.908030001322 -96.6957880973816 2.08333134651184E-05
 	ptl -101.908030001322 -96.6957880973816 2.08333134651184E-05 -101.908899998665 -96.7105458259582 -0.000262499845121056 14 {Uziz Portal}
 ~~ }
-NAV: nav51___None_ once ~~ {
+NAV: nav51_xarabyd once ~~ {
 	pnt -101.652388381958 -96.6047176678975 2.08333134651184E-05
 	pnt -101.632807890574 -96.6269082387288 2.08333134651184E-05
 	pnt -101.625432300568 -96.6410520553589 2.08333134651184E-05
@@ -8425,7 +8381,7 @@ NAV: nav51___None_ once ~~ {
 	pnt -101.603238805135 -96.934827041626 2.08333134651184E-05
 	ptl -101.603238805135 -96.934827041626 2.08333134651184E-05 -101.59051249822 -96.933137512207 -0.000262499845121056 14 {Portal to Westwatch}
 ~~ }
-NAV: nav52___None_ once ~~ {
+NAV: nav52_xarabydun once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8439,7 +8395,7 @@ NAV: nav52___None_ once ~~ {
 	pnt -101.863093694051 -96.5867295265198 2.08333134651184E-05
 	ptl -101.863093694051 -96.5867295265198 2.08333134651184E-05 -101.866370836894 -96.5744208335877 -0.000262499845121056 14 {Portal to Xarabydun}
 ~~ }
-NAV: nav53___None_ once ~~ {
+NAV: nav53_zaikhal once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8458,7 +8414,7 @@ NAV: nav53___None_ once ~~ {
 	pnt -101.408037249247 -96.7003823916117 2.08333134651184E-05
 	ptl -101.408037249247 -96.7003823916117 2.08333134651184E-05 -101.408554140727 -96.7098208427429 -0.000262499845121056 14 {Portal to Yanshi}
 ~~ }
-NAV: nav54___None_ once ~~ {
+NAV: nav54_yaraq once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8470,7 +8426,7 @@ NAV: nav54___None_ once ~~ {
 	pnt -101.781704950333 -96.6982880274455 2.08333134651184E-05
 	ptl -101.782670974731 -96.6996031761169 2.08333134651184E-05 -101.783350006739 -96.7090750058492 -0.000262499845121056 14 {Portal to Yaraq}
 ~~ }
-NAV: nav55___None_ once ~~ {
+NAV: nav55_zaikhal once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8484,7 +8440,7 @@ NAV: nav55___None_ once ~~ {
 	pnt -101.905433762074 -96.58826268514 2.08333134651184E-05
 	ptl -101.905209338665 -96.5874918460846 2.08333134651184E-05 -101.90858749946 -96.5742208321889 -0.000262499845121056 14 {Portal to Zaikhal}
 ~~ }
-NAV: nav57_maskmaker_ once ~~ {
+NAV: nav57_maskmaker once ~~ {
 	pnt -101.659012762705 -96.5742304801941 2.08333134651184E-05
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
@@ -8516,7 +8472,7 @@ NAV: nav57_maskmaker_ once ~~ {
 	pnt 63.505002339681 17.364084593455 0.0979374965031942
 	pnt 63.5014678319295 17.3700206915538 0.0979374965031942
 ~~ }
-NAV: nav58_vincadi_ once ~~ {
+NAV: nav58_vincadi once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -8576,7 +8532,7 @@ NAV: nav58_vincadi_ once ~~ {
 	pnt 46.5893911997477 -12.5891152699788 0.0416874965031942
 	pnt 46.6582071304321 -12.5883050918579 0.0416874965031942
 ~~ }
-NAV: nav59___None_ once ~~ {
+NAV: nav59_Higashiyama once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -8630,7 +8586,7 @@ NAV: nav59___None_ once ~~ {
 	pnt 0.271151733398438 12.9031591097514 0.516687520345052
 	tlk 0.274523035685221 12.9019045829773 0.516687520345052 0.270325024922689 12.9071166674296 0.516687512397766 37 {Higashiyama Akako}
 ~~ }
-NAV: nav62__vissidal once ~~ {
+NAV: nav62_vissidal once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -8783,7 +8739,7 @@ NAV: nav62__vissidal once ~~ {
 	pnt 65.6428611755371 70.1407287279765 2.08333134651184E-05
 	ptl 65.6430891990662 70.1410724719365 2.08333134651184E-05 65.6331437428792 70.1559400002162 -0.000679166638292372 14 {Vissidal Island}
 ~~ }
-NAV: nav63___None_ once ~~ {
+NAV: nav63_Wai_Jhou once ~~ {
 	cht -101.637317339579 -96.6218548456828 2.08333134651184E-05 {/tn}
 	pnt -101.637317339579 -96.6218548456828 2.08333134651184E-05
 	pnt -101.624283091227 -96.6344682057699 2.08333134651184E-05
@@ -8801,15 +8757,15 @@ NAV: nav63___None_ once ~~ {
 	pnt -101.347319793701 -96.6413205464681 2.08333134651184E-05
 	ptl -101.347319793701 -96.6413205464681 2.08333134651184E-05 -101.338916651408 -96.6417220751444 -0.000262499845121056 14 {Wai Jhou Portal}
 ~~ }
-NAV: nav65___None_ once ~~ {
+NAV: nav65_ulgrims_recall once ~~ {
 	rcl -88.000599638621 -59.8324852625529 0.175020837783813 {Ulgrim's Recall}
 	pau -88.000599638621 -59.8324852625529 0.175020837783813 2000
 	cht -88.000599638621 -59.8324852625529 0.175020837783813 {/vt jump 180 false 100}
 ~~ }
-NAV: nav68___None_ once ~~ {
+NAV: nav68_singularity_caul once ~~ {
 	rcl -94.7025000015895 -97.9641666412354 0.364673614501953 {Recall to the Singularity Caul}
 ~~ }
-NAV: nav69___None_ once ~~ {
+NAV: nav69_singularity_bore once ~~ {
 	pnt -63.7062916437785 -63.5560124715169 0.0245197951793671
 	pnt -63.7076215744019 -63.5752705891927 0.0229149520397186
 	pnt -63.7075198491414 -63.5927345275879 0.0214596231778463
@@ -8852,13 +8808,13 @@ NAV: nav69___None_ once ~~ {
 	pnt -99.4731474558512 13.9713594118754 0.0750208298365275
 	ptl -63.7062916437785 -63.5560124715169 0.0245197951793671 -99.475 14.0083333333333 0.0747375041246414 14 {Singularity Caul}
 ~~ }
-NAV: nav70___None_ circular ~~ {
+NAV: nav70_singviadevice circular ~~ {
 	cht 69.0531416575114 33.7708708445231 0.0916874965031942 {/hom}
 	pau 69.0531416575114 33.7708708445231 0.0916874965031942 25000
 	cht 69.0531416575114 33.7708708445231 0.0916874965031942 {/vt mexec actiontryuseitem[wobjectfindnearestbynameandobjectclass[10, Dangerous Portal Device]]}
 	pau 69.0531416575114 33.7708708445231 0.0916874965031942 8000
 ~~ }
-NAV: nav71___None_ once ~~ {
+NAV: nav71_Vslayer once ~~ {
 	pnt -63.2873523076375 -61.5667846361796 0.550020790100098
 	pnt -63.2981910069784 -61.5809851328532 0.550020790100098
 	pnt -63.3067393302917 -61.5997412045797 0.550020790100098
@@ -8915,16 +8871,16 @@ NAV: nav71___None_ once ~~ {
 	pnt -64.8497594197591 -61.9483818060408 0.550020790100098
 	pnt -64.8624027570089 -61.9546608606974 0.550020790100098
 ~~ }
-NAV: nav81___None_ once ~~ {
+NAV: nav81_aphus_lassel once ~~ {
 	rcl 55.7998047033946 33.6242826461792 0.21668750445048 {Recall Aphus Lassel}
 ~~ }
-NAV: nav82___None_ once ~~ {
+NAV: nav82_aerlinthe once ~~ {
 	rcl 55.7998047033946 33.6242826461792 0.21668750445048 {Aerlinthe Recall}
 ~~ }
-NAV: nav85___None_ once ~~ {
+NAV: nav85_mount_lethe once ~~ {
 	rcl -94.7025000015895 -97.9641666412354 0.364673614501953 {Mount Lethe Recall}
 ~~ }
-NAV: nav86___None_ once ~~ {
+NAV: nav86_fort_tethana once ~~ {
 	pnt -101.658241430918 -96.5890776475271 2.08333134651184E-05
 	pnt -101.657858498891 -96.5435535271963 2.08333134651184E-05
 	pnt -101.657572174072 -96.5095108668009 2.08333134651184E-05
@@ -8936,16 +8892,16 @@ NAV: nav86___None_ once ~~ {
 	pnt -101.716120068232 -96.393957734108 2.08333134651184E-05
 	ptl -101.716120068232 -96.393957734108 2.08333134651184E-05 -101.727083333333 -96.3916666666667 -0.000262499845121056 14 {Glenden Wood Portal}
 ~~ }
-NAV: nav87___None_ once ~~ {
+NAV: nav87_glenden_wood once ~~ {
 	rcl 95.4582380930583 2.27918507258097 0.24168750445048 {Glenden Wood Recall}
 ~~ }
-NAV: nav88___None_ once ~~ {
+NAV: nav88_return_to_the_keep once ~~ {
 	rcl 95.4582380930583 2.27918507258097 0.24168750445048 {Return to the Keep}
 ~~ }
-NAV: nav90___None_ once ~~ {
+NAV: nav90_bur_recall once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Bur Recall}
 ~~ }
-NAV: nav91__toBur once ~~ {
+NAV: nav91_toBur once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -9121,16 +9077,16 @@ NAV: nav91__toBur once ~~ {
 	pnt 30.4999684651693 67.3882210413615 1.69168752034505
 	ptl -101.783333333333 21.35 2.08333134651184E-05 30.4979166666667 67.4 1.69140410423279 37 {Portal to Bur}
 ~~ }
-NAV: nav92___None_ once ~~ {
+NAV: nav92_graveyard once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Call of the Mhoire Forge}
 ~~ }
-NAV: nav93___None_ once ~~ {
+NAV: nav93_colosseum once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Colosseum Recall}
 ~~ }
-NAV: nav95___None_ once ~~ {
+NAV: nav95_neftet once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Lost City of Neftet Recall}
 ~~ }
-NAV: nav96___None_ once ~~ {
+NAV: nav96_neftetrun once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -9309,10 +9265,10 @@ NAV: nav96___None_ once ~~ {
 	pnt 6.22770957946777 -22.1994845072428 0.0333541631698608
 	pnt 6.22576572100321 -22.2123163223267 0.0333541631698608
 ~~ }
-NAV: nav97___None_ once ~~ {
+NAV: nav97_olthoitent once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Paradox-touched Olthoi Infested Area Recall}
 ~~ }
-NAV: nav98___None_ once ~~ {
+NAV: nav98_paradoxrun once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -9721,19 +9677,19 @@ NAV: nav98___None_ once ~~ {
 	pnt 54.9572135607402 43.7612509568532 1.32141405741374
 	pnt 54.9446190913518 43.7585207382838 1.32502085367839
 ~~ }
-NAV: nav99___None_ once ~~ {
+NAV: nav99_gear_knight once ~~ {
 	rcl -67.0473333358765 -87.5435416668654 0.200020837783813 {Gear Knight Invasion Area Camp Recall}
 ~~ }
-NAV: nav102___None_ once ~~ {
+NAV: nav102_fachub once ~~ {
 	rcl 95.4576822916667 2.27521910667419 0.24168750445048 {Facility Hub Recall}
 ~~ }
-NAV: nav103___None_ once ~~ {
+NAV: nav103_viridian_rise once ~~ {
 	rcl 95.4576822916667 2.27521910667419 0.24168750445048 {Viridian Rise Recall}
 ~~ }
-NAV: nav105___None_ once ~~ {
+NAV: nav105_viridiantree once ~~ {
 	rcl 95.4576822916667 2.27521910667419 0.24168750445048 {Viridian Rise Great Tree Recall}
 ~~ }
-NAV: nav106___None_ once ~~ {
+NAV: nav106_viridianroot once ~~ {
 	rcl 42.5786882082621 -42.8663572947184 0.0416874965031942 {Viridian Rise Recall}
 	pnt 41.5307486216227 -43.2891415119171 0.233871571222941
 	pnt 41.5335817337036 -43.3239983558655 0.229478645324707
@@ -9806,7 +9762,7 @@ NAV: nav106___None_ once ~~ {
 	pnt 42.570073445638 -42.8798217773438 0.0416874965031942
 	pnt 42.5777125358582 -42.8667573928833 0.0416874965031942
 ~~ }
-NAV: nav107__viridianroot once ~~ {
+NAV: nav107_viridianroot once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -10007,31 +9963,31 @@ NAV: nav107__viridianroot once ~~ {
 	pnt 42.5851647694906 -42.8757855733236 0.0416874965031942
 	pnt 42.5922770182292 -42.8632038752238 0.0416874965031942
 ~~ }
-NAV: nav108__handrecall once ~~ {
+NAV: nav108_handrecall once ~~ {
 	rcl 49.6512076059977 26.2627005894979 -0.000395833452542623 {Celestial Hand Stronghold Recall}
 ~~ }
-NAV: nav109__webrecall once ~~ {
+NAV: nav109_webrecall once ~~ {
 	rcl 49.6512076059977 26.2627005894979 -0.000395833452542623 {Eldrytch Web Stronghold Recall}
 ~~ }
-NAV: nav110__bloodrecall once ~~ {
+NAV: nav110_bloodrecall once ~~ {
 	rcl 49.6512076059977 26.2627005894979 -0.000395833452542623 {Radiant Blood Stronghold Recall}
 ~~ }
-NAV: nav111___None_ circular ~~ {
+NAV: nav111_wal circular ~~ {
 	cht 69.0531416575114 33.7708708445231 0.0916874965031942 {/hom}
 	pau 69.0531416575114 33.7708708445231 0.0916874965031942 25000
 	cht 69.0531416575114 33.7708708445231 0.0916874965031942 {/vt mexec actiontryuseitem[wobjectfindnearestbynameandobjectclass[10, Dangerous Portal Device]]}
 	pau 69.0531416575114 33.7708708445231 0.0916874965031942 8000
 ~~ }
-NAV: nav117___None_ once ~~ {
+NAV: nav117_rynthid_recall once ~~ {
 	rcl -101.61530790329 -96.6325020472209 2.08333134651184E-05 {Rynthid Recall}
 ~~ }
-NAV: nav120___None_ circular ~~ {
+NAV: nav120_dangerous circular ~~ {
 	cht 54.9446190913518 43.7585207382838 1.32502085367839 {/hom}
 	pau 54.9446190913518 43.7585207382838 1.32502085367839 25000
 	cht 54.9446190913518 43.7585207382838 1.32502085367839 {/vt mexec actiontryuseitem[wobjectfindnearestbynameandobjectclass[10, Dangerous Portal Device]]}
 	pau 54.9446190913518 43.7585207382838 1.32502085367839 8000
 ~~ }
-NAV: nav122___None_ once ~~ {
+NAV: nav122_ivorycrafter once ~~ {
 	pnt -101.658241430918 -96.5890776475271 2.08333134651184E-05
 	pnt -101.657858498891 -96.5435535271963 2.08333134651184E-05
 	pnt -101.657572174072 -96.5095108668009 2.08333134651184E-05
@@ -10084,7 +10040,7 @@ NAV: nav122___None_ once ~~ {
 	pnt 27.4834036509196 29.6001684506734 0.221520837148031
 	pnt 27.4801323572795 29.6097937583923 0.221520837148031
 ~~ }
-NAV: nav123___collector once ~~ {
+NAV: nav123_collector once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -10127,7 +10083,7 @@ NAV: nav123___collector once ~~ {
 	pnt 13.7195801417033 -30.9732022603353 0.0216874996821086
 	pnt 13.7131803830465 -30.974847539266 0.0216874996821086
 ~~ }
-NAV: nav124__stonecollector once ~~ {
+NAV: nav124_stonecollector once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -10160,7 +10116,7 @@ NAV: nav124__stonecollector once ~~ {
 	pnt 19.1474104881287 -74.3027033170064 0.425020853678385
 	cht 19.1282820701599 -74.3058946927388 0.440020847320557 {/vt jump 250 true 1000}
 ~~ }
-NAV: nav125___None_ once ~~ {
+NAV: nav125_leathercrafter once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -10180,7 +10136,7 @@ NAV: nav125___None_ once ~~ {
 	pnt 56.600014368693 33.397647968928 0.175020837783813
 	pnt 56.5966459115346 33.3806597948074 0.175020837783813
 ~~ }
-NAV: nav126__northwatch once ~~ {
+NAV: nav126_northwatch once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -10412,7 +10368,7 @@ NAV: nav126__northwatch once ~~ {
 	pnt 24.9980876286825 81.2702455540498 0.345694796244303
 	pnt 24.9499486287435 81.2764773011208 0.341687520345052
 ~~ }
-NAV: nav127___None_ once ~~ {
+NAV: nav127_trophysmith once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -10449,14 +10405,14 @@ NAV: nav127___None_ once ~~ {
 	pnt 19.1749708811442 -74.3775507926941 0.421687507629395
 	pnt 19.1741181691488 -74.3862411499023 0.421687507629395
 ~~ }
-NAV: nav130___None_ once ~~ {
+NAV: nav130_neftetkt once ~~ {
 	rcl 6.20796055793762 -22.1764251708984 0.0333541631698608 {Lost City of Neftet Recall}
 	pnt 6.2179544766744 -22.1936618804932 0.0333541631698608
 	pnt 6.21486026446025 -22.17569287618 0.0333541631698608
 	pnt 6.20796055793762 -22.1764251708984 0.0333541631698608
 	tlk 6.20796055793762 -22.1764251708984 0.0333541631698608 6.19299917221069 -22.1826583226522 0.0333541631698608 37 {Sir Ibreh bin Kassim}
 ~~ }
-NAV: nav131___None_ once ~~ {
+NAV: nav131_neftetkt2 once ~~ {
 	pnt 6.20635868708293 -22.1739124298096 0.0333541631698608
 	pnt 6.19939247767131 -22.1653116861979 0.0333541631698608
 	pnt 6.17121642430623 -22.1433457056681 0.0339086890220642
@@ -10465,7 +10421,7 @@ NAV: nav131___None_ once ~~ {
 	pnt 6.13907454808553 -22.1671237309774 0.0342646201451619
 	tlk 6.13899040222168 -22.1671404520671 0.0342716296513875 6.13453249931335 -22.1756791432699 0.0346431247889996 37 {Sir Unell bin Rakke}
 ~~ }
-NAV: nav132___None_ once ~~ {
+NAV: nav132_neftetkt3 once ~~ {
 	pnt 6.13899040222168 -22.1671404520671 0.0342716296513875
 	pnt 6.15715565681458 -22.1429896036784 0.0339383641878764
 	pnt 6.18635492324829 -22.1280107498169 0.0351866006851196
@@ -10473,14 +10429,14 @@ NAV: nav132___None_ once ~~ {
 	pnt 6.2470295270284 -22.1383230209351 0.033601705233256
 	tlk 6.24755942026774 -22.1391079584757 0.0335575461387634 6.26230166753133 -22.1433791478475 0.0343793034553528 37 {Dame Tularin}
 ~~ }
-NAV: nav133___None_ once ~~ {
+NAV: nav133_neftetkt4 once ~~ {
 	pnt 6.25360752741496 -22.1455505371094 0.033654793103536
 	pnt 6.26517992019653 -22.159704208374 0.0346191565195719
 	pnt 6.27850567499797 -22.1760023752848 0.0357296387354533
 	pnt 6.2940921942393 -22.1950656255086 0.0370285153388977
 	tlk 6.29487546284993 -22.196967569987 0.0370937863985697 6.30616291364034 -22.2027916590373 0.0380344055593014 37 {Sir Adarl}
 ~~ }
-NAV: nav134___None_ once ~~ {
+NAV: nav134_neftet5 once ~~ {
 	pnt 6.29542649586995 -22.1965677261353 0.0371397058169047
 	pnt 6.29632274309794 -22.2168583234151 0.0372143944104513
 	pnt 6.29812273979187 -22.2345026652018 0.037364395459493
@@ -10488,16 +10444,16 @@ NAV: nav134___None_ once ~~ {
 	pnt 6.30998961130778 -22.2698599179586 0.0416632850964864
 	tlk 6.30992437998454 -22.2711302757263 0.041869576772054 6.31295083363851 -22.2786458333333 0.0433743707835674 37 {Sir Hassim bin Tamarek}
 ~~ }
-NAV: nav136___None_ circular ~~ {
+NAV: nav136_frozenkt1 circular ~~ {
 	ptl -4.30345348119736 83.7587877670924 0.500020853678385 -4.31185412406921 83.783719587326 0.500020861625671 37 {Gregoria, Gurog Destroyer}
 ~~ }
-NAV: nav137___None_ circular ~~ {
+NAV: nav137_frozenkt2 circular ~~ {
 	ptl -4.2927661895752 83.7753795544306 0.500020853678385 -4.2903854171435 83.7840304215749 0.500020861625671 37 {Hunter}
 ~~ }
-NAV: nav138___None_ circular ~~ {
+NAV: nav138_frozenkt3 circular ~~ {
 	ptl -4.2927661895752 83.7753795544306 0.500020853678385 -4.2733637491862 83.7571062485377 0.500020861625671 37 {Leilah}
 ~~ }
-NAV: nav139___None_ linear ~~ {
+NAV: nav139_frozenkt4 linear ~~ {
 	pnt -4.27666736443838 83.7608792940776 0.500020853678385
 	pnt -4.27124703725179 83.7648442109426 0.500020853678385
 	pnt -4.2583332379659 83.7742905457815 0.500020853678385
@@ -10527,7 +10483,7 @@ NAV: nav139___None_ linear ~~ {
 	pnt -4.28796771764755 83.7196428219477 0.500020853678385
 	ptl -4.28761672178904 83.7208188533783 0.500020853678385 -4.28388249874115 83.7191158294678 0.500020861625671 37 {George}
 ~~ }
-NAV: nav140___None_ linear ~~ {
+NAV: nav140_frozenkt5 linear ~~ {
 	pnt -4.28975584904353 83.7213122447332 0.500020853678385
 	pnt -4.29536852836609 83.714470966657 0.500020853678385
 	pnt -4.30672181049983 83.6997005105019 0.500020853678385
@@ -10537,16 +10493,16 @@ NAV: nav140___None_ linear ~~ {
 	pnt -4.28038794994354 83.6989889184634 0.500020853678385
 	ptl -4.27978431383769 83.7005438129107 0.500020853678385 -4.27328041394552 83.7055945833524 0.500020861625671 37 {Kumiko}
 ~~ }
-NAV: nav141___None_ once ~~ {
+NAV: nav141_frozenkt6 once ~~ {
 	ptl -4.29427502552668 83.6824648578962 0.500020853678385 -4.28559875090917 83.696454167366 0.500020861625671 37 {Boone}
 	pau -4.29427502552668 83.6824648578962 0.500020853678385 5000
 	pnt -4.28753201166789 83.6880702137947 0.500020853678385
 	pnt -4.29641211032867 83.6786448299885 0.500020853678385
 ~~ }
-NAV: nav144___None_ circular ~~ {
+NAV: nav144_hoshinokt circular ~~ {
 	ptl -42.9609082539876 80.6714670817057 0.0500208298365275 -42.9612458546956 80.6557595888774 0.0500270836055279 37 {Sergeant Trebuus}
 ~~ }
-NAV: nav145___None_ linear ~~ {
+NAV: nav145_hoshinokt3 linear ~~ {
 	pnt -42.960072517395 80.6673592408498 0.0500208298365275
 	pnt -42.9470680236816 80.658687655131 0.0502651611963908
 	pnt -42.9306795756022 80.6609096209208 0.0516308665275574
@@ -10560,29 +10516,29 @@ NAV: nav145___None_ linear ~~ {
 	pnt -42.9962138493856 80.6966554323832 0.0487708330154419
 	ptl -42.9962138493856 80.6966554323832 0.0487708330154419 -42.9885666529338 80.6886745770772 0.0487750023603439 37 {Lord Eorlinde}
 ~~ }
-NAV: nav146___None_ circular ~~ {
+NAV: nav146_hoshinokt4 circular ~~ {
 	ptl -42.9962138493856 80.6966554323832 0.0487708330154419 -42.9947999954224 80.6892554124196 0.0487708337605 37 {Griffon}
 ~~ }
-NAV: nav147___None_ circular ~~ {
+NAV: nav147_hoshinokt5 circular ~~ {
 	ptl -42.9962138493856 80.6966554323832 0.0487708330154419 -43.0125833511353 80.6878458340963 0.0487708337605 37 {Hanamoto Aki'ko}
 ~~ }
-NAV: nav148___None_ circular ~~ {
+NAV: nav148_hoshinokt6 circular ~~ {
 	ptl -42.9967030843099 80.6963921229045 0.0487708330154419 -43.0001458485921 80.7067937533061 0.0487708337605 37 {Corporal Irashi}
 ~~ }
-NAV: nav149___None_ circular ~~ {
+NAV: nav149_hoshinokt7 circular ~~ {
 	ptl -42.9967030843099 80.6963921229045 0.0487708330154419 -42.9958916982015 80.7098141670227 0.0487708337605 37 {Lieutenant Takamaki}
 ~~ }
-NAV: nav150___None_ circular ~~ {
+NAV: nav150_hoshinokt8 circular ~~ {
 	pnt -42.9967030843099 80.6963921229045 0.0487708330154419
 	pnt -42.9923572540283 80.7002113978068 0.0487708330154419
 	pnt -42.9734344482422 80.7014994939168 0.0500208298365275
 	pnt -42.9537143071492 80.7022134462992 0.0500208298365275
 	ptl -42.9483734766642 80.7018146355947 0.0501563747723897 -42.9636666615804 80.7106066703796 0.0500270798802376 37 {Lieutenant Aurin}
 ~~ }
-NAV: nav151___None_ circular ~~ {
+NAV: nav151_hoshinokt9 circular ~~ {
 	ptl -42.9483734766642 80.7018146355947 0.0501563747723897 -42.9592625300089 80.7128587563833 0.0500229150056839 37 {Aun Kirtal}
 ~~ }
-NAV: nav152___None_ once ~~ {
+NAV: nav152_hoshinokt once ~~ {
 	pnt -42.9581783294678 80.7019054889679 0.0500208298365275
 	pnt -42.9583717346191 80.6820466677348 0.0500208298365275
 	pnt -42.9585102081299 80.6678238391876 0.0500208298365275
@@ -10590,7 +10546,7 @@ NAV: nav152___None_ once ~~ {
 	pnt -42.9851720174154 80.6666889508565 0.0500208298365275
 	ptl -42.9851720174154 80.6666889508565 0.0500208298365275 -42.9919166564941 80.668191242218 0.0500270836055279 37 {Sergeant Freng}
 ~~ }
-NAV: nav154___None_ once ~~ {
+NAV: nav154_toutoukt once ~~ {
 	rcl 94.8179962793986 -30.2917719523112 0.0833541631698608 {Recall Aphus Lassel}
 	pnt 95.4592402776082 2.27837050755819 0.24168750445048
 	pnt 95.4595985412598 2.29238675435384 0.24168750445048
@@ -10613,25 +10569,25 @@ NAV: nav154B_toutou once ~~ {
 	pnt 94.7808736165365 -30.319929822286 0.0833541631698608
 	pnt 94.8156834284464 -30.2928133964539 0.0833541631698608
 ~~ }
-NAV: nav155___None_ circular ~~ {
+NAV: nav155_toutoukt circular ~~ {
 	ptl 94.8451359430949 -30.2894950866699 0.0833541631698608 94.838975016276 -30.2967375119527 0.0833583325147629 37 {Royal Guard}
 ~~ }
-NAV: nav156___None_ circular ~~ {
+NAV: nav156_toutoukt circular ~~ {
 	ptl 94.8387243270874 -30.2832807540894 0.0833541631698608 94.8337791442871 -30.2890791575114 0.0833541601896286 37 {Umbral Guard}
 ~~ }
-NAV: nav157___None_ circular ~~ {
+NAV: nav157_toutoukt circular ~~ {
 	ptl 94.8329589207967 -30.2783635775248 0.0833541631698608 94.8293541590373 -30.2825541814168 0.0833541601896286 37 {Umbral Guard}
 ~~ }
-NAV: nav158___None_ circular ~~ {
+NAV: nav158_toutoukt circular ~~ {
 	ptl 94.8142334620158 -30.2766000111898 0.0833541631698608 94.8205583572388 -30.2686250050863 0.0833541601896286 37 {Royal Guard}
 ~~ }
-NAV: nav159___None_ circular ~~ {
+NAV: nav159_toutoukt circular ~~ {
 	ptl 94.8078531901042 -30.2696640650431 0.0833541631698608 94.8163499832153 -30.2596958478292 0.0833541601896286 37 {Royal Guard}
 ~~ }
-NAV: nav160___None_ circular ~~ {
+NAV: nav160_toutoukt circular ~~ {
 	ptl 94.805569712321 -30.2592757542928 0.0833541631698608 94.8084374745687 -30.2432708422343 0.0833541601896286 37 {Royal Guard}
 ~~ }
-NAV: nav162___None_ once ~~ {
+NAV: nav162_graveyardkt once ~~ {
 	rcl -43.9734394073486 -65.4209643363953 -0.0616458336512248 {Call of the Mhoire Forge}
 	pnt -43.9883333206177 -65.3766666412353 -0.0616458336512248
 	pnt -43.979541015625 -65.3773808797201 -0.0616458336512248
@@ -10642,26 +10598,26 @@ NAV: nav162___None_ once ~~ {
 	pnt -43.9734394073486 -65.4209643363953 -0.0616458336512248
 	tlk -43.9734394073486 -65.4209643363953 -0.0616458336512248 -43.9669875144958 -65.423554166158 -0.061645831912756 37 {Renata}
 ~~ }
-NAV: nav163___None_ once ~~ {
+NAV: nav163_graveyardkt once ~~ {
 	pnt -43.9748364766439 -65.4373648643494 -0.0616458336512248
 	tlk -43.9748364766439 -65.4373648643494 -0.0616458336512248 -43.96677125295 -65.4375375111898 -0.061645831912756 37 {Yoite}
 ~~ }
-NAV: nav164___None_ once ~~ {
+NAV: nav164_graveyardkt once ~~ {
 	pnt -43.9748515129089 -65.4537966092428 -0.0616458336512248
 	tlk -43.9748515129089 -65.4537966092428 -0.0616458336512248 -43.9678400039673 -65.4534374872843 -0.061645831912756 37 {Gadi}
 ~~ }
-NAV: nav165___None_ once ~~ {
+NAV: nav165_graveyardkt once ~~ {
 	pnt -43.9738398551941 -65.4665543874105 -0.0616458336512248
 	tlk -43.9738398551941 -65.4665543874105 -0.0616458336512248 -43.9677874883016 -65.465416653951 -0.061645831912756 37 {Aethelswith}
 ~~ }
-NAV: nav167___None_ once ~~ {
+NAV: nav167_rythnidkt once ~~ {
 	rcl -63.2691910107931 -61.612263806661 0.550020790100098 {Rynthid Recall}
 	pnt -63.215612856547 -61.5792284647624 0.550020790100098
 	pnt -63.2404368082682 -61.5810763676961 0.550020790100098
 	pnt -63.2616822560628 -61.5954984029134 0.550020790100098
 	pnt -63.2683497428894 -61.6118288675944 0.550020790100098
 ~~ }
-NAV: nav168___None_ once ~~ {
+NAV: nav168_rythnidkt once ~~ {
 	pnt -63.7062916437785 -63.5560124715169 0.0245197951793671
 	pnt -63.7019088109334 -63.5355486690998 0.0250208338101705
 	pnt -63.69571240743 -63.5165743470192 0.0250208338101705
@@ -10722,30 +10678,30 @@ NAV: nav168___None_ once ~~ {
 	pnt -63.2277773221334 -61.5981360435486 0.550020790100098
 	pnt -63.25914478302 -61.6159694989522 0.550020790100098
 ~~ }
-NAV: nav170___None_ circular ~~ {
+NAV: nav170_rythnidkt circular ~~ {
 	cht -63.2836081504822 -61.5652400334676 0.550020790100098 {/mt usep contract}
 	pnt -63.2700334866842 -61.6361111323039 0.550020790100098
 	cht -63.2836081504822 -61.5652400334676 0.550020790100098 {/mt combatstate peace}
 	tlk -63.2836081504822 -61.5652400334676 0.550020790100098 -63.2734658241272 -61.6398454030355 0.550020813941956 37 {Hernd}
 	cht -63.2836081504822 -61.5652400334676 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav171___None_ circular ~~ {
+NAV: nav171_rythnidkt circular ~~ {
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 	pnt -63.2868336836497 -61.6366433779399 0.550020790100098
 	tlk -63.2837694485982 -61.565248298645 0.550020790100098 -63.2904891649882 -61.6437337557475 0.550120770931244 37 {Lohrn}
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav172___None_ circular ~~ {
+NAV: nav172_rythnidkt circular ~~ {
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 	tlk -63.2837694485982 -61.565248298645 0.550020790100098 -63.3009799957275 -61.6414216677348 0.550120770931244 37 {Wido}
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav173___None_ circular ~~ {
+NAV: nav173_rythnidkt circular ~~ {
 	cht -63.2836081504822 -61.5652400334676 0.550020790100098 {/mt usep contract}
 	ptl -63.2836081504822 -61.5652400334676 0.550020790100098 -63.3219833374023 -61.6377908388774 0.550120770931244 37 {Rhys}
 	cht -63.2836081504822 -61.5652400334676 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav174___None_ once ~~ {
+NAV: nav174_rythnidkt once ~~ {
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 	pnt -63.3135739326477 -61.6308540344238 0.550020790100098
 	pnt -63.3112309773763 -61.6188536643982 0.550020790100098
@@ -10757,27 +10713,27 @@ NAV: nav174___None_ once ~~ {
 	tlk -63.2837694485982 -61.565248298645 0.550020790100098 -63.3153083324432 -61.5581704139709 0.550120770931244 37 {Ranulf}
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav175___None_ circular ~~ {
+NAV: nav175_rythnidkt circular ~~ {
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 	ptl -63.2837694485982 -61.565248298645 0.550020790100098 -63.3007833321889 -61.5582320849101 0.550120770931244 37 {Sylvanus}
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav176___None_ circular ~~ {
+NAV: nav176_rythnidkt circular ~~ {
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 	ptl -63.2837694485982 -61.565248298645 0.550020790100098 -63.2855283260345 -61.5559545834859 0.550120770931244 37 {Marcus}
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav177___None_ circular ~~ {
+NAV: nav177_rythnidkt circular ~~ {
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 	ptl -63.2837694485982 -61.565248298645 0.550020790100098 -63.2678112347921 -61.567797088623 0.55002498626709 37 {Tillahan}
 	cht -63.2837694485982 -61.565248298645 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav178___None_ once ~~ {
+NAV: nav178_rythnidkt once ~~ {
 	cht -63.2840587615967 -61.5652133305868 0.550020790100098 {/mt usep contract}
 	pau -63.2840587615967 -61.5652133305868 0.550020790100098 3500
 	cht -63.2840587615967 -61.5652133305868 0.550020790100098 {/mt usep contract}
 ~~ }
-NAV: nav200___None_ once ~~ {
+NAV: nav200_tethquest once ~~ {
 	rcl -72.0272713979085 1.43561968803406 0.916687456766764 {Primary Portal Recall}
 	pnt -72.0394348462423 1.44397865931193 0.916687456766764
 	pnt -72.0598325093587 1.46934564908346 0.916687456766764
@@ -10799,7 +10755,7 @@ NAV: nav200___None_ once ~~ {
 	tlk -72.0007586161296 1.65446840922038 0.916687456766764 -71.9784449895223 1.68054167429606 0.916687428951263 37 {Wilhelmina}
 	pnt -72.0007586161296 1.65446840922038 0.916687456766764
 ~~ }
-NAV: nav203___None_ once ~~ {
+NAV: nav203_curator once ~~ {
 	rcl -63.202916653951 -61.578333346049 0.550020790100098 {Rynthid Recall}
 	pnt -63.2491377512614 -61.6140370686849 0.550020790100098
 	pnt -63.3236534436544 -61.6282383600871 0.550020790100098
@@ -10841,7 +10797,7 @@ NAV: nav203___None_ once ~~ {
 	pnt -30.6287183523178 -35.2208232561747 -0.174979162216187
 	pnt -30.6253457864126 -35.1824394543966 -0.174979162216187
 ~~ }
-NAV: nav204___None_ once ~~ {
+NAV: nav204_hollowdungeon once ~~ {
 	pnt -38.4306842803955 91.0944820404053 0.350020853678385
 	pnt -38.4659764607747 91.1438050905863 0.350020853678385
 	pnt -38.4892225583394 91.1735409418742 0.350020853678385
@@ -10852,19 +10808,19 @@ NAV: nav204___None_ once ~~ {
 	pnt -99.7668394088745 89.4873273849487 2.08333134651184E-05
 	tlk -38.4653275171916 91.1430203755697 0.350020853678385 -99.7598124821981 89.4872583389282 2.08333131013205E-05 37 {Virindi Energy Seeker}
 ~~ }
-NAV: nav205___None_ circular ~~ {
+NAV: nav205_hollowdungeon circular ~~ {
 	tlk -38.4653275171916 91.1430203755697 0.350020853678385 -99.7600374857585 89.4790999730428 2.08333131013205E-05 37 {Ascended Virindi Hunter}
 ~~ }
-NAV: nav206___None_ circular ~~ {
+NAV: nav206_hollowdungeon circular ~~ {
 	tlk -38.4653275171916 91.1430203755697 0.350020853678385 -99.7735125223796 89.4781041463216 2.08333131013205E-05 37 {Ascended Void Hunter}
 ~~ }
-NAV: nav207___None_ circular ~~ {
+NAV: nav207_hollowdungeon circular ~~ {
 	tlk -38.4653275171916 91.1430203755697 0.350020853678385 -99.7727666854858 89.4894875208537 2.08333131013205E-05 37 {Void Energy Seeker}
 ~~ }
-NAV: nav208___None_ once ~~ {
+NAV: nav208_hollowdungeon once ~~ {
 	pnt -99.7668394088745 89.4873273849487 2.08333134651184E-05
 ~~ }
-NAV: nav209___curatornoscroll once ~~ {
+NAV: nav209_curatornoscroll once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -10942,7 +10898,7 @@ NAV: nav209___curatornoscroll once ~~ {
 	pnt -30.6287183523178 -35.2208232561747 -0.174979162216187
 	pnt -30.6253457864126 -35.1824394543966 -0.174979162216187
 ~~ }
-NAV: nav220___sub_ once ~~ {
+NAV: nav220_subasherons once ~~ {
 	pnt -100.83958419164 58.717795475324 2.08333134651184E-05
 	pnt -100.825743707021 58.7196038405101 2.08333134651184E-05
 	pnt -100.814030424754 58.7288074413935 2.08333134651184E-05
@@ -10953,7 +10909,7 @@ NAV: nav220___sub_ once ~~ {
 	cht -100.815071773529 58.7731631040573 2.08333134651184E-05 {/vt opt set opendoors false}
 	ptl -100.815071773529 58.7731631040573 2.08333134651184E-05 -100.806403319041 58.7769420862198 -0.000262499845121056 14 {Asheron's Castle}
 ~~ }
-NAV: nav221___sub_ once ~~ {
+NAV: nav222_subcandeth once ~~ {
 	pnt -100.83958419164 58.717795475324 2.08333134651184E-05
 	pnt -100.825743707021 58.7196038405101 2.08333134651184E-05
 	pnt -100.814030424754 58.7288074413935 2.08333134651184E-05
@@ -10963,7 +10919,7 @@ NAV: nav221___sub_ once ~~ {
 	pnt -100.815071773529 58.7731631040573 2.08333134651184E-05
 	ptl -100.815071773529 58.7731631040573 2.08333134651184E-05 -100.826977507273 58.7769808371862 -0.000262499845121056 14 {Candeth Keep Portal}
 ~~ }
-NAV: nav222___sub_ once ~~ {
+NAV: nav222_subwithered once ~~ {
 	pnt -100.838427416484 58.7199907859166 2.08333134651184E-05
 	pnt -100.811024920146 58.7049032688141 2.08333134651184E-05
 	pnt -100.802760187785 58.6967278003693 2.08333134651184E-05
@@ -10971,7 +10927,7 @@ NAV: nav222___sub_ once ~~ {
 	pnt -100.781920146942 58.654544321696 2.08333134651184E-05
 	ptl -100.781920146942 58.654544321696 2.08333134651184E-05 -100.778754170736 58.6459087530772 -0.000262499845121056 14 {Withered Beach}
 ~~ }
-NAV: nav223___sub_ once ~~ {
+NAV: nav223_aerlinthe once ~~ {
 	pnt -100.846030298869 58.721537621816 2.08333134651184E-05
 	pnt -100.829273160299 58.7106163978577 2.08333134651184E-05
 	pnt -100.817414061228 58.7043695767721 2.08333134651184E-05
@@ -10988,7 +10944,7 @@ NAV: nav223___sub_ once ~~ {
 	pnt -100.649941126506 58.7128467241923 -0.0249791661898295
 	ptl -100.652258014679 58.8085601091385 -0.0249791661898295 -100.663020833333 58.7244104146957 -0.025262501090765 14 {Aerlinthe Island Portal}
 ~~ }
-NAV: nav224___sub_ once ~~ {
+NAV: nav224_substonehold once ~~ {
 	pnt -100.846030298869 58.721537621816 2.08333134651184E-05
 	pnt -100.829273160299 58.7106163978577 2.08333134651184E-05
 	pnt -100.817414061228 58.7043695767721 2.08333134651184E-05
@@ -11005,7 +10961,7 @@ NAV: nav224___sub_ once ~~ {
 	pnt -100.649941126506 58.7128467241923 -0.0249791661898295
 	ptl -100.652258014679 58.8085601091385 -0.0249791661898295 -100.634820842743 58.725 -0.025262501090765 14 {Stonehold Portal}
 ~~ }
-NAV: nav225___sub_ once ~~ {
+NAV: nav225_subabayarlab once ~~ {
 	pnt -100.846030298869 58.721537621816 2.08333134651184E-05
 	pnt -100.829273160299 58.7106163978577 2.08333134651184E-05
 	pnt -100.817414061228 58.7043695767721 2.08333134651184E-05
@@ -11027,7 +10983,7 @@ NAV: nav225___sub_ once ~~ {
 	pnt -100.652258014679 58.8085601091385 -0.0249791661898295
 	ptl -100.652258014679 58.8085601091385 -0.0249791661898295 -100.649870840708 58.8222747921944 -0.025262501090765 14 {Abayar's Laboratory}
 ~~ }
-NAV: nav226___sub_ once ~~ {
+NAV: nav226_subhumming once ~~ {
 	pnt -100.836018880208 58.7138811588287 2.08333134651184E-05
 	pnt -100.813184483846 58.7013225396474 2.08333134651184E-05
 	pnt -100.783407592773 58.6892781416575 2.08333134651184E-05
@@ -11050,7 +11006,7 @@ NAV: nav226___sub_ once ~~ {
 	pnt -100.705036354065 58.5858036200205 -0.0249791661898295
 	ptl -100.654491043091 58.473705291748 -0.0249791661898295 -100.698604170481 58.5930600007375 -0.025262501090765 14 {Humming Crystal Portal}
 ~~ }
-NAV: nav227___sub_ once ~~ {
+NAV: nav227_subolthoinest once ~~ {
 	pnt -100.836018880208 58.7138811588287 2.08333134651184E-05
 	pnt -100.813184483846 58.7013225396474 2.08333134651184E-05
 	pnt -100.783407592773 58.6892781416575 2.08333134651184E-05
@@ -11079,7 +11035,7 @@ NAV: nav227___sub_ once ~~ {
 	pnt -100.654491043091 58.473705291748 -0.0249791661898295
 	ptl -100.654491043091 58.473705291748 -0.0249791661898295 -100.663879172007 58.4611020723979 -0.025262501090765 14 {Olthoi Horde Nest}
 ~~ }
-NAV: nav228___sub_ once ~~ {
+NAV: nav228_subwilderness once ~~ {
 	pnt -100.839849789937 58.7187664429347 2.08333134651184E-05
 	pnt -100.816450023651 58.7071966807048 2.08333134651184E-05
 	pnt -100.790745035807 58.6944871107737 2.08333134651184E-05
@@ -11098,7 +11054,7 @@ NAV: nav228___sub_ once ~~ {
 	pnt -100.60658009847 58.62398686409 -0.0249791661898295
 	ptl -100.607873662313 58.5618576367696 -0.0249791661898295 -100.594791666667 58.61875 -0.025262501090765 14 {Wilderness Citadel Portal}
 ~~ }
-NAV: nav231___sub_ once ~~ {
+NAV: nav231_subdesert once ~~ {
 	pnt -100.839849789937 58.7187664429347 2.08333134651184E-05
 	pnt -100.816450023651 58.7071966807048 2.08333134651184E-05
 	pnt -100.790745035807 58.6944871107737 2.08333134651184E-05
@@ -11120,7 +11076,7 @@ NAV: nav231___sub_ once ~~ {
 	pnt -100.609000015259 58.5625116348267 -0.0249791661898295
 	ptl -100.607873662313 58.5618576367696 -0.0249791661898295 -100.608329137166 58.5458254178365 -0.025262501090765 14 {Desert Citadel Portal}
 ~~ }
-NAV: nav232___sub_ once ~~ {
+NAV: nav232_subjungle once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11143,7 +11099,7 @@ NAV: nav232___sub_ once ~~ {
 	pnt -100.43513730367 58.725044465065 -0.0249791661898295
 	ptl -100.54097328186 58.7295550346375 -0.0249791661898295 -100.413629150391 58.7249366680781 -0.025262501090765 14 {Jungle Shadows}
 ~~ }
-NAV: nav233___sub_ once ~~ {
+NAV: nav233_submalignant once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11169,7 +11125,7 @@ NAV: nav233___sub_ once ~~ {
 	pnt -100.417103068034 58.7667967955271 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.412600008647 58.7514875014623 -0.025262501090765 14 {Malignant Tabernacle}
 ~~ }
-NAV: nav234___sub_ once ~~ {
+NAV: nav234_subvenemous once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11196,7 +11152,7 @@ NAV: nav234___sub_ once ~~ {
 	pnt -100.395100021362 58.767960691452 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.386466662089 58.7514875014623 -0.025262501090765 14 {Venemous Nidus}
 ~~ }
-NAV: nav235___sub_ once ~~ {
+NAV: nav235_subconvergent once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11224,7 +11180,7 @@ NAV: nav235___sub_ once ~~ {
 	pnt -100.36974512736 58.7723785718282 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.359191640218 58.7514875014623 -0.025262501090765 14 {Convergent Median}
 ~~ }
-NAV: nav236___sub_ once ~~ {
+NAV: nav236_subtoutou once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11258,7 +11214,7 @@ NAV: nav236___sub_ once ~~ {
 	pnt -100.387103144328 58.8487511950235 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.38535416921 58.8642753750086 -0.025262501090765 14 {Portal to Tou-Tou}
 ~~ }
-NAV: nav237___sub_ once ~~ {
+NAV: nav237_subparadox once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11292,7 +11248,7 @@ NAV: nav237___sub_ once ~~ {
 	pnt -100.387103144328 58.8487511950235 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.403208351135 58.835127000014 -0.025262501090765 14 {The Paradox Encampment Tent}
 ~~ }
-NAV: nav238___sub_ once ~~ {
+NAV: nav238_royaltent once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11328,12 +11284,12 @@ NAV: nav238___sub_ once ~~ {
 	pnt -100.406261761983 58.850046821346 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.412716674805 58.8642197916905 -0.025262501090765 14 {The Royal Tent}
 ~~ }
-NAV: nav239___sub_ once ~~ {
+NAV: nav239_subvrise once ~~ {
 	pnt -100.828292592367 58.7187776883443 2.08333134651184E-05
 	pnt -100.798775513967 58.7118164857229 2.08333134651184E-05
 	ptl -100.790510940552 58.7113182385763 2.08333134651184E-05 -100.770437908173 58.7092316627502 -0.000262499845121056 14 {Viridian Rise Access}
 ~~ }
-NAV: nav240___sub_ once ~~ {
+NAV: nav240_subfrozenv once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11371,7 +11327,7 @@ NAV: nav240___sub_ once ~~ {
 	pnt -100.433056322734 58.849785675512 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.438570849101 58.8644415001074 -0.025262501090765 14 {Frozen Valley}
 ~~ }
-NAV: nav241___sub once ~~ {
+NAV: nav241_subrythnid once ~~ {
 	pnt -100.836213207245 58.7143940766652 2.08333134651184E-05
 	pnt -100.813862101237 58.7011648495992 2.08333134651184E-05
 	pnt -100.786818472544 58.6883469581604 2.08333134651184E-05
@@ -11410,7 +11366,7 @@ NAV: nav241___sub once ~~ {
 	pnt -100.44822807312 58.8473433805009 -0.0249791661898295
 	ptl -100.44822807312 58.8473433805009 -0.0249791661898295 -100.454654184977 58.8352193335692 -0.025262501090765 14 {Rynthid Encampment}
 ~~ }
-NAV: nav242___sub_ once ~~ {
+NAV: nav242_subcrater once ~~ {
 	pnt -100.843698628743 58.7152691523234 2.08333134651184E-05
 	pnt -100.838530890147 58.697246837616 2.08333134651184E-05
 	pnt -100.831182765961 58.6716204166412 2.08333134651184E-05
@@ -11425,7 +11381,7 @@ NAV: nav242___sub_ once ~~ {
 	pnt -100.816035016378 58.4214063644409 -0.0249791661898295
 	ptl -100.816035016378 58.4214063644409 -0.0249791661898295 -100.816888745626 58.4044375101725 -0.025262501090765 14 {Crater Village}
 ~~ }
-NAV: nav243___sub_ once ~~ {
+NAV: nav243_subcrystal once ~~ {
 	pnt -100.843803564707 58.7086095174154 2.08333134651184E-05
 	pnt -100.834169006348 58.6750320116679 2.08333134651184E-05
 	pnt -100.822992006938 58.643127044042 2.08333134651184E-05
@@ -11440,7 +11396,7 @@ NAV: nav243___sub_ once ~~ {
 	pnt -100.890251763662 58.5149140357971 -0.0249791661898295
 	ptl -100.890251763662 58.5149140357971 -0.0249791661898295 -100.909926668803 58.5162979125977 -0.025262501090765 14 {Crystaline Crag}
 ~~ }
-NAV: nav244___sub_ once ~~ {
+NAV: nav244_subab once ~~ {
 	pnt -100.841082255046 58.7061443328857 2.08333134651184E-05
 	pnt -100.834266599019 58.6823749860128 2.08333134651184E-05
 	pnt -100.828020000458 58.6605900764465 2.08333134651184E-05
@@ -11465,7 +11421,7 @@ NAV: nav244___sub_ once ~~ {
 	pnt -100.899226220449 58.3140071233114 -0.0249791661898295
 	ptl -100.899226220449 58.3140071233114 -0.0249791661898295 -100.887129163742 58.3212208429972 -0.025262501090765 14 {Ayan Baqur Portal}
 ~~ }
-NAV: nav245___sub_ once ~~ {
+NAV: nav245_subempyrean once ~~ {
 	pnt -100.841082255046 58.7061443328857 2.08333134651184E-05
 	pnt -100.834266599019 58.6823749860128 2.08333134651184E-05
 	pnt -100.828020000458 58.6605900764465 2.08333134651184E-05
@@ -11490,7 +11446,7 @@ NAV: nav245___sub_ once ~~ {
 	pnt -100.899226220449 58.3140071233114 -0.0249791661898295
 	ptl -100.899226220449 58.3140071233114 -0.0249791661898295 -100.888198757172 58.2966833114624 -0.025262501090765 14 {Empyrean Facility}
 ~~ }
-NAV: nav246___sub_ once ~~ {
+NAV: nav246_subbandit once ~~ {
 	pnt -100.841082255046 58.7061443328857 2.08333134651184E-05
 	pnt -100.834266599019 58.6823749860128 2.08333134651184E-05
 	pnt -100.828020000458 58.6605900764465 2.08333134651184E-05
@@ -11515,7 +11471,7 @@ NAV: nav246___sub_ once ~~ {
 	pnt -100.899226220449 58.3140071233114 -0.0249791661898295
 	ptl -100.899226220449 58.3140071233114 -0.0249791661898295 -100.910945415497 58.2964833577474 -0.025262501090765 14 {Bandit Castle Portal}
 ~~ }
-NAV: nav247___sub_ once ~~ {
+NAV: nav247_bsd once ~~ {
 	pnt -100.842613538106 58.7114846547445 2.08333134651184E-05
 	pnt -100.833456166585 58.679548629125 2.08333134651184E-05
 	pnt -100.826718393962 58.6560509204865 2.08333134651184E-05
@@ -11561,7 +11517,7 @@ NAV: nav247___sub_ once ~~ {
 	pnt -101.096596117814 58.22975025177 -0.124979170163473
 	pnt -101.113262756666 58.226126797994 -0.124979170163473
 ~~ }
-NAV: nav248___sub_ once ~~ {
+NAV: nav248_submetos once ~~ {
 	pnt -100.841082255046 58.7061443328857 2.08333134651184E-05
 	pnt -100.834545485179 58.6833474636078 2.08333134651184E-05
 	pnt -100.827350489298 58.6582552750905 2.08333134651184E-05
@@ -11600,7 +11556,7 @@ NAV: nav248___sub_ once ~~ {
 	pnt -100.941965007782 58.5408728599548 -0.124979170163473
 	pnt -100.942655865351 58.5661384264628 -0.124979170163473
 ~~ }
-NAV: nav250___sub_ once ~~ {
+NAV: nav250_subnexus once ~~ {
 	pnt -100.841082255046 58.7061443328857 2.08333134651184E-05
 	pnt -100.834545485179 58.6833474636078 2.08333134651184E-05
 	pnt -100.827350489298 58.6582552750905 2.08333134651184E-05
@@ -11645,7 +11601,7 @@ NAV: nav250___sub_ once ~~ {
 	pnt -100.884257300695 58.6489787419637 -0.124979170163473
 	ptl -100.902010234197 58.640647983551 -0.124979170163473 -100.862306245168 58.649706252416 -0.125262498855591 14 {Nexus Portal}
 ~~ }
-NAV: nav251___subjump_ once ~~ {
+NAV: nav251_subjump once ~~ {
 	pnt -100.839718087514 58.6988219420115 2.08333134651184E-05
 	pnt -100.831484826406 58.6730218887329 2.08333134651184E-05
 	pnt -100.822296841939 58.6442300160726 2.08333134651184E-05
@@ -11697,7 +11653,7 @@ NAV: nav251___subjump_ once ~~ {
 	pnt -100.773634115855 58.1217642466227 -0.174979162216187
 	cht -100.793172804515 58.2304684321086 -0.174979162216187 {/vt jump 180 false 100}
 ~~ }
-NAV: nav252___sub_ once ~~ {
+NAV: nav252_subpotb once ~~ {
 	pnt -100.788746388753 58.0755252838135 -0.299979146321615
 	pnt -100.801855564117 58.083424949646 -0.299979146321615
 	pnt -100.824700737 58.0927456537882 -0.299979146321615
@@ -11706,7 +11662,7 @@ NAV: nav252___sub_ once ~~ {
 	pnt -100.856833966573 58.0992130279541 -0.299979146321615
 	ptl -100.872994168599 58.098805809021 -0.299979146321615 -100.858357079824 58.1277041753133 -0.300262480974197 14 {Path of the Blind Surface}
 ~~ }
-NAV: nav253___sub_ once ~~ {
+NAV: nav253_subeo once ~~ {
 	pnt -100.788746388753 58.0755252838135 -0.299979146321615
 	pnt -100.801855564117 58.083424949646 -0.299979146321615
 	pnt -100.824700737 58.0927456537882 -0.299979146321615
@@ -11716,28 +11672,28 @@ NAV: nav253___sub_ once ~~ {
 	pnt -100.872994168599 58.098805809021 -0.299979146321615
 	ptl -100.872994168599 58.098805809021 -0.299979146321615 -100.886035410563 58.0999458312988 -0.300262480974197 14 {Egg Orchard Surface}
 ~~ }
-NAV: nav254___sub_ once ~~ {
+NAV: nav254_subaugrealm once ~~ {
 	pnt -100.796808656057 58.0601200739543 -0.299979146321615
 	pnt -100.823853460948 58.0596662521362 -0.299979146321615
 	pnt -100.846932347616 58.0576856613159 -0.299979146321615
 	pnt -100.856255118052 58.05716381073 -0.299979146321615
 	ptl -100.856255118052 58.05716381073 -0.299979146321615 -100.858287493388 58.0305708567301 -0.300262480974197 14 {Augmentation Realm Main Level}
 ~~ }
-NAV: nav255___sub_ once ~~ {
+NAV: nav255_subinsatiable once ~~ {
 	pnt -100.796808656057 58.0601200739543 -0.299979146321615
 	pnt -100.823853460948 58.0596662521362 -0.299979146321615
 	pnt -100.846932347616 58.0576856613159 -0.299979146321615
 	pnt -100.856255118052 58.05716381073 -0.299979146321615
 	ptl -100.856255118052 58.05716381073 -0.299979146321615 -100.886068757375 58.0583875020345 -0.300262480974197 14 {Insatiable Vault}
 ~~ }
-NAV: nav256___sub_ once ~~ {
+NAV: nav256_subunderground once ~~ {
 	pnt -100.769600995382 58.0731881459554 -0.299979146321615
 	pnt -100.78170859019 58.093005434672 -0.299979146321615
 	pnt -100.79635403951 58.1169764200846 -0.299979146321615
 	pnt -100.801349385579 58.1251526514689 -0.299979146321615
 	ptl -100.801349385579 58.1251526514689 -0.299979146321615 -100.811941655477 58.1369375228882 -0.300262480974197 14 {Underground City Portal}
 ~~ }
-NAV: nav257___sub_ once ~~ {
+NAV: nav257_submines once ~~ {
 	pnt -100.775333468119 58.0800081888835 -0.299979146321615
 	pnt -100.775202242533 58.113111114502 -0.299979146321615
 	pnt -100.775068664551 58.1467811584473 -0.299979146321615
@@ -11745,7 +11701,7 @@ NAV: nav257___sub_ once ~~ {
 	pnt -100.774929745992 58.1817923227946 -0.299979146321615
 	ptl -100.774884192149 58.1932703653971 -0.299979146321615 -100.802833747864 58.1832749684652 -0.300262480974197 14 {Mines of Despair}
 ~~ }
-NAV: nav258___sub_ once ~~ {
+NAV: nav258_subsingbore once ~~ {
 	pnt -100.775333468119 58.0800081888835 -0.299979146321615
 	pnt -100.775202242533 58.113111114502 -0.299979146321615
 	pnt -100.775068664551 58.1467811584473 -0.299979146321615
@@ -11754,7 +11710,7 @@ NAV: nav258___sub_ once ~~ {
 	pnt -100.774884192149 58.1932703653971 -0.299979146321615
 	ptl -100.774884192149 58.1932703653971 -0.299979146321615 -100.775032901764 58.2111541748047 -0.300262480974197 14 {Singularity Bore}
 ~~ }
-NAV: nav259___sub_ once ~~ {
+NAV: nav259_subbdc once ~~ {
 	pnt -100.775333468119 58.0800081888835 -0.299979146321615
 	pnt -100.775202242533 58.113111114502 -0.299979146321615
 	pnt -100.775068664551 58.1467811584473 -0.299979146321615
@@ -11762,7 +11718,7 @@ NAV: nav259___sub_ once ~~ {
 	pnt -100.774929745992 58.1817923227946 -0.299979146321615
 	ptl -100.774884192149 58.1932703653971 -0.299979146321615 -100.747330824534 58.1833583196004 -0.300262480974197 14 {Black Death Catacombs Portal}
 ~~ }
-NAV: nav260___sub_ once ~~ {
+NAV: nav260_subhidden once ~~ {
 	pnt -100.765897941589 58.0593785603841 -0.299979146321615
 	pnt -100.74128408432 58.0797984441121 -0.299979146321615
 	pnt -100.716054884593 58.096039390564 -0.299979146321615
@@ -11770,7 +11726,7 @@ NAV: nav260___sub_ once ~~ {
 	pnt -100.691792869568 58.1006100972494 -0.299979146321615
 	ptl -100.683186149597 58.0990088780721 -0.299979146321615 -100.691733328501 58.1277958552043 -0.300262480974197 14 {Hidden Cavern}
 ~~ }
-NAV: nav261___sub_ once ~~ {
+NAV: nav261_subcreepy once ~~ {
 	pnt -100.765897941589 58.0593785603841 -0.299979146321615
 	pnt -100.74128408432 58.0797984441121 -0.299979146321615
 	pnt -100.716054884593 58.096039390564 -0.299979146321615
@@ -11779,7 +11735,7 @@ NAV: nav261___sub_ once ~~ {
 	pnt -100.684214146932 58.1002077738444 -0.299979146321615
 	ptl -100.683186149597 58.0990088780721 -0.299979146321615 -100.663829167684 58.1000833511353 -0.300262480974197 14 {Creepy Canyons}
 ~~ }
-NAV: nav262___sub_ once ~~ {
+NAV: nav262_subfeeding once ~~ {
 	pnt -100.748497327169 58.0500408172607 -0.299979146321615
 	pnt -100.722637271881 58.0564011891683 -0.299979146321615
 	pnt -100.709201272329 58.0574959437052 -0.299979146321615
@@ -11787,14 +11743,14 @@ NAV: nav262___sub_ once ~~ {
 	pnt -100.682001717885 58.0585557301839 -0.299979146321615
 	ptl -100.682001717885 58.0585557301839 -0.299979146321615 -100.663762505849 58.0583333333333 -0.300262480974197 14 {Feeding Tubes}
 ~~ }
-NAV: nav263___sub_ once ~~ {
+NAV: nav263_subdarkdes once ~~ {
 	pnt -100.748497327169 58.0500408172607 -0.299979146321615
 	pnt -100.722637271881 58.0564011891683 -0.299979146321615
 	pnt -100.709201272329 58.0574959437052 -0.299979146321615
 	pnt -100.692898527781 58.0578039169312 -0.299979146321615
 	ptl -100.682001717885 58.0585557301839 -0.299979146321615 -100.691666666667 58.0304666519165 -0.300262480974197 14 {Dark Design}
 ~~ }
-NAV: nav264___sub_ once ~~ {
+NAV: nav264_subsurface once ~~ {
 	pnt -100.775595664978 58.021262105306 -0.299979146321615
 	pnt -100.775284989675 58.0058979670207 -0.299979146321615
 	pnt -100.775030454 57.9933111190796 -0.299979146321615
@@ -11802,14 +11758,14 @@ NAV: nav264___sub_ once ~~ {
 	pnt -100.774183622996 57.9685089747111 -0.299979146321615
 	ptl -100.774183622996 57.9685089747111 -0.299979146321615 -100.774842484792 57.9471750259399 -0.300262480974197 14 {Surface}
 ~~ }
-NAV: nav265___sub_ once ~~ {
+NAV: nav265_subthrungus once ~~ {
 	pnt -100.775595664978 58.021262105306 -0.299979146321615
 	pnt -100.775284989675 58.0058979670207 -0.299979146321615
 	pnt -100.775030454 57.9933111190796 -0.299979146321615
 	pnt -100.774668439229 57.9754013697306 -0.299979146321615
 	ptl -100.774183622996 57.9685089747111 -0.299979146321615 -100.747107505798 57.9750166575114 -0.300262480974197 14 {Thrungus Hole}
 ~~ }
-NAV: nav270___curatorti_ once ~~ {
+NAV: nav270_curatorti once ~~ {
 	rcl -63.3359971205393 -61.6310511271159 0.550020790100098 {Rynthid Recall}
 	cht -63.213960202535 -61.5861304601034 0.550020790100098 {/mt CombatState peace}
 	pnt -63.2350335756938 -61.6013196309408 0.550020790100098
@@ -11820,7 +11776,7 @@ NAV: nav270___curatorti_ once ~~ {
 	pnt -63.3359971205393 -61.6310511271159 0.550020790100098
 	cht -63.3359971205393 -61.6310511271159 0.550020790100098 {/ub givep 1 Shard of the Curator of Torment's Mask to Morgethais}
 ~~ }
-NAV: nav271___peppermint_ once ~~ {
+NAV: nav271_peppermint once ~~ {
 	cht -101.78190425237 -96.7011447906494 2.08333134651184E-05 {/tn}
 	pnt -101.669519424438 -96.6125583171845 2.08333134651184E-05
 	pnt -101.693235985438 -96.6295577685038 2.08333134651184E-05
@@ -11870,7 +11826,7 @@ NAV: nav271___peppermint_ once ~~ {
 	pnt -0.204654248555501 -23.7073419570923 0.208354171117147
 	ptl -0.204654248555501 -23.7073419570923 0.208354171117147 -0.192007493972778 -23.7038916905721 0.208070829510689 14 {The Peppermint Factory}
 ~~ }
-NAV: nav272___barber once ~~ {
+NAV: nav272_barber once ~~ {
 	cht -101.077829432487 35.5678510824839 2.08333134651184E-05 {/haven}
 	pnt -101.077829432487 35.5678510824839 2.08333134651184E-05
 	pnt -101.050069069862 35.5653150081635 2.08333134651184E-05
@@ -11891,7 +11847,7 @@ NAV: nav272___barber once ~~ {
 	pnt -100.901209910711 35.5698738177617 0.0250208338101705
 	pnt -100.896079238256 35.5754217068354 0.0250208338101705
 ~~ }
-NAV: nav273___fortress_ once ~~ {
+NAV: nav273_fortress once ~~ {
 	pnt -38.4055092175802 91.0601766109467 0.350020853678385
 	pnt -38.4104721387227 91.0818374792735 0.350020853678385
 	pnt -38.415623664856 91.1043215433756 0.350020853678385
@@ -11915,13 +11871,13 @@ NAV: nav273___fortress_ once ~~ {
 	pnt -38.3311270395915 91.2761692682902 0.350020853678385
 	tlk -38.3571347872416 91.0544721762339 0.350020853678385 -38.3266416549683 91.2819041570028 0.350020855665207 37 {Rex the Ribcage Reaper}
 ~~ }
-NAV: nav273B___rex once ~~ {
+NAV: nav273B_monouga once ~~ {
 	pnt -38.3446586290995 91.229691696167 0.350020853678385
 	pnt -38.385219669342 91.1664487520854 0.350020853678385
 	tlk -38.385219669342 91.1664487520854 0.350020853678385 -38.3918858210246 91.1611433347066 0.350020855665207 37 {Riven Vantusk}
 	pnt -38.3360441843669 91.0649634361267 0.350020853678385
 ~~ }
-NAV: nav274___jeweler once ~~ {
+NAV: nav274_jeweler once ~~ {
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
 	pnt -101.653368886312 -96.5122077147166 2.08333134651184E-05
@@ -11952,7 +11908,7 @@ NAV: nav274___jeweler once ~~ {
 	pnt -43.4958706736565 44.1150664965312 1.0000207901001
 	vnd -43.4958706736565 44.1150664965312 1.0000207901001 749B6013 {Brenica the Jeweler}
 ~~ }
-NAV: nav275___kendrick once ~~ {
+NAV: nav274_kendric once ~~ {
 	pnt -101.080697218577 35.5670833349228 2.08333134651184E-05
 	pnt -101.056482807795 35.5664381186167 2.08333134651184E-05
 	pnt -101.020383771261 35.5602999210358 2.08333134651184E-05
@@ -11969,7 +11925,7 @@ NAV: nav275___kendrick once ~~ {
 	pnt -100.935787979762 35.5694556474686 2.08333134651184E-05
 	vnd -100.935787979762 35.5694556474686 2.08333134651184E-05 701AC01F {Kendric Woodsetter}
 ~~ }
-NAV: nav276___beachfort once ~~ {
+NAV: nav276_beachfort once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05
@@ -12060,7 +12016,7 @@ NAV: nav276___beachfort once ~~ {
 	pnt -49.0702015797297 76.010594813029 2.08333212261399E-05
 	ptl -49.0701138178507 76.0121256192525 2.08333212261399E-05 -49.0836295843124 76.0139474868774 2.08333131013205E-05 37 {Feruza ibn Salaq}
 ~~ }
-NAV: nav277___alchemist once ~~ {
+NAV: nav277_alchemist once ~~ {
 	pnt -101.722076654434 -96.6418460528056 2.08333134651184E-05
 	pnt -101.741537221273 -96.642782942454 2.08333134651184E-05
 	pnt -101.751858886083 -96.6425162315369 2.08333134651184E-05
@@ -12089,7 +12045,7 @@ NAV: nav277___alchemist once ~~ {
 	pnt 15.8172915935516 -41.8044014771779 0.0583541631698608
 	vnd 15.8172915935516 -41.8044014771779 0.0583541631698608 7934B068 {Janier al-Evv}
 ~~ }
-NAV: nav278___grocer once ~~ {
+NAV: nav278_grocer once ~~ {
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
 	pnt -101.655209636688 -96.528502702713 2.08333134651184E-05
@@ -13364,7 +13320,7 @@ NAV: nav311_pongB once ~~ {
 	pnt -38.3006614367167 91.5834178288778 -0.00039583332836628
 	cht -38.3006614367167 91.5834178288778 -0.00039583332836628 {/vt opt set enablecombat true}
 ~~ }
-NAV: nav312___castlelum once ~~ {
+NAV: nav312_castlelum once ~~ {
 	cht -100.83958419164 58.717795475324 2.08333134651184E-05 {/vt opt set opendoors true}
 	pnt -100.83958419164 58.717795475324 2.08333134651184E-05
 	pnt -100.825743707021 58.7196038405101 2.08333134651184E-05
@@ -13382,7 +13338,7 @@ NAV: nav312___castlelum once ~~ {
 	pnt 69.1572293599447 21.0293900807699 1.55835418701172
 	cht 69.1572293599447 21.0293900807699 1.55835418701172 {/vt opt set opendoors false}
 ~~ }
-NAV: nav313___dragonNpcs once ~~ {
+NAV: nav313_dragonnpcs once ~~ {
 	pau 82.9469696760178 67.3797565460205 0.708354123433431 2000
 	pau 82.9469696760178 67.3797565460205 0.708354123433431 2000
 	cht 82.9469696760178 67.3797565460205 0.708354123433431 {/mt usep Black Dragon Statue}
@@ -13405,7 +13361,7 @@ NAV: nav313___dragonNpcs once ~~ {
 	pau 82.9469696760178 67.3797565460205 0.708354123433431 2000
 	pnt 82.9469696760178 67.3797565460205 0.708354123433431
 ~~ }
-NAV: nav314___delegate once ~~ {
+NAV: nav314_delegate once ~~ {
 	pnt -101.659012762705 -96.5742304801941 2.08333134651184E-05
 	pnt -101.658813317617 -96.5528091748556 2.08333134651184E-05
 	pnt -101.65542974472 -96.5373175621033 2.08333134651184E-05
@@ -14921,7 +14877,7 @@ NAV: nav375_wahchon once ~~ {
 	pnt 82.0121525446574 -52.4123255411784 0.400020853678385
 	vnd 82.0121525446574 -52.4123255411784 0.400020853678385 7E53D006 {Wah Chon the Barkeep}
 ~~ }
-NAV: nav376__DrunkenMadman once ~~ {
+NAV: nav376_drunkenMadman once ~~ {
 	pnt -101.649338372548 -96.6113193035126 2.08333134651184E-05
 	pnt -101.63404156367 -96.6262210845947 2.08333134651184E-05
 	pnt -101.625316397349 -96.6327499071757 2.08333134651184E-05

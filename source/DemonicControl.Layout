@@ -299,7 +299,7 @@ tab: Jump
 
 tab: Subway
 	tabvisible: false
-	tabsize: 750, 450
+	tabsize: 600, 400
 	tabposition: 390, 50
 	cols: 5
 	rows: 9
@@ -443,8 +443,9 @@ tab: Subway
 		Button		2,#navto Lum,#navto lum
 		Button		3,Millicent,#navto millicent
 		Button		3,#ap,/ub bc /mt autopack
-		Button		3,/vt stop,/ub bc /vt stop
-		Button		3,/vt start,/ub bc /vt start
+		Button		2,/vt stop,/ub bc /vt stop
+		Button		2,/vt start,/ub bc /vt start
+		Button		2,Hosts,/ub bc /vt meta load RonHosts
 		Button		2,Camper,/ub bc /vt meta load DemonicCamper
 		Button		2,Robot,/ub bc /vt meta load DemonicRobot
 		Button		2,Control,/ub bc /vt meta load DemonicControl

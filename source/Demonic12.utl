@@ -1,10 +1,16 @@
 UTL
 1
-209
+211
+Tablet
+
+0;1;1
+11
+Tablet
+1
 Untranslated Yalaini Spells
 
 0;10;1
-1
+0
 32
 Untranslated Yalaini Spells
 1
@@ -375,6 +381,12 @@ Gurog
 0;1;1
 10
 Gurog
+1
+Burun Guruk Head
+
+0;1;1
+21
+Burun Guruk Head
 1
 Crystal Shard
 
@@ -852,7 +864,7 @@ Legendary Defender
 41
 159
 15
-71
+72
 218103842
 75
 Nodachi|Shashqa|Spadone|Greataxe|Quadrelle|Khanda-handled|Tetsubo|Star

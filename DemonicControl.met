@@ -11,7 +11,7 @@ n
 n
 n
 n
-953
+954
 i
 26
 i
@@ -52,7 +52,7 @@ x
 ba
 2810
 <?xml version="1.0"?><view width="168" height="217" title="Demonic Control"><control type="layout"><control type="button" name="All On" left="6" top="6" width="75" height="15" text="All On" setstate="Default2" actionexpr="chatbox[\#action all on]" /><control type="button" name="All Off" left="87" top="6" width="75" height="15" text="All Off" setstate="Default2" actionexpr="chatbox[\#action all off]" /><control type="button" name="Follow" left="6" top="27" width="75" height="15" text="Follow" setstate="Default2" actionexpr="chatbox[\#action follow]" /><control type="button" name="Stay" left="87" top="27" width="75" height="15" text="Stay" setstate="Default2" actionexpr="chatbox[\#action stay]" /><control type="button" name="Nav Only" left="87" top="48" width="75" height="15" text="Nav Only" setstate="Default2" actionexpr="chatbox[\#action nav only]" /><control type="button" name="Forcebuff" left="6" top="48" width="75" height="15" text="Forcebuff" setstate="Default2" actionexpr="chatbox[\#action buff]" /><control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="Default2" actionexpr="chatbox[\#optset enablecombat true]" /><control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="Default2" actionexpr="chatbox[\#optset enablecombat false]" /><control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Default2" actionexpr="chatbox[\#optset enablenav false]" /><control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="Default2" actionexpr="chatbox[\#optset enablenav true]" /><control type="button" name="Rares Only" left="87" top="111" width="75" height="15" text="Rares Only" setstate="Default2" actionexpr="chatbox[\#action rares only]" /><control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Default2" actionexpr="chatbox[\#action loot all]" /><control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing true]" /><control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" setstate="Default2" actionexpr="chatbox[\#optset enablebuffing false]" /><control type="button" name="Portal" left="6" top="174" width="75" height="15" text="Portal" setstate="Default2" actionexpr="chatbox[\#action ucp]" /><control type="button" name="NPC" left="87" top="174" width="75" height="15" text="NPC" setstate="Default2" actionexpr="chatbox[\#action npc]" /><control type="button" name="Vendor" left="6" top="195" width="75" height="15" text="Vendor" setstate="Default2" actionexpr="chatbox[\#action ucv]" /></control></view>s
-***DemonicControlv228***
+***DemonicControlv250***
 i
 26
 i
@@ -80,7 +80,7 @@ e
 s
 setvar[class, mage]
 s
-***DemonicControlv228***
+***DemonicControlv250***
 i
 26
 i
@@ -108,7 +108,7 @@ e
 s
 setvar[class, void]
 s
-***DemonicControlv228***
+***DemonicControlv250***
 i
 3
 i
@@ -184,7 +184,7 @@ e
 s
 setvar[class, melee]
 s
-***DemonicControlv228***
+***DemonicControlv250***
 i
 2
 i
@@ -304,7 +304,7 @@ e
 s
 setvar[class, ranger]
 s
-***DemonicControlv228***
+***DemonicControlv250***
 i
 1
 i
@@ -317,7 +317,7 @@ K
 V
 n
 n
-6
+5
 i
 8
 TABLE
@@ -356,19 +356,6 @@ n
 s
 e
 s
-testgvar[watchlist]&&echo[`Watchlist found.`,13]||setgvar[watchlist,listcreate[]]
-i
-7
-TABLE
-2
-k
-v
-n
-n
-1
-s
-e
-s
 echo[`--------------`,13]
 i
 7
@@ -382,7 +369,7 @@ n
 s
 e
 s
-echo[`Welcome to DemonicControl v2.25`,5]
+echo[`Welcome to DemonicControl v2.50`,5]
 i
 7
 TABLE
@@ -397,7 +384,7 @@ e
 s
 echo[`--------------`,13]
 s
-***DemonicControlv228***
+***DemonicControlv250***
 i
 1
 i
@@ -407,7 +394,7 @@ i
 s
 SpellCheck
 s
-***DemonicControlv228***
+***DemonicControlv250***
 i
 1
 i
@@ -744,7 +731,7 @@ s
 i
 1
 s
-***DemonicControlv228***
+***DemonicControlv250***
 s
 Default
 i
@@ -1684,7 +1671,7 @@ K
 V
 n
 n
-7
+6
 i
 7
 TABLE
@@ -1697,7 +1684,7 @@ n
 s
 e
 s
-echo[`Aura of Invulnerability is `+getcharintprop[334],13
+echo[`Aura of Invulnerability is `+getcharintprop[334],13]
 i
 7
 TABLE
@@ -1710,7 +1697,7 @@ n
 s
 e
 s
-echo[`Aura of Valor is `+getcharintprop[333],13
+echo[`Aura of the World is `+getcharintprop[365],13]
 i
 7
 TABLE
@@ -1723,7 +1710,7 @@ n
 s
 e
 s
-echo[`Aura of the World is `+getcharintprop[365],13
+echo[`Aura Purity is `+getcharintprop[342],13]
 i
 7
 TABLE
@@ -1736,20 +1723,7 @@ n
 s
 e
 s
-echo[`Aura Purity is `+getcharintprop[342],13
-i
-7
-TABLE
-2
-k
-v
-n
-n
-1
-s
-e
-s
-echo[`Aura Destruction is `+getcharintprop[333],13
+echo[`Aura Destruction is `+getcharintprop[333],13]
 i
 7
 TABLE
@@ -7135,7 +7109,7 @@ n
 s
 e
 s
-clearvar[capturegroup_command]&&clearvar[capturegroup_arg1]&&clearvar[capturegroup_arg2]&&clearvar[capturegroup_saythink]&&clearvar[capturegroup_name]&&clearvar[capturegroup_0]&&clearvar[capturecolor)&&clearvar[speaker]
+clearvar[capturegroup_command]&&clearvar[capturegroup_arg1]&&clearvar[capturegroup_arg2]&&clearvar[capturegroup_saythink]&&clearvar[capturegroup_name]&&clearvar[capturegroup_0]&&clearvar[capturecolor]&&clearvar[speaker]
 s
 Command
 i
@@ -7762,20 +7736,7 @@ K
 V
 n
 n
-3
-i
-26
-TABLE
 2
-k
-v
-n
-n
-1
-s
-e
-s
-$activemode==bsd
 i
 6
 i
@@ -7788,7 +7749,7 @@ K
 V
 n
 n
-3
+4
 i
 12
 TABLE
@@ -7840,6 +7801,23 @@ s
 c
 i
 1
+i
+12
+TABLE
+2
+k
+v
+n
+n
+2
+s
+n
+s
+Wrecker Tusk
+s
+c
+i
+1
 s
 /f Got my Tusk!
 s
@@ -7856,18 +7834,9 @@ n
 n
 3
 i
-26
-TABLE
-2
-k
-v
-n
-n
-1
-s
-e
-s
-$activemode==bluelady
+17
+i
+-1956380672
 i
 6
 i
@@ -7891,38 +7860,6 @@ i
 1
 s
 /f Got Water!
-s
-Default2
-i
-2
-i
-1
-TABLE
-2
-K
-V
-n
-n
-2
-i
-26
-TABLE
-2
-k
-v
-n
-n
-1
-s
-e
-s
-testvar[raretracker]
-i
-6
-i
-20
-s
-RareTracker
 s
 Default2
 i
@@ -10270,6 +10207,121 @@ n
 s
 p
 s
+(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#keycount\"$
+s
+c
+s
+
+i
+3
+TABLE
+2
+K
+V
+n
+n
+3
+i
+26
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+listcontains[getgvar[charlist],getvar[capturegroup_name]]
+i
+26
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+getvar[capturegroup_saythink]==say
+i
+26
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+getvar[capturegroup_saythink]==think
+TABLE
+2
+K
+V
+n
+n
+3
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+echo[`You have `+getitemcountininventorybyname[Durable Ascended Moon Chest Key]+` Durable Ascended Moon Chest Keys`,5]
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+echo[`You have `+getitemcountininventorybyname[Durable Primal Moon Chest Keys]+` Durable Primal Moon Chest Keys`,5]
+i
+1
+s
+Default2
+s
+Default2
+i
+2
+i
+3
+TABLE
+2
+K
+V
+n
+n
+2
+i
+28
+TABLE
+2
+k
+v
+n
+n
+2
+s
+p
+s
 (^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#summon (?<elementtext>.*)\"$
 s
 c
@@ -10334,6 +10386,121 @@ i
 1
 s
 Summon
+s
+Default2
+i
+2
+i
+3
+TABLE
+2
+K
+V
+n
+n
+2
+i
+28
+TABLE
+2
+k
+v
+n
+n
+2
+s
+p
+s
+(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#attackdistance (?<distance>([2-9]|[1-6][0-9]|70))\"$
+s
+c
+s
+
+i
+3
+TABLE
+2
+K
+V
+n
+n
+3
+i
+26
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+listcontains[getgvar[charlist],getvar[capturegroup_name]]
+i
+26
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+getvar[capturegroup_saythink]==say
+i
+26
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+getvar[capturegroup_saythink]==think
+TABLE
+2
+K
+V
+n
+n
+3
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+vtsetsetting[AttackDistance,cstr[cnumber[getregexmatch[getvar[capturegroup_distance],`([2-9]|[1-6][0-9]|70)\$`]]/240]]
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+clearvar[capturegroup_distance]
+i
+1
+s
+Default2
 s
 Default2
 i
@@ -26898,7 +27065,7 @@ n
 s
 e
 s
-echo[`Aura of Invulnerability is `+getcharintprop[334],13
+echo[`Aura of Invulnerability is `+getcharintprop[334],13]
 i
 7
 TABLE
@@ -26911,7 +27078,7 @@ n
 s
 e
 s
-echo[`Aura of Valor is `+getcharintprop[333],13
+echo[`Aura of Valor is `+getcharintprop[333],13]
 i
 7
 TABLE
@@ -26924,7 +27091,7 @@ n
 s
 e
 s
-echo[`Aura of the World is `+getcharintprop[365],13
+echo[`Aura of the World is `+getcharintprop[365],13]
 i
 7
 TABLE
@@ -26937,7 +27104,7 @@ n
 s
 e
 s
-echo[`Aura Purity is `+getcharintprop[342],13
+echo[`Aura Purity is `+getcharintprop[342],13]
 i
 7
 TABLE
@@ -26950,7 +27117,7 @@ n
 s
 e
 s
-echo[`Aura Destruction is `+getcharintprop[333],13
+echo[`Aura Destruction is `+getcharintprop[333],13]
 i
 7
 TABLE
@@ -29729,7 +29896,7 @@ n
 s
 e
 s
-(Jeweler)#getvar[capturegroup_navtext]
+(Jeweler\|Kendrick)#getvar[capturegroup_navtext]
 TABLE
 2
 K
@@ -62874,7 +63041,7 @@ K
 V
 n
 n
-8
+9
 i
 26
 TABLE
@@ -62957,6 +63124,19 @@ s
 e
 s
 actiontryuseitem[listgetitem[$corpseitemslistobjects,0]]
+i
+26
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+wobjectfindininventorybytemplatetype[33758]==1
 i
 0
 i
@@ -77420,7 +77600,7 @@ K
 V
 n
 n
-7
+6
 i
 4
 ba
@@ -77456,23 +77636,6 @@ s
 e
 s
 clearvar[capturegroup_questtext]
-i
-12
-TABLE
-2
-k
-v
-n
-n
-2
-s
-o
-s
-enablecombat
-s
-v
-s
-true
 i
 12
 TABLE
@@ -80784,7 +80947,7 @@ K
 V
 n
 n
-6
+5
 i
 4
 ba
@@ -80825,23 +80988,6 @@ s
 e
 s
 clearvar[capturegroup_questtext]
-i
-12
-TABLE
-2
-k
-v
-n
-n
-2
-s
-o
-s
-enablecombat
-s
-v
-s
-true
 i
 12
 TABLE
@@ -96036,7 +96182,7 @@ K
 V
 n
 n
-10
+11
 i
 7
 TABLE
@@ -96167,6 +96313,19 @@ s
 e
 s
 (getqueststatus[prismaticcrystalguardiankilltasktimer]&&testquestflag[prismaticcrystalguardianktcount]&&echo[Guardian is ready and flagged,16])||(getqueststatus[prismaticcrystalguardiankilltasktimer]&&testquestflag[prismaticcrystalguardianktcount]==0&&echo[Guardian is ready but not flagged,4])
+i
+7
+TABLE
+2
+k
+v
+n
+n
+1
+s
+e
+s
+(getqueststatus[killtaskbrowndragontimer]&&getqueststatus[killtaskgreendragontimer]&&testquestflag[browndragonktcount]&&testquestflag[greendragonktcount]&&echo[Brown and Green Dragons are flagged and ready,16]||getqueststatus[killtaskbrowndragontimer]&&testquestflag[greendragonktcount]==0 && echo[Brown and Green Dragons are ready, but not flagged,4]
 s
 QuestCheck
 i
@@ -96661,7 +96820,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Forge`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Forge`
 i
 8
 TABLE
@@ -96918,7 +97077,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Path`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Path`
 i
 8
 TABLE
@@ -97192,7 +97351,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Bugs`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Bugs`
 i
 8
 TABLE
@@ -97453,7 +97612,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-BSD`]
+`/vt settings loadchar `+getcharstringprop[1]+`-BSD`
 i
 8
 TABLE
@@ -97675,7 +97834,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Mukkir`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Mukkir`
 i
 8
 TABLE
@@ -97923,7 +98082,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Teth`
 i
 8
 TABLE
@@ -98193,7 +98352,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Rage`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Rage`
 i
 12
 TABLE
@@ -98738,7 +98897,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Hollow`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Hollow`
 i
 12
 TABLE
@@ -99211,7 +99370,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Monouga`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Monouga`
 i
 12
 TABLE
@@ -99710,7 +99869,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-TethBow`]
+`/vt settings loadchar `+getcharstringprop[1]+`-TethBow`
 i
 7
 TABLE
@@ -99858,7 +100017,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Teth`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Teth`
 i
 7
 TABLE
@@ -100314,7 +100473,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Butter`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Butter`
 i
 12
 TABLE
@@ -100868,7 +101027,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-ButterBow`]
+`/vt settings loadchar `+getcharstringprop[1]+`-ButterBow`
 i
 1
 s
@@ -100931,7 +101090,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-VR`]
+`/vt settings loadchar `+getcharstringprop[1]+`-VR`
 i
 12
 TABLE
@@ -101477,7 +101636,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Bow`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Bow`
 i
 12
 TABLE
@@ -101893,7 +102052,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Dino`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Dino`
 i
 12
 TABLE
@@ -102098,7 +102257,7 @@ n
 s
 e
 s
-`/vt settings loadchar `+getcharstringprop[1]+`-Dino`]
+`/vt settings loadchar `+getcharstringprop[1]+`-Dino`
 i
 7
 TABLE

@@ -5,6 +5,7 @@ DemonicControl is a comprehensive automation meta script for Asheron's Call that
 ## Features
 
 ### Core Automation
+
 - **Quest Management**: Automated quest running with timer tracking for 30+ major quests
 - **Navigation System**: 100+ navigation destinations including towns, dungeons, and special locations
 - **Multi-Character Coordination**: Advanced systems for coordinating 2-7 characters simultaneously
@@ -12,6 +13,7 @@ DemonicControl is a comprehensive automation meta script for Asheron's Call that
 - **Fellowship Integration**: Automatic fellowship creation, management, and coordination
 
 ### Advanced Systems
+
 - **Patrol Routes**: Multiple patrol systems for different dungeons and farming areas
 - **Mode System**: Specialized modes for different activities (Rage, Forge, Dino, Teth, etc.)
 - **Watchlist**: Death monitoring and automatic recall system
@@ -31,7 +33,21 @@ DemonicControl is a comprehensive automation meta script for Asheron's Call that
 
 ### Option 1
 
-1. Download the [installer](https://raw.githubusercontent.com/RonGeorge/DemonicControl/refs/heads/main/installer/DemonicInstallerFULL.bat)(Right Click and Save As..) into your Downloads folder, or wherever and let it run. You will see a message when it finishes. You can alternatively just grab the meta only [installer](https://github.com/RonGeorge/DemonicControl/blob/main/installer/DemonicInstaller.bat)(Right Click and Save As..), double click it and it will download and move the files accordingly.
+1. Download the [installer](dist\DemonicControl_Installer.exe) and after it finishes double click it. You will see a message when it finishes. 
+
+#### The installer includes
+
+> To VirindiTank folder:
+- DemonicControl.met - the Meta
+ - Demonic12.utl - Default loot profile, change it in settings
+ - RaresOnly.utl - bare minimum loot profile used in some places
+
+> To chaoshelper folder:
+
+- chaoshelper.ini - configuration file for ChaosHelper
+ - ChaosHelper.dll - Custom version of ChaosHelper that I built, [it shows colors](https://i.imgur.com/VUhz1kh.png)
+ - DemonicControl.txt - ChaosHelper profile
+ - DemonicControl.Layout - ChaosHelper profile
 
 ### Option 2
 
@@ -56,9 +72,9 @@ For a complete command reference, see the [Commands Wiki](https://github.com/Ron
 
 ### Files in Repo
 
-1. /source/ contains my loot profiles. the .mut profile to build my loot profile, Chaos Profiles, and also the .af source file used in Metaf to build DemonicControl.
-2. /lootprofilesformovingandautopack/ this folder contains my autopack profiles, many random loot profiles that I use for muling, trading, and the /ub givep command for mules.
-3. /installer/ contains the 3 different kinds of installers.
+1. _/source/_ contains all of the original files. the .mut profile to build my loot profile, Chaos Profiles, and also the .af source file used in Metaf to build DemonicControl.
+2. _/loot-profiles-and-autopack/_ this folder contains my autopack profiles, many random loot profiles that I use for muling, trading, and the /ub givep command for mules.
+3. /dist/ contains the installer.
 
 ### Thanks
 
