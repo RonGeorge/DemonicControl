@@ -34,7 +34,7 @@ DemonicControl is a comprehensive automation meta script for Asheron's Call that
 
 ### Option 1
 
-1. Download the [installer](https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/dist/DemonicInstaller.exe) and after it finishes double click it. You will see a message when it finishes. 
+1. Download the [installer (just click this)](https://raw.githubusercontent.com/RonGeorge/DemonicControl/main/dist/DemonicInstaller.exe) and after it finishes double click it. You will see a message when it finishes. 
 
 #### The installer includes
 
